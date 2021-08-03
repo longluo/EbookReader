@@ -1,0 +1,39 @@
+package com.longluo.ebookreader.network.authentication.litres;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import com.longluo.zlibrary.core.network.ZLNetworkException;
+import com.longluo.zlibrary.core.network.ZLNetworkRequest;
+
+public class LitResNetworkRequest extends ZLNetworkRequest.PostWithMap {
+	public final LitResAuthenticationXMLReader Reader;
+
+	static String clean(String url) {
+		final int index = url.indexOf('?');
+		return index != -1 ? url.substring(0, index) : url;
+	}
+
+	public LitResNetworkRequest(String url, LitResAuthenticationXMLReader reader) {
+		super(clean(url));
+		final int index = url.indexOf('?');
+		if (index != -1) {
+			for (String param : url.substring(index + 1).split("&")) {
+				String[] pp = param.split("=");
+				if (pp.length == 2) {
+					addPostParameter(pp[0], pp[1]);
+				}
+			}
+		}
+		Reader = reader;
+	}
+
+	@Override
+	public void handleStream(InputStream inputStream, int length) throws IOException, ZLNetworkException {
+		Reader.read(inputStream);
+		ZLNetworkException e = Reader.getException();
+		if (e != null) {
+			throw e;
+		}
+	}
+}

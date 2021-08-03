@@ -1,3 +1,5 @@
 rootProject.name = "EbookReader"
 include ':app'
-include ':epublib'
+include ':AmbilWarna'
+include ':SuperToasts'
+include ':android-filechooser'

@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.5.30-M1'
+//    ext.kotlin_version = '1.5.30-M1'
 
     repositories {
         maven { url 'https://maven.aliyun.com/repository/public' }
@@ -18,12 +18,12 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:4.2.1"
+        classpath "com.android.tools.build:gradle:3.6.3"
         // Added for bufferknife for BindView
         classpath 'com.jakewharton:butterknife-gradle-plugin:10.2.1'
 	
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'de.timfreiheit.resourceplaceholders:placeholders:0.4'
+//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+//        classpath 'de.timfreiheit.resourceplaceholders:placeholders:0.4'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -52,8 +52,8 @@ task clean(type: Delete) {
 }
 
 ext {
-    versionCode = 3
-    versionName = '3.0'
+    versionCode = 4
+    versionName = '4.0'
 
     libMinSdkVersion = 23
     appMinSdkVersion = 23

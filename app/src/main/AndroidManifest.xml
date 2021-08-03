@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.longluo.ebookreader">
-
-    <uses-sdk
-        android:maxSdkVersion="10"
-        android:targetSdkVersion="9" />
+    package="com.longluo.ebookreader"
+    android:installLocation="auto">
 
     <supports-screens
         android:anyDensity="true"
@@ -15,6 +12,7 @@
         android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -32,434 +30,633 @@
         tools:ignore="ScopedStorage" />
 
     <application
-        android:name=".App"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:name="com.longluo.android.ebookreader.FBReaderApplication"
+        android:icon="@drawable/fbreader"
         android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
-        android:requestLegacyExternalStorage="true"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme.Light"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
-        <!-- 主入口 -->
+        android:logo="@drawable/fbreader_bw">
+
         <activity
-            android:name=".ui.welcome.WelcomeActivity"
-            android:exported="true">
+            android:name="com.longluo.android.ebookreader.error.BookReadingErrorActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":error"
+            android:theme="@style/FBReader.Dialog">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.fbreader.action.ERROR" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:scheme="BookReadingException"
+                    tools:ignore="AppLinkUrlError" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:launchMode="singleTask"
-                android:resource="@xml/shortcuts" />
         </activity>
-        <!-- 图标1 -->
+
         <activity
-            android:name=".ui.welcome.Launcher1"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/launcher1">
+            android:name="com.longluo.zlibrary.ui.android.error.BugReportActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:label="FBReader crash"
+            android:process=":crash"
+            android:theme="@style/FBReader.Activity" />
+        <activity
+            android:name="com.longluo.android.ebookreader.crash.FixBooksDirectoryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:process=":crash"
+            android:theme="@style/FBReader.Dialog">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.fbreader.action.CRASH" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:scheme="CachedCharStorageException"
+                    tools:ignore="AppLinkUrlError" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:launchMode="singleTask"
-                android:resource="@xml/shortcuts" />
         </activity>
-        <!-- 图标2 -->
         <activity
-            android:name=".ui.welcome.Launcher2"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/launcher2">
+            android:name="com.longluo.android.ebookreader.crash.MissingNativeLibraryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:process=":crash"
+            android:theme="@style/FBReader.Dialog">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.fbreader.action.CRASH" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:scheme="ExceptionInInitializerError"
+                    tools:ignore="AppLinkUrlError" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:launchMode="singleTask"
-                android:resource="@xml/shortcuts" />
-        </activity>
-        <!-- 图标3 -->
-        <activity
-            android:name=".ui.welcome.Launcher3"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/launcher3">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.fbreader.action.CRASH" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:scheme="UnsatisfiedLinkError"
+                    tools:ignore="AppLinkUrlError" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:launchMode="singleTask"
-                android:resource="@xml/shortcuts" />
         </activity>
-        <!-- 图标4 -->
-        <activity
-            android:name=".ui.welcome.Launcher4"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/launcher4">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:launchMode="singleTask"
-                android:resource="@xml/shortcuts" />
-        </activity>
-        <!-- 图标5 -->
-        <activity
-            android:name=".ui.welcome.Launcher5"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/launcher5">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:launchMode="singleTask"
-                android:resource="@xml/shortcuts" />
-        </activity>
-        <!-- 图标6 -->
-        <activity
-            android:name=".ui.welcome.Launcher6"
-            android:enabled="false"
-            android:exported="true"
-            android:icon="@mipmap/launcher6">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:launchMode="singleTask"
-                android:resource="@xml/shortcuts" />
-        </activity>
-        <!-- 主界面 -->
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:alwaysRetainTaskState="true"
-            android:launchMode="singleTask" />
-        <!-- 阅读界面 -->
-        <activity
-            android:name=".ui.book.read.ReadBookActivity"
-            android:configChanges="locale|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout"
-            android:exported="true"
+        <service
+            android:name="com.longluo.android.ebookreader.api.ApiService"
             android:launchMode="singleTask">
             <intent-filter>
-                <action android:name="com.samsung.android.support.REMOTE_ACTION" />
+                <action android:name="android.fbreader.action.API" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name="com.longluo.android.ebookreader.FBReader"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:icon="@drawable/fbreader"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:theme="@style/FBReader.Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.fbreader.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.fbreader.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="file" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="fbreader-action" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.fbreader.action.PLUGIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host=""
+                    android:scheme="file"
+                    tools:ignore="AppLinkUrlError" />
+                <data android:pathPattern=".*\\.epub" />
+                <data android:pathPattern=".*\\.oeb" />
+                <data android:pathPattern=".*\\.fb2" />
+                <data android:pathPattern=".*\\.fb2\\.zip" />
+                <data android:pathPattern=".*\\.mobi" />
+                <data android:pathPattern=".*\\.prc" />
+                <data android:pathPattern=".*\\.txt" />
+                <data android:pathPattern=".*\\.rtf" />
+                <data android:pathPattern=".*\\.pdf" />
+                <data android:pathPattern=".*\\.djvu" />
+                <data android:pathPattern=".*\\.cbr" />
+                <data android:pathPattern=".*\\.cbz" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host=""
+                    android:mimeType="text/plain"
+                    android:scheme="file"
+                    tools:ignore="AppLinkUrlError" />
+                <data android:pathPattern=".*\\.epub" />
+                <data android:pathPattern=".*\\.oeb" />
+                <data android:pathPattern=".*\\.fb2" />
+                <data android:pathPattern=".*\\.mobi" />
+                <data android:pathPattern=".*\\.prc" />
+                <data android:pathPattern=".*\\.txt" />
+                <data android:pathPattern=".*\\.rtf" />
+                <data android:pathPattern=".*\\.pdf" />
+                <data android:pathPattern=".*\\.djvu" />
+                <data android:pathPattern=".*\\.cbr" />
+                <data android:pathPattern=".*\\.cbz" />
+            </intent-filter>
+            <!--intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="content" android:pathPattern=".*\\.fb2"/>
+            </intent-filter-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host=""
+                    android:scheme="file"
+                    tools:ignore="AppLinkUrlError" />
+                <data android:mimeType="application/epub+zip" />
+                <data android:mimeType="application/x-pilot-prc" />
+                <data android:mimeType="application/x-mobipocket-ebook" />
+                <data android:mimeType="application/x-fictionbook+xml" />
+                <data android:mimeType="application/x-fictionbook" />
+                <data android:mimeType="application/pdf" />
+                <data android:mimeType="application/x-pdf" />
+                <data android:mimeType="application/djvu" />
+                <data android:mimeType="application/x-djvu" />
+                <data android:mimeType="application/x-cbr" />
+                <data android:mimeType="application/x-cbz" />
+                <data android:mimeType="image/vnd.djvu" />
+                <data android:mimeType="image/x-djvu" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
             <meta-data
-                android:name="com.samsung.android.support.REMOTE_ACTION"
-                android:resource="@xml/spen_remote_actions" />
-        </activity>
-        <!-- 书籍详情页 -->
-        <activity
-            android:name=".ui.book.info.BookInfoActivity"
-            android:launchMode="singleTop" />
-        <!-- 书籍信息编辑 -->
-        <activity
-            android:name=".ui.book.info.edit.BookInfoEditActivity"
-            android:launchMode="singleTask" />
-        <!-- 音频播放界面 -->
-        <activity
-            android:name="com.longluo.ebookreader.ui.book.audio.AudioPlayActivity"
-            android:launchMode="singleTask" />
-        <!-- 授权界面 -->
-        <activity
-            android:name="com.longluo.ebookreader.lib.permission.PermissionActivity"
-            android:theme="@style/Activity.Permission" />
-        <!-- 二维码扫描 -->
-        <activity
-            android:name=".ui.qrcode.QrCodeActivity"
-            android:launchMode="singleTask" />
-        <!-- 规则订阅 -->
-        <activity
-            android:name=".ui.rss.subscription.RuleSubActivity"
-            android:launchMode="singleTask" />
-        <!-- 书源编辑 -->
-        <activity
-            android:name=".ui.book.source.edit.BookSourceEditActivity"
-            android:configChanges="locale|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <!-- 订阅源编辑 -->
-        <activity
-            android:name=".ui.rss.source.edit.RssSourceEditActivity"
-            android:configChanges="locale|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <!-- 书源编辑 -->
-        <activity
-            android:name=".ui.replace.edit.ReplaceEditActivity"
-            android:configChanges="locale|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <!-- 配置界面 -->
-        <activity
-            android:name=".ui.config.ConfigActivity"
-            android:launchMode="singleTask" />
-        <!-- 搜索界面 -->
-        <activity
-            android:name=".ui.book.search.SearchActivity"
-            android:launchMode="standard" />
-        <!-- 关于界面 -->
-        <activity
-            android:name=".ui.about.AboutActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="behind" />
-        <!-- 捐赠界面 -->
-        <activity
-            android:name=".ui.about.DonateActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="behind" />
-        <!-- 书源管理 -->
-        <activity
-            android:name=".ui.book.source.manage.BookSourceActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="behind" />
-        <!-- 订阅源管理 -->
-        <activity
-            android:name=".ui.rss.source.manage.RssSourceActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="behind" />
-        <!-- 替换规则界面 -->
-        <activity
-            android:name=".ui.replace.ReplaceRuleActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="behind" />
-        <!-- 书籍管理 -->
-        <activity
-            android:name=".ui.book.arrange.ArrangeBookActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="behind" />
-        <!-- 书源调试 -->
-        <activity
-            android:name=".ui.book.source.debug.BookSourceDebugActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="behind" />
-        <!-- 目录 -->
-        <activity
-            android:name=".ui.book.toc.TocActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="behind" />
-        <!-- 正文搜索 -->
-        <activity
-            android:name=".ui.book.searchContent.SearchContentActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="behind" />
-        <!-- RSS条目 -->
-        <activity
-            android:name=".ui.rss.article.RssSortActivity"
-            android:launchMode="singleTop" />
-        <!-- RSS阅读 -->
-        <activity
-            android:name=".ui.rss.read.ReadRssActivity"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleTop" />
-        <!-- 导入书籍 -->
-        <activity
-            android:name=".ui.book.local.ImportBookActivity"
-            android:launchMode="singleTop" />
-        <!-- 发现界面 -->
-        <activity
-            android:name=".ui.book.explore.ExploreShowActivity"
-            android:launchMode="singleTop" />
-        <!-- 订阅源调试 -->
-        <activity
-            android:name=".ui.rss.source.debug.RssSourceDebugActivity"
-            android:launchMode="singleTop" />
-        <!-- Rss收藏 -->
-        <activity
-            android:name=".ui.rss.favorites.RssFavoritesActivity"
-            android:launchMode="singleTop" />
-        <!-- 缓存界面 -->
-        <activity
-            android:name=".ui.book.cache.CacheActivity"
-            android:launchMode="singleTop" />
-        <!-- 书源登录 -->
-        <activity
-            android:name=".ui.login.SourceLoginActivity"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true" />
-        <!-- 阅读记录 -->
-        <activity
-            android:name=".ui.about.ReadRecordActivity"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true" />
-        <!-- 选择文件 -->
-        <activity
-            android:name=".ui.document.FilePickerActivity"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true"
-            android:theme="@style/AppTheme.Transparent" />
-        <!-- 文字处理 -->
-        <activity
-            android:name=".receiver.SharedReceiverActivity"
-            android:exported="true"
-            android:label="@string/receiving_shared_label"
-            android:theme="@style/AppTheme.Transparent">
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
             <intent-filter>
-                <action android:name="android.intent.action.PROCESS_TEXT" />
-
+                <action android:name="android.fbreader.action.CLOSE" />
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
+                <action android:name="android.fbreader.action.PLUGIN_CRASH" />
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <!-- 一键导入 -->
         <activity
-            android:name=".ui.association.OnLineImportActivity"
-            android:configChanges="locale|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout"
-            android:exported="true"
-            android:theme="@style/AppTheme.Transparent">
+            android:name="com.longluo.android.ebookreader.dict.DictionaryNotInstalledActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.CancelActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FBReader.Dialog">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
+                <action android:name="android.fbreader.action.CANCEL_MENU" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="legado" />
-                <data android:scheme="yuedu" />
             </intent-filter>
         </activity>
-        <!-- 打开文件 -->
         <activity
-            android:name=".ui.association.FileAssociationActivity"
-            android:exported="true"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.Transparent">
-            <!-- VIEW (Open with) action -->
-            <!-- Works when an app knows the media type of a file, e.g. Gmail or Chrome. -->
+            android:name="com.longluo.android.ebookreader.PluginListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FBReader.Dialog" />
+
+        <activity
+            android:name="com.longluo.android.ebookreader.bookmark.BookmarksActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:process=":bookmarks"
+            android:theme="@style/FBReader.Activity.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="app" />
-                <data android:scheme="content" />
-                <data android:scheme="file" />
-                <!-- text -->
-                <data android:mimeType="text/plain" />
-                <!-- json -->
-                <data android:mimeType="application/json" />
-                <!-- EPUB -->
-                <data android:mimeType="application/epub+zip" />
+                <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <!-- Works when an app doesn't know the media type, e.g. Dropbox -->
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
+                <action android:name="android.fbreader.action.BOOKMARKS" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:host="*" />
-
-                <data android:scheme="app" />
-                <data android:scheme="content" />
-                <data android:scheme="file" />
-                <!-- This media type is necessary, otherwise it won't match on the file extension -->
-                <data android:mimeType="*/*" />
-                <!--TXT-->
-                <data android:pathPattern=".*\\.txt" />
-                <data android:pathPattern=".*\\.TXT" />
-                <!--JSON-->
-                <data android:pathPattern=".*\\.json" />
-                <data android:pathPattern=".*\\.JSON" />
-                <!-- EPUB -->
-                <data android:pathPattern=".*\\.epub" />
-                <data android:pathPattern=".*\\.EPUB" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.longluo.android.ebookreader.bookmark.EditBookmarkActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FBReader.Dialog">
+            <intent-filter>
+                <action android:name="android.fbreader.action.EDIT_BOOKMARK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.longluo.android.ebookreader.bookmark.EditStyleActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FBReader.Dialog">
+            <intent-filter>
+                <action android:name="android.fbreader.action.EDIT_STYLES" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <service android:name=".service.CheckSourceService" />
-        <service android:name=".service.CacheBookService" />
-        <service android:name=".service.WebService" />
+        <activity
+            android:name="com.longluo.android.ebookreader.image.ImageViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":imageView"
+            android:theme="@style/FBReader.Activity" />
+
         <service
-            android:name=".service.WebTileService"
-            android:label="legado Web Service"
-            android:icon="@drawable/ic_web_service_noti"
-            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
-            android:exported="true">
+            android:name="com.longluo.android.ebookreader.libraryService.LibraryService"
+            android:launchMode="singleTask"
+            android:process=":libraryService">
             <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
+                <action android:name="android.fbreader.action.LIBRARY_SERVICE" />
             </intent-filter>
         </service>
-        <service android:name=".service.TTSReadAloudService" />
-        <service android:name=".service.HttpReadAloudService" />
-        <service android:name=".service.AudioPlayService" />
-        <service android:name=".service.DownloadService" />
+        <service
+            android:name="com.longluo.android.ebookreader.config.ConfigService"
+            android:launchMode="singleTask"
+            android:process=":configService">
+            <intent-filter>
+                <action android:name="android.fbreader.action.CONFIG_SERVICE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.longluo.android.ebookreader.sync.SyncService"
+            android:launchMode="singleTask"
+            android:process=":synchroniser">
+            <intent-filter>
+                <action android:name="android.fbreader.action.sync.START" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.fbreader.action.sync.QUICK_SYNC" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name="com.longluo.android.ebookreader.library.BookInfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":library"
+            android:theme="@style/FBReader.Activity">
+            <intent-filter>
+                <action android:name="android.fbreader.action.BOOK_INFO" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.longluo.android.ebookreader.library.LibrarySearchActivity"
+            android:process=":library"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name="com.longluo.android.ebookreader.library.LibraryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:process=":library"
+            android:theme="@style/FBReader.Activity">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value="com.longluo.android.ebookreader.library.LibrarySearchActivity" />
+            <intent-filter>
+                <action android:name="android.ebookreader.action.LIBRARY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.longluo.android.ebookreader.TOCActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FBReader.Activity" />
+        <activity
+            android:name="com.longluo.android.ebookreader.preferences.PreferenceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":preferences"
+            android:theme="@style/FBReader.Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="fbreader-preferences" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.ebookreader.action.PREFERENCES" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.longluo.android.ebookreader.preferences.EditBookInfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":library"
+            android:theme="@style/FBReader.Activity" />
+        <activity
+            android:name="com.longluo.android.ebookreader.sync.MissingBookActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.network.BookDownloader"
+            android:process=":networkLibrary"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:scheme="http" />
+                <data android:pathPattern=".*\\.epub" />
+                <data android:pathPattern=".*\\.oeb" />
+                <data android:pathPattern=".*\\.fb2" />
+                <data android:pathPattern=".*\\.fb2\\.zip" />
+                <data android:pathPattern=".*\\.mobi" />
+                <data android:pathPattern=".*\\.prc" />
+                <data android:pathPattern=".*\\.txt" />
+                <data android:pathPattern=".*\\.rtf" />
+                <data android:pathPattern=".*\\.djvu" />
+                <data android:pathPattern=".*\\.cbr" />
+                <data android:pathPattern=".*\\.cbz" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:scheme="http" />
+                <data android:mimeType="application/epub+zip" />
+                <data android:mimeType="application/x-pilot-prc" />
+                <data android:mimeType="application/x-mobipocket-ebook" />
+                <data android:mimeType="application/x-fictionbook+xml" />
+                <data android:mimeType="application/x-fictionbook" />
+                <data android:mimeType="application/djvu" />
+                <data android:mimeType="application/x-djvu" />
+                <data android:mimeType="application/x-cbr" />
+                <data android:mimeType="application/x-cbz" />
+                <data android:mimeType="image/vnd.djvu" />
+                <data android:mimeType="image/x-djvu" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*rus.ec"
+                    android:mimeType="application/zip"
+                    android:scheme="http" />
+                <data
+                    android:host="lib.ololo.cc"
+                    android:mimeType="application/zip"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:scheme="book" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:scheme="epub" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="com.longluo.android.ebookreader.network.BookDownloaderService"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:process=":networkLibrary" />
+
+        <activity
+            android:name="com.longluo.android.ebookreader.network.NetworkSearchActivity"
+            android:process=":networkLibrary"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity
+            android:name="com.longluo.android.ebookreader.network.auth.WebAuthorisationScreen"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Activity" />
+        <activity
+            android:name="com.longluo.android.ebookreader.network.NetworkLibraryPrimaryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Activity">
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value="com.longluo.android.ebookreader.network.NetworkSearchActivity" />
+
+            <intent-filter>
+                <action android:name="android.ebookreader.action.OPEN_NETWORK_CATALOG" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="*"
+                    android:scheme="http" />
+                <data
+                    android:host="*"
+                    android:scheme="https" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.ebookreader.action.NETWORK_LIBRARY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.longluo.android.ebookreader.network.NetworkLibrarySecondaryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Activity" />
+        <activity
+            android:name="com.longluo.android.ebookreader.network.AuthenticationActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.network.BuyBooksActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.network.AddCatalogMenuActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.network.AddCustomCatalogActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Dialog">
+            <intent-filter>
+                <action android:name="android.ebookreader.action.ADD_OPDS_CATALOG" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="data.fbreader.org"
+                    android:path="/add_catalog/editUrl"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:scheme="opds" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.ebookreader.action.ADD_OPDS_CATALOG_URL" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="*"
+                    android:scheme="http" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.ebookreader.action.ADD_OPDS_CATALOG_URL" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="*"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.longluo.android.ebookreader.network.AuthorisationMenuActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.network.litres.UserRegistrationActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.network.litres.AutoRegistrationActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.network.TopupMenuActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.network.NetworkBookInfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="*"
+                    android:scheme="litres-book" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.longluo.android.ebookreader.network.CatalogManagerActivity"
+            android:process=":networkLibrary"
+            android:theme="@style/FBReader.Activity" />
 
         <receiver
-            android:name=".receiver.MediaButtonReceiver"
-            android:exported="true">
+            android:name="com.longluo.android.ebookreader.network.ListenerCallback"
+            android:process=":networkLibrary">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.ebookreader.action.network.SIGNIN" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
 
-        <provider
-            android:name=".api.ReaderProvider"
-            android:authorities="${applicationId}.readerProvider"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="ExportedContentProvider" />
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileProvider"
+        <activity
+            android:name="com.longluo.android.ebookreader.tips.TipsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.paragon.dictionary.fbreader.OpenDictionaryActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/FBReader.Transparent" />
+
+        <service
+            android:name="com.longluo.android.ebookreader.httpd.DataService"
             android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+            android:launchMode="singleTask"
+            android:process=":dataService" />
+        <service
+            android:name="group.pals.android.lib.ui.filechooser.services.LocalFileProvider"
+            android:exported="false" />
 
-        <meta-data
-            android:name="channel"
-            android:value="${APP_CHANNEL_VALUE}" />
+        <activity
+            android:name="group.pals.android.lib.ui.filechooser.FileChooserActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.preferences.background.Chooser"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.ebookreader.preferences.background.PredefinedImages"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.util.FolderListDialogActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.util.EditTagsDialogActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/FBReader.Dialog" />
+        <activity
+            android:name="com.longluo.android.util.EditAuthorsDialogActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/FBReader.Dialog" />
     </application>
-
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.TTS_SERVICE" />
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT" />
-            <data android:mimeType="text/plain" />
-        </intent>
-    </queries>
-
 </manifest>

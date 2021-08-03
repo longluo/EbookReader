@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.longluo.android.ebookreader.SimplePopupWindow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/selection_panel"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:focusable="false"
+    android:visibility="gone">
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/panel"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:id="@+id/selection_panel_bookmark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/popup_bookmark" />
+
+            <ImageView
+                android:id="@+id/selection_panel_translate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/popup_translate" />
+
+            <ImageView
+                android:id="@+id/selection_panel_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/popup_share" />
+
+            <ImageView
+                android:id="@+id/selection_panel_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/popup_copy" />
+
+            <ImageView
+                android:id="@+id/selection_panel_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/popup_close" />
+        </LinearLayout>
+    </FrameLayout>
+</com.longluo.android.ebookreader.SimplePopupWindow>

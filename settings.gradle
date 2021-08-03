@@ -1,2 +1,3 @@
 rootProject.name = "EbookReader"
 include ':app'
+include ':epublib'

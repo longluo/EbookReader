@@ -16,7 +16,7 @@
         android:id="@+id/menu_add_group"
         android:title="@string/add_group"
         app:showAsAction="never" />
-        
+
     <item
         android:id="@+id/menu_remove_group"
         android:title="@string/remove_group"

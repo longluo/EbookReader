@@ -62,11 +62,13 @@ data class BookChapter(
         return false
     }
 
-    fun getAbsoluteURL():String{
+    fun getAbsoluteURL(): String {
         val urlMatcher = AnalyzeUrl.paramPattern.matcher(url)
-        val urlBefore = if(urlMatcher.find())url.substring(0,urlMatcher.start()) else url
-        val urlAbsoluteBefore = NetworkUtils.getAbsoluteURL(baseUrl,urlBefore)
-        return if(urlBefore.length == url.length) urlAbsoluteBefore else urlAbsoluteBefore + ',' + url.substring(urlMatcher.end())
+        val urlBefore = if (urlMatcher.find()) url.substring(0, urlMatcher.start()) else url
+        val urlAbsoluteBefore = NetworkUtils.getAbsoluteURL(baseUrl, urlBefore)
+        return if (urlBefore.length == url.length) urlAbsoluteBefore else urlAbsoluteBefore + ',' + url.substring(
+            urlMatcher.end()
+        )
     }
 
     fun getFileName(): String = String.format("%05d-%s.nb", index, MD5Utils.md5Encode16(title))

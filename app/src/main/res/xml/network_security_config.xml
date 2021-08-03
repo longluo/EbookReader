@@ -7,7 +7,7 @@
     <debug-overrides cleartextTrafficPermitted="true">
         <trust-anchors>
             <certificates src="user" />
-            <certificates src="system"/>
+            <certificates src="system" />
         </trust-anchors>
     </debug-overrides>
 </network-security-config>

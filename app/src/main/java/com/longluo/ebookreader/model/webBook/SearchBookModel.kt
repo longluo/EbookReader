@@ -26,7 +26,7 @@ class SearchBookModel(private val scope: CoroutineScope, private val callBack: C
     private var searchIndex = -1
 
     private fun initSearchPool() {
-        searchPool = Executors.newFixedThreadPool(min(threadCount,8)).asCoroutineDispatcher()
+        searchPool = Executors.newFixedThreadPool(min(threadCount, 8)).asCoroutineDispatcher()
     }
 
     fun search(searchId: Long, key: String) {

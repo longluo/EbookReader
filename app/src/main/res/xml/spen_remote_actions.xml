@@ -9,7 +9,9 @@
         repeatable="true"
         repeatable_interval="short"
         trigger_key="PAGE_DOWN">
-        <preference name="gesture" value="click" />
+        <preference
+            name="gesture"
+            value="click" />
     </action>
     <action
         id="prev_page"
@@ -18,6 +20,8 @@
         repeatable="true"
         repeatable_interval="short"
         trigger_key="PAGE_UP">
-        <preference name="gesture" value="double_click" />
+        <preference
+            name="gesture"
+            value="double_click" />
     </action>
 </remote-actions>

@@ -1,6 +1,3 @@
-/*
- * Copyright (C) 2020 w568w
- */
 package com.longluo.ebookreader.api
 
 import android.content.ContentProvider

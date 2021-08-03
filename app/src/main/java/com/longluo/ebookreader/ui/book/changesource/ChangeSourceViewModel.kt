@@ -57,7 +57,7 @@ class ChangeSourceViewModel(application: Application) : BaseViewModel(applicatio
     }
 
     private fun initSearchPool() {
-        searchPool = Executors.newFixedThreadPool(min(threadCount,8)).asCoroutineDispatcher()
+        searchPool = Executors.newFixedThreadPool(min(threadCount, 8)).asCoroutineDispatcher()
         searchIndex = -1
     }
 

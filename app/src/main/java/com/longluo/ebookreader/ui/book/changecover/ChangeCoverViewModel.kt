@@ -49,7 +49,7 @@ class ChangeCoverViewModel(application: Application) : BaseViewModel(application
     }
 
     private fun initSearchPool() {
-        searchPool = Executors.newFixedThreadPool(min(threadCount,8)).asCoroutineDispatcher()
+        searchPool = Executors.newFixedThreadPool(min(threadCount, 8)).asCoroutineDispatcher()
         searchIndex = -1
     }
 

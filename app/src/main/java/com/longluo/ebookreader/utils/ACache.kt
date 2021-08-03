@@ -1,4 +1,3 @@
-//Copyright (c) 2017. 章钦豪. All rights reserved.
 package com.longluo.ebookreader.utils
 
 import android.content.Context

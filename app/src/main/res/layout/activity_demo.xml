@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="com.longluo.ebookreader.ui.main.DemoViewModel" />
+
+        <variable
+            name="viewModel"
+            type="DemoViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:binding="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#202020"
+        android:orientation="vertical">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="网络访问"
+            binding:onClickCommand="@{viewModel.netWorkClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RecycleView多布局"
+            binding:onClickCommand="@{viewModel.rvMultiClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="底部Tab按钮"
+            binding:onClickCommand="@{viewModel.startTabBarClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ViewPager绑定"
+            binding:onClickCommand="@{viewModel.viewPagerBindingClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ViewPager+Fragment"
+            binding:onClickCommand="@{viewModel.viewPagerGroupBindingClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="表单提交"
+            binding:onClickCommand="@{viewModel.formSbmClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="表单编辑"
+            binding:onClickCommand="@{viewModel.formModifyClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="权限申请"
+            binding:onClickCommand="@{viewModel.permissionsClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="全局异常捕获"
+            binding:onClickCommand="@{viewModel.exceptionClick}" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="文件下载"
+            binding:onClickCommand="@{viewModel.fileDownLoadClick}" />
+    </LinearLayout>
+</layout>

@@ -1,20 +1,18 @@
-plugins {
-    id 'com.android.application'
-    id 'com.jakewharton.butterknife'
-}
+apply plugin: 'com.android.application'
+apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    // buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.longluo.ebookreader"
 
-        minSdkVersion rootProject.ext.appMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
 
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
 
         ndk {
             // 设置支持的SO库架构 
@@ -24,8 +22,13 @@ android {
 
     buildTypes {
         release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -34,15 +37,26 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-//    buildFeatures {
-//        viewBinding true
-//    }
+    dataBinding {
+        enabled true
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     
-        implementation project(':android-pdf-viewer')
+    implementation project(':android-pdf-viewer')
+    //MVVMHabit
+    implementation project(':mvvmhabit')
+    
+    //support
+    implementation rootProject.ext.support["design"]
+    //下拉刷新,上拉加载
+    implementation 'com.lcodecorex:tkrefreshlayout:1.0.7'
+    //底部tabBar
+    implementation('me.majiajie:pager-bottom-tab-strip:2.2.5') {
+        exclude group: 'com.android.support'
+    }
 
     implementation "androidx.appcompat:appcompat:1.1.0"
     implementation "com.google.android.material:material:1.1.0"
@@ -54,4 +68,8 @@ dependencies {
 
     compile files('libs/slf4j-android-1.5.8.jar')
     compile files('libs/epublib-core-latest.jar')
+    
+    //内存泄漏测试
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.3'
 }

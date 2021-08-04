@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="com.longluo.ebookreader.ui.viewpager.vm.ViewPagerViewModel" />
+
+        <import type="com.longluo.ebookreader.ui.viewpager.adapter.ViewPagerBindingAdapter" />
+
+        <variable
+            name="viewModel"
+            type="ViewPagerViewModel" />
+
+        <variable
+            name="adapter"
+            type="ViewPagerBindingAdapter" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:binding="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            binding:tabGravity="fill"
+            binding:tabIndicatorColor="@color/colorPrimary"
+            binding:tabSelectedTextColor="@color/colorPrimary"
+            binding:tabTextColor="@android:color/black" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F0F0F0" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            binding:adapter="@{adapter}"
+            binding:itemBinding="@{viewModel.itemBinding}"
+            binding:items="@{viewModel.items}"
+            binding:onPageSelectedCommand="@{viewModel.onPageSelectedCommand}"
+            binding:pageTitles="@{viewModel.pageTitles}" />
+    </LinearLayout>
+</layout>

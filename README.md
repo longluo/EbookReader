@@ -2,7 +2,5 @@
 
 电子书阅读器
 
-The EbookReader Android App. Support Epub, pdf, txt, mobi, azw3, fb2.
-
-
+The EbookReader is an Android application for reading books in HTML, SVG, PDF, EPUB, CBZ, MOBI, TXT, AZW, AZW3 formats on Android devices.
 

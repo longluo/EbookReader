@@ -1,0 +1,37 @@
+-- Merging decision tree log ---
+manifest
+ADDED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:2:1-5:12
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:2:1-5:12
+	package
+		ADDED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:3:5-44
+		INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+		INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+		ADDED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:2:1-5:12
+		INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+		ADDED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:2:1-5:12
+		INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml:2:11-69
+uses-sdk
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+		ADDED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+		INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+		ADDED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml
+		INJECTED from E:\Project\AndroidApp\EbookReader\android-pdf-viewer\src\main\AndroidManifest.xml

@@ -137,6 +137,7 @@ public class MuPDFCore {
                 /* ignore error */
             }
         }
+
         return outline != null;
     }
 

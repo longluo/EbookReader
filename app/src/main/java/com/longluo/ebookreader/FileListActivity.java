@@ -1,6 +1,5 @@
 package com.longluo.ebookreader;
 
-
 import android.Manifest;
 import android.app.ListActivity;
 import android.content.Context;
@@ -17,7 +16,6 @@ import android.widget.ListView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.artifex.mupdf.fitz.Document;
 import com.longluo.android.pdfviewer.pdfui.DocumentActivity;
 
 import java.io.File;
@@ -144,7 +142,7 @@ public class FileListActivity extends ListActivity {
                     return true;
                 }
 
-                return Document.recognize(file.getName());
+                return true;
             }
         });
 

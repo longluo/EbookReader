@@ -1,7 +1,4 @@
 rootProject.name = "EbookReader"
 include ':app'
-include ':mvvmhabit'
-include ':AmbilWarna'
-include ':android-filechooser'
 include ':SuperToasts'
 include ':android-pdf-viewer'

@@ -28,9 +28,9 @@
 
         <activity android:name=".FileListActivity" />
 
-        <activity android:name="com.longluo.android.pdfviewer.pdfui.DocumentActivity" />
+        <activity android:name="com.longluo.viewer.DocumentActivity" />
 
-        <activity android:name="com.longluo.android.pdfviewer.pdfui.OutlineActivity" />
+        <activity android:name="com.longluo.viewer.OutlineActivity" />
 
     </application>
 </manifest>

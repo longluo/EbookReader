@@ -17,7 +17,7 @@ import android.widget.ListView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.longluo.android.pdfviewer.pdfui.DocumentActivity;
+import com.longluo.viewer.DocumentActivity;
 import com.longluo.ebookreader.libmobi.LibMobi;
 
 import java.io.File;

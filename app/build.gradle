@@ -53,5 +53,5 @@ dependencies {
 
     compile files('libs/slf4j-android-1.5.8.jar')
 
-    implementation project(':android-pdf-viewer')
+    implementation project(':mupdf-android-viewer')
 }

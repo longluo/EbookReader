@@ -1,4 +1,4 @@
 rootProject.name = "EbookReader"
 include ':app'
 include ':SuperToasts'
-include ':android-pdf-viewer'
+include ':mupdf-android-viewer'

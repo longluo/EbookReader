@@ -52,8 +52,8 @@ task clean(type: Delete) {
 }
 
 ext {
-    versionCode = 7
-    versionName = '5.1.1'
+    versionCode = 8
+    versionName = '6.0'
 
     libMinSdkVersion = 23
     appMinSdkVersion = 23

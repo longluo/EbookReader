@@ -5,13 +5,6 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/btn_showepub"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:text="Show Epub" />
-
-    <Button
         android:id="@+id/btn_open_folder"
         android:layout_width="match_parent"
         android:layout_height="100dp"

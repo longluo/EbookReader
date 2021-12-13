@@ -615,7 +615,9 @@ int drawable default_scroll_handle_top 0x0
 int drawable ic_chevron_left_white_24dp 0x0
 int drawable ic_chevron_right_white_24dp 0x0
 int drawable ic_close_white_24dp 0x0
+int drawable ic_format_size_white_24dp 0x0
 int drawable ic_link_white_24dp 0x0
+int drawable ic_mupdf 0x0
 int drawable ic_search_white_24dp 0x0
 int drawable ic_toc_white_24dp 0x0
 int drawable notification_action_background 0x0
@@ -679,6 +681,17 @@ int id action_container 0x0
 int id action_context_bar 0x0
 int id action_divider 0x0
 int id action_image 0x0
+int id action_layout_10pt 0x0
+int id action_layout_11pt 0x0
+int id action_layout_12pt 0x0
+int id action_layout_13pt 0x0
+int id action_layout_14pt 0x0
+int id action_layout_15pt 0x0
+int id action_layout_16pt 0x0
+int id action_layout_6pt 0x0
+int id action_layout_7pt 0x0
+int id action_layout_8pt 0x0
+int id action_layout_9pt 0x0
 int id action_menu_divider 0x0
 int id action_menu_presenter 0x0
 int id action_mode_bar 0x0
@@ -714,6 +727,7 @@ int id icon_group 0x0
 int id image 0x0
 int id info 0x0
 int id italic 0x0
+int id layoutButton 0x0
 int id line1 0x0
 int id line3 0x0
 int id linkButton 0x0
@@ -843,6 +857,7 @@ int layout select_dialog_item_material 0x0
 int layout select_dialog_multichoice_material 0x0
 int layout select_dialog_singlechoice_material 0x0
 int layout support_simple_spinner_dropdown_item 0x0
+int menu layout_menu 0x0
 int string abc_action_bar_home_description 0x0
 int string abc_action_bar_up_description 0x0
 int string abc_action_menu_overflow_description 0x0
@@ -883,7 +898,7 @@ int string not_supported 0x0
 int string okay 0x0
 int string search 0x0
 int string search_menu_title 0x0
-int string searching 0x0
+int string searching_ 0x0
 int string status_bar_notification_info_overflow 0x0
 int string text_not_found 0x0
 int style AlertDialog_AppCompat 0x0

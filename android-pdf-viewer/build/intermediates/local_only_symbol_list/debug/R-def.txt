@@ -14,13 +14,27 @@ drawable default_scroll_handle_top
 drawable ic_chevron_left_white_24dp
 drawable ic_chevron_right_white_24dp
 drawable ic_close_white_24dp
+drawable ic_format_size_white_24dp
 drawable ic_link_white_24dp
+drawable ic_mupdf
 drawable ic_search_white_24dp
 drawable ic_toc_white_24dp
 drawable page_indicator
 drawable seek_line
 drawable seek_thumb
+id action_layout_10pt
+id action_layout_11pt
+id action_layout_12pt
+id action_layout_13pt
+id action_layout_14pt
+id action_layout_15pt
+id action_layout_16pt
+id action_layout_6pt
+id action_layout_7pt
+id action_layout_8pt
+id action_layout_9pt
 id docNameText
+id layoutButton
 id linkButton
 id lowerButtons
 id mainBar
@@ -35,6 +49,7 @@ id searchForward
 id searchText
 id switcher
 layout document_activity
+menu layout_menu
 string cancel
 string cannot_open_document
 string cannot_open_document_Reason
@@ -47,6 +62,6 @@ string no_further_occurrences_found
 string not_supported
 string okay
 string search
-string searching
+string searching_
 string text_not_found
 styleable ScrollBar sb_handlerColor sb_indicatorColor sb_indicatorTextColor sb_horizontal

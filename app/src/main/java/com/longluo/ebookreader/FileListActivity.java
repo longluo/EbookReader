@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -17,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.longluo.android.pdfviewer.pdfui.DocumentActivity;
+import com.longluo.ebookreader.libmobi.LibMobi;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -25,6 +27,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class FileListActivity extends ListActivity {
+    private static final String TAG = "FileListActivity";
+
     protected final int UPDATE_DELAY = 5000;
     protected final int PERMISSION_REQUEST = 42;
 
@@ -180,11 +184,34 @@ public class FileListActivity extends ListActivity {
             return;
         }
 
+        File file = item.file;
+        String fileName = file.getName();
+        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+        Log.d(TAG, "File Path : " + file.getAbsolutePath() + " file Name = " + fileName + " suffix = " + suffix);
+
+        if (suffix.equals("mobi") || suffix.equals("azw") || suffix.equals("azw3") || suffix.equals("azw4")) {
+            openMobiFile(file);
+        } else {
+            openEpubPdf(file);
+        }
+    }
+
+    private void openEpubPdf(File file) {
         Intent intent = new Intent(this, DocumentActivity.class);
         // API>=21: intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT); /* launch as a new document */
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT); /* launch as a new document */
         intent.setAction(Intent.ACTION_VIEW);
-        intent.setData(Uri.fromFile(item.file));
+        intent.setData(Uri.fromFile(file));
         startActivity(intent);
+    }
+
+    private void openMobiFile(File file) {
+        String path = file.getAbsolutePath();
+        String folderPath = path.substring(0, path.lastIndexOf("/"));
+        Log.d(TAG, "openMobiFile: file = " + path + " , folder = " + folderPath);
+        String hashCode = "" + path.hashCode();
+        LibMobi.convertToEpub(path, new File(folderPath, hashCode + "").getPath());
+        File result = new File(folderPath, hashCode + hashCode + ".epub");
+        openEpubPdf(result);
     }
 }

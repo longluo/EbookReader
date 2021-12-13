@@ -26,12 +26,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".EpubActivity" />
-
-        <activity
-            android:name=".ChapterDetailActivity"
-            android:launchMode="singleInstance" />
-
         <activity android:name=".FileListActivity" />
 
         <activity android:name="com.longluo.android.pdfviewer.pdfui.DocumentActivity" />

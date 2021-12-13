@@ -14,7 +14,7 @@
     <string name="not_supported">Not supported</string>
     <string name="okay">Okay</string>
     <string name="search">Search…</string>
-    <string name="searching">Searching…</string>
+    <string name="searching_">Searching…</string>
     <string name="text_not_found">Text not found</string>
     <declare-styleable name="ScrollBar">
         <attr format="color|reference" name="sb_handlerColor"/>

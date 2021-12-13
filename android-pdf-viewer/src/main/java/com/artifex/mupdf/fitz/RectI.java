@@ -1,3 +1,25 @@
+// Copyright (C) 2004-2021 Artifex Software, Inc.
+//
+// This file is part of MuPDF.
+//
+// MuPDF is free software: you can redistribute it and/or modify it under the
+// terms of the GNU Affero General Public License as published by the Free
+// Software Foundation, either version 3 of the License, or (at your option)
+// any later version.
+//
+// MuPDF is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+// FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+// details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with MuPDF. If not, see <https://www.gnu.org/licenses/agpl-3.0.en.html>
+//
+// Alternative licensing terms are available from the licensor.
+// For commercial licensing, see <https://www.artifex.com/> or contact
+// Artifex Software, Inc., 1305 Grant Avenue - Suite 200, Novato,
+// CA 94945, U.S.A., +1(415)492-9861, for further information.
+
 package com.artifex.mupdf.fitz;
 
 public class RectI
@@ -7,9 +29,17 @@ public class RectI
 	public int x1;
 	public int y1;
 
+	// Minimum and Maximum values that can survive round trip
+	// from int to float.
+	private static final int FZ_MIN_INF_RECT = 0x80000000;
+	private static final int FZ_MAX_INF_RECT = 0x7fffff80;
+
 	public RectI()
 	{
-		x0 = y0 = x1 = y1 = 0;
+		// Invalid (hence zero area) rectangle. Unioning
+		// this with any rectangle (or point) will 'cure' it
+		x0 = y0 = FZ_MAX_INF_RECT;
+		x1 = y1 = FZ_MIN_INF_RECT;
 	}
 
 	public RectI(int x0, int y0, int x1, int y1) {
@@ -34,7 +64,21 @@ public class RectI
 		return "[" + x0 + " " + y0 + " " + x1 + " " + y1 + "]";
 	}
 
-	public RectI transform(Matrix tm) {
+	public boolean isInfinite()
+	{
+		return this.x0 == FZ_MIN_INF_RECT &&
+			this.y0 == FZ_MIN_INF_RECT &&
+			this.x1 == FZ_MAX_INF_RECT &&
+			this.y1 == FZ_MAX_INF_RECT;
+	}
+
+	public RectI transform(Matrix tm)
+	{
+		if (this.isInfinite())
+			return this;
+		if (!this.isValid())
+			return this;
+
 		float ax0 = x0 * tm.a;
 		float ax1 = x1 * tm.a;
 
@@ -101,28 +145,34 @@ public class RectI
 
 	public boolean isEmpty()
 	{
-		return (x0 == x1 || y0 == y1);
+		return (x0 >= x1 || y0 >= y1);
+	}
+
+	public boolean isValid()
+	{
+		return (x0 <= x1 || y0 <= y1);
 	}
 
 	public void union(RectI r)
 	{
-		if (isEmpty())
+		if (!r.isValid() || this.isInfinite())
+			return;
+		if (!this.isValid() || r.isInfinite())
 		{
 			x0 = r.x0;
 			y0 = r.y0;
 			x1 = r.x1;
 			y1 = r.y1;
+			return;
 		}
-		else
-		{
-			if (r.x0 < x0)
-				x0 = r.x0;
-			if (r.y0 < y0)
-				y0 = r.y0;
-			if (r.x1 > x1)
-				x1 = r.x1;
-			if (r.y1 > y1)
-				y1 = r.y1;
-		}
+
+		if (r.x0 < x0)
+			x0 = r.x0;
+		if (r.y0 < y0)
+			y0 = r.y0;
+		if (r.x1 > x1)
+			x1 = r.x1;
+		if (r.y1 > y1)
+			y1 = r.y1;
 	}
 }

@@ -616,7 +616,9 @@ drawable default_scroll_handle_top
 drawable ic_chevron_left_white_24dp
 drawable ic_chevron_right_white_24dp
 drawable ic_close_white_24dp
+drawable ic_format_size_white_24dp
 drawable ic_link_white_24dp
+drawable ic_mupdf
 drawable ic_search_white_24dp
 drawable ic_toc_white_24dp
 drawable notification_action_background
@@ -680,6 +682,17 @@ id action_container
 id action_context_bar
 id action_divider
 id action_image
+id action_layout_10pt
+id action_layout_11pt
+id action_layout_12pt
+id action_layout_13pt
+id action_layout_14pt
+id action_layout_15pt
+id action_layout_16pt
+id action_layout_6pt
+id action_layout_7pt
+id action_layout_8pt
+id action_layout_9pt
 id action_menu_divider
 id action_menu_presenter
 id action_mode_bar
@@ -715,6 +728,7 @@ id icon_group
 id image
 id info
 id italic
+id layoutButton
 id line1
 id line3
 id linkButton
@@ -844,6 +858,7 @@ layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
 layout support_simple_spinner_dropdown_item
+menu layout_menu
 string abc_action_bar_home_description
 string abc_action_bar_up_description
 string abc_action_menu_overflow_description
@@ -884,7 +899,7 @@ string not_supported
 string okay
 string search
 string search_menu_title
-string searching
+string searching_
 string status_bar_notification_info_overflow
 string text_not_found
 style AlertDialog_AppCompat

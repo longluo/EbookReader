@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <!--搜索框-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <ImageView
+            android:id="@+id/search_iv_back"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_search_back_normal" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_common_gray_corner"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <EditText
+                android:id="@+id/search_et_input"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/common_gray"
+                android:hint="请输入书名 | 作者名"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textCursorDrawable="@color/red"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/search_iv_delete"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="6dp"
+                android:src="@drawable/ic_delete"
+                android:visibility="invisible"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/search_iv_search"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:padding="6dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_search_normal" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/nb.divider.narrow" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!--搜索显示界面-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="热门搜索"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/search_book_tv_refresh_hot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawableLeft="@drawable/ic_refresh"
+                    android:drawablePadding="2dp"
+                    android:gravity="center_vertical"
+                    android:text="换一批" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <!--关键字，书籍显示-->
+        <include layout="@layout/fragment_refresh_list" />
+    </FrameLayout>
+</LinearLayout>

@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="TwinklingRefreshLayout">
-        <attr name="tr_wave_height" format="dimension" />
-        <attr name="tr_head_height" format="dimension" />
-        <attr name="tr_bottom_height" format="dimension" />
-        <attr name="tr_overscroll_height" format="dimension" />
-        <attr name="tr_enable_loadmore" format="boolean" />
-        <attr name="tr_pureScrollMode_on" format="boolean" />
-        <attr name="tr_show_overlay_refreshview" format="boolean" />
-        <attr name="tr_headerView" format="dimension" />
-        <attr name="tr_bottomView" format="dimension" />
-        <attr name="onRefreshCommand" format="reference" />
-        <attr name="onLoadMoreCommand" format="reference" />
+
+    <declare-styleable name="FastScrollRecyclerView">
+        <attr name="hideScrollbar" format="boolean" />
+        <attr name="showTrack" format="boolean" />
+        <attr name="trackColor" format="color" />
+        <attr name="handleColor" format="color" />
+        <attr name="bubbleColor" format="color" />
+        <attr name="bubbleTextColor" format="color" />
     </declare-styleable>
+    
+    
+    <declare-styleable name="DragLinearLayout">
+        <attr name="scrollSensitiveHeight" format="dimension" />
+        <attr name="placeholderView" format="reference" />
+    </declare-styleable>
+    
+        <declare-styleable name="ScrollRefreshLayout">
+        <attr name="layout_scroll_empty" format="reference"/>
+        <attr name="text_error_tip" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="RefreshLayout">
+        <attr name="layout_refresh_empty" format="reference"/>
+        <attr name="layout_refresh_error" format="reference"/>
+        <attr name="layout_refresh_loading" format="reference"/>
+    </declare-styleable>
+    
+    <declare-styleable name="BookTextView">
+        <attr name="bookColor" format="reference"/>
+    </declare-styleable>
+    
+    <declare-styleable name="EasyRatingBar">
+        <attr name="rateNum" format="integer"/>
+        <attr name="rating" format="integer"/>
+        <attr name="rateNormal" format="reference"/>
+        <attr name="rateSelect" format="reference"/>
+        <attr name="rateInterval" format="dimension"/>
+        <attr name="isIndicator" format="boolean"/>
+    </declare-styleable>
+    
+    
+    
 </resources>

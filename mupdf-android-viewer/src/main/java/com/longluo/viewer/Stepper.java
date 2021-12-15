@@ -35,7 +35,6 @@ public class Stepper {
                         mTask.run();
                     }
                 });
-
             }
         }
     }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="@drawable/selector_common_bg"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/nb.padding.large"
+    android:paddingRight="@dimen/nb.padding.large">
+
+    <ImageView
+        android:id="@+id/section_iv_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/ic_section_comment" />
+
+    <TextView
+        android:id="@+id/section_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/section_iv_icon"
+        android:text="综合讨论区"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_arrow_enter"
+        android:textColor="@color/black" />
+</RelativeLayout>

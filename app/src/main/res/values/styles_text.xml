@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Common-->
+    <style name="NB.Theme.TextAppearance.Common" />
+
+    <style name="NB.Theme.TextAppearance.Common.SingleLine">
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!--表示领域-->
+    <style name="NB.Theme.TextAppearance.Billboard" />
+
+    <style name="NB.Theme.TextAppearance.Billboard.Title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/nb.text.default</item>
+        <item name="android:textSize">@dimen/nb.text.large</item>
+    </style>
+
+    <!--书籍-->
+    <style name="NB.Theme.TextAppearance.Book" />
+
+    <style name="NB.Theme.TextAppearance.Book.Name">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/nb.text.default</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!--ReadActivity-->
+    <style name="NB.Theme.TextAppearance.Read"></style>
+
+    <style name="NB.Theme.TextAppearance.Read.TopMenu">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/nb.read.menu.text</item>
+        <item name="android:textSize">@dimen/nb.read.text.top</item>
+    </style>
+
+    <style name="NB.Theme.TextAppearance.Read.BottomMenu">
+        <item name="android:textColor">@color/nb.read.menu.text</item>
+        <item name="android:textSize">@dimen/nb.read.text.bottom</item>
+    </style>
+
+    <style name="NB.Theme.TextAppearance.Read.BottomMenu.Button" parent="NB.Theme.TextAppearance.Read.BottomMenu">
+        <item name="android:gravity">center_horizontal|bottom</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="NB.Theme.TextAppearance.File" />
+
+    <style name="NB.Theme.TextAppearance.File.Tag">
+        <item name="android:layout_width">38dp</item>
+        <item name="android:layout_height">18dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+</resources>

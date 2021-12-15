@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_open_folder"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:text="Open Folder" />
+    <include layout="@layout/toolbar" />
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/main_tl_tab"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:tabIndicatorColor="@color/white"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/translucent_text" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/main_vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 </LinearLayout>

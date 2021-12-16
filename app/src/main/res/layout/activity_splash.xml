@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/bg_splash">
+    android:background="@color/cardview_shadow_end_color">
 
     <TextView
         android:id="@+id/splash_tv_skip"

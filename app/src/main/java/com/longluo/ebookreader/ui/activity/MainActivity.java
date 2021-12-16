@@ -52,7 +52,7 @@ public class MainActivity extends BaseTabActivity {
     @Override
     protected void setUpToolbar(Toolbar toolbar) {
         super.setUpToolbar(toolbar);
-        toolbar.setLogo(R.mipmap.logo);
+//        toolbar.setLogo(R.mipmap.logo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         getSupportActionBar().setTitle("");
     }
@@ -148,6 +148,7 @@ public class MainActivity extends BaseTabActivity {
             Intent intent = new Intent(this, activityCls);
             startActivity(intent);
         }
+        
         return super.onOptionsItemSelected(item);
     }
 

@@ -1,19 +1,18 @@
 package com.longluo.ebookreader.model.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
-import org.greenrobot.greendao.annotation.Generated;
 
 import java.io.Serializable;
 
 /**
- * Created by newbiechen on 17-5-10.
  * 书的章节链接(作为下载的进度数据)
  * 同时作为网络章节和本地章节 (没有找到更好分离两者的办法)
  */
 @Entity
-public class BookChapterBean implements Serializable{
+public class BookChapterBean implements Serializable {
     private static final long serialVersionUID = 56423411313L;
     /**
      * title : 第一章 他叫白小纯
@@ -38,7 +37,6 @@ public class BookChapterBean implements Serializable{
 
     //本地书籍参数
 
-
     //在书籍文件中的起始位置
     private long start;
 
@@ -47,7 +45,7 @@ public class BookChapterBean implements Serializable{
 
     @Generated(hash = 1508543635)
     public BookChapterBean(String id, String link, String title, String taskName,
-            boolean unreadble, String bookId, long start, long end) {
+                           boolean unreadble, String bookId, long start, long end) {
         this.id = id;
         this.link = link;
         this.title = title;

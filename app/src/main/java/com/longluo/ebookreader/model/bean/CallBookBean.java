@@ -26,6 +26,7 @@ public class CallBookBean implements Parcelable {
     public static final int STATUS_UNCACHE = 0; //未缓存
     public static final int STATUS_CACHING = 1; //正在缓存
     public static final int STATUS_CACHED = 2;  //已经缓存
+
     /**
      * _id : 53663ae356bdc93e49004474
      * title : 逍遥派
@@ -264,7 +265,6 @@ public class CallBookBean implements Parcelable {
     public synchronized void resetBookChapterList() {
         bookChapterList = null;
     }
-
 
     /**
      * Convenient call for {@link org.greenrobot.greendao.AbstractDao#delete(Object)}.

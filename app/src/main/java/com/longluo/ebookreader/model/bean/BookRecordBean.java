@@ -4,9 +4,6 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
-/**
- * Created by newbiechen on 17-5-20.
- */
 @Entity
 public class BookRecordBean{
     //所属的书的id

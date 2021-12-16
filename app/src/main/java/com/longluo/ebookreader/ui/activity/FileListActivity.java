@@ -34,7 +34,8 @@ public class FileListActivity extends ListActivity {
     protected final int PERMISSION_REQUEST = 42;
 
     protected SharedPreferences prefs;
-    protected File topDirectory, currentDirectory;
+    protected File topDirectory;
+    protected File currentDirectory;
     protected ArrayAdapter<Item> adapter;
     protected Timer updateTimer;
 

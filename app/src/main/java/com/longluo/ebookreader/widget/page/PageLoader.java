@@ -33,9 +33,6 @@ import io.reactivex.SingleObserver;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.disposables.Disposable;
 
-/**
- *
- */
 
 public abstract class PageLoader {
     private static final String TAG = "PageLoader";

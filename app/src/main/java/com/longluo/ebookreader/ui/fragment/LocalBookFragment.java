@@ -54,9 +54,6 @@ public class LocalBookFragment extends BaseFileFragment {
                     //点击选中
                     mAdapter.setCheckedItem(pos);
 
-//                    ReadActivity.startActivity(getContext(),
-//                            mAdapter.getItem(pos), true);
-
                     //反馈
                     if (mListener != null) {
                         mListener.onItemCheckedChange(mAdapter.getItemIsChecked(pos));

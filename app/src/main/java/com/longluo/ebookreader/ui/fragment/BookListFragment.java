@@ -26,6 +26,7 @@ import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
+
 public class BookListFragment extends BaseMVPFragment<BookListContract.Presenter>
         implements BookListContract.View {
     private static final String EXTRA_BOOK_LIST_TYPE = "extra_book_list_type";
@@ -151,7 +152,6 @@ public class BookListFragment extends BaseMVPFragment<BookListContract.Presenter
         mRefreshLayout.showFinish();
     }
 
-    /***********************************************************************/
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

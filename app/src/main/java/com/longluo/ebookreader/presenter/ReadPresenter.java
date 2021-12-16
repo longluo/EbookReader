@@ -1,6 +1,5 @@
 package com.longluo.ebookreader.presenter;
 
-
 import com.longluo.ebookreader.model.bean.BookChapterBean;
 import com.longluo.ebookreader.model.bean.ChapterInfoBean;
 import com.longluo.ebookreader.model.local.BookRepository;
@@ -131,5 +130,4 @@ public class ReadPresenter extends RxPresenter<ReadContract.View>
             mChapterSub.cancel();
         }
     }
-
 }

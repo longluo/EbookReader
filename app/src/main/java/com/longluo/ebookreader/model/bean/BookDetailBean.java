@@ -3,24 +3,23 @@ package com.longluo.ebookreader.model.bean;
 import java.util.List;
 
 
-
-public class BookDetailBean{
+public class BookDetailBean {
     /**
      * _id : 525253d094336b3155000dd8       (Collect)
      * author : w风雪                       (Collect)
      * cover : /agent/http://image.cmfu.com/books/2797907/2797907.jpg  (Collect)
      * creater : iPhone 5 (GSM+CDMA)
      * longIntro : 一死今生了却凡尘！         (Collect)
-     重生洪荒造化苍生！
-     天道之下尽皆蝼蚁！
-     唯有异数勘破万法！
-     且看主角这个穿入洪荒世界的异数如何：
-     造化福泽苍生
-     道法纵横天地
-     挣脱天道束缚
-     一剑破空而去
-     自此逍遥无束...
-     书友群：209425550
+     * 重生洪荒造化苍生！
+     * 天道之下尽皆蝼蚁！
+     * 唯有异数勘破万法！
+     * 且看主角这个穿入洪荒世界的异数如何：
+     * 造化福泽苍生
+     * 道法纵横天地
+     * 挣脱天道束缚
+     * 一剑破空而去
+     * 自此逍遥无束...
+     * 书友群：209425550
      * title : 洪荒造化
      * cat : 洪荒封神
      * majorCate : 仙侠
@@ -301,14 +300,14 @@ public class BookDetailBean{
         this.tags = tags;
     }
 
-    public CallBookBean getCallBookBean(){
-        if (callBookBean == null){
+    public CallBookBean getCallBookBean() {
+        if (callBookBean == null) {
             callBookBean = createCallBookBean();
         }
         return callBookBean;
     }
 
-    public CallBookBean createCallBookBean(){
+    public CallBookBean createCallBookBean() {
         CallBookBean bean = new CallBookBean();
         bean.set_id(get_id());
         bean.setTitle(getTitle());

@@ -1,5 +1,6 @@
 package com.longluo.ebookreader.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -69,6 +70,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
     private static final String TAG = "ReadActivity";
 
     public static final int REQUEST_MORE_SETTING = 1;
+
     public static final String EXTRA_CALL_BOOK = "extra_call_book";
     public static final String EXTRA_IS_COLLECTED = "extra_is_collected";
 
@@ -112,13 +114,14 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
     TextView mTvCategory;
     @BindView(R.id.read_tv_night_mode)
     TextView mTvNightMode;
-    /*    @BindView(R.id.read_tv_download)
-        TextView mTvDownload;*/
+
     @BindView(R.id.read_tv_setting)
     TextView mTvSetting;
+
     /***************left slide*******************************/
     @BindView(R.id.read_iv_category)
     ListView mLvCategory;
+
     /*****************view******************/
     private ReadSettingDialog mSettingDialog;
     private PageLoader mPageLoader;
@@ -127,10 +130,13 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
     private Animation mBottomInAnim;
     private Animation mBottomOutAnim;
     private CategoryAdapter mCategoryAdapter;
-    private CallBookBean mCollBook;
+    private CallBookBean mCallBook;
+
     //控制屏幕常亮
     private PowerManager.WakeLock mWakeLock;
+
     private Handler mHandler = new Handler() {
+        @SuppressLint("HandlerLeak")
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -139,12 +145,14 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
                 case WHAT_CATEGORY:
                     mLvCategory.setSelection(mPageLoader.getChapterPos());
                     break;
+
                 case WHAT_CHAPTER:
                     mPageLoader.openChapter();
                     break;
             }
         }
     };
+
     // 接收电池信息和时间更新的广播
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -217,19 +225,19 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
     @Override
     protected void initData(Bundle savedInstanceState) {
         super.initData(savedInstanceState);
-        mCollBook = getIntent().getParcelableExtra(EXTRA_CALL_BOOK);
+        mCallBook = getIntent().getParcelableExtra(EXTRA_CALL_BOOK);
         isCollected = getIntent().getBooleanExtra(EXTRA_IS_COLLECTED, false);
         isNightMode = ReadSettingManager.getInstance().isNightMode();
         isFullScreen = ReadSettingManager.getInstance().isFullScreen();
 
-        mBookId = mCollBook.get_id();
+        mBookId = mCallBook.get_id();
     }
 
     @Override
     protected void setUpToolbar(Toolbar toolbar) {
         super.setUpToolbar(toolbar);
         //设置标题
-        toolbar.setTitle(mCollBook.getTitle());
+        toolbar.setTitle(mCallBook.getTitle());
         //半透明化StatusBar
         SystemBarUtils.transparentStatusBar(this);
     }
@@ -245,7 +253,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
         }
 
         //获取页面加载器
-        mPageLoader = mPvPage.getPageLoader(mCollBook);
+        mPageLoader = mPvPage.getPageLoader(mCallBook);
         //禁止滑动展示DrawerLayout
         mDlSlide.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         //侧边打开后，返回键能够起作用
@@ -617,7 +625,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
                                 // 刷新章节列表
                                 mPageLoader.refreshChapterList();
                                 // 如果是网络小说并被标记更新的，则从网络下载目录
-                                if (mCollBook.isUpdate() && !mCollBook.isLocal()) {
+                                if (mCallBook.isUpdate() && !mCallBook.isLocal()) {
                                     mPresenter.loadCategory(mBookId);
                                 }
                                 LogUtils.e(throwable);
@@ -647,7 +655,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
         mPageLoader.refreshChapterList();
 
         // 如果是目录更新的情况，那么就需要存储更新数据
-        if (mCollBook.isUpdate() && isCollected) {
+        if (mCallBook.isUpdate() && isCollected) {
             BookRepository.getInstance()
                     .saveBookChaptersWithAsync(bookChapters);
         }
@@ -685,8 +693,8 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
             return;
         }
 
-        if (!mCollBook.isLocal() && !isCollected
-                && !mCollBook.getBookChapters().isEmpty()) {
+        if (!mCallBook.isLocal() && !isCollected
+                && !mCallBook.getBookChapters().isEmpty()) {
             AlertDialog alertDialog = new AlertDialog.Builder(this)
                     .setTitle("加入书架")
                     .setMessage("喜欢本书就加入书架吧")
@@ -694,11 +702,11 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
                         //设置为已收藏
                         isCollected = true;
                         //设置阅读时间
-                        mCollBook.setLastRead(StringUtils.
+                        mCallBook.setLastRead(StringUtils.
                                 dateConvert(System.currentTimeMillis(), Constant.FORMAT_BOOK_DATE));
 
                         BookRepository.getInstance()
-                                .saveCallBookWithAsync(mCollBook);
+                                .saveCallBookWithAsync(mCallBook);
 
                         exit();
                     })

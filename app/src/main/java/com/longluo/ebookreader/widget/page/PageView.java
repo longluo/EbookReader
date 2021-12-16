@@ -19,12 +19,10 @@ import com.longluo.ebookreader.widget.animation.SimulationPageAnim;
 import com.longluo.ebookreader.widget.animation.SlidePageAnim;
 
 /**
- * Created by Administrator on 2016/8/29 0029.
  * 原作者的GitHub Project Path:(https://github.com/PeachBlossom/treader)
  * 绘制页面显示内容的类
  */
 public class PageView extends View {
-
     private final static String TAG = "BookPageWidget";
 
     private int mViewWidth = 0; // 当前View的宽
@@ -317,7 +315,7 @@ public class PageView extends View {
     public void drawCurPage(boolean isUpdate) {
         if (!isPrepare) return;
 
-        if (!isUpdate){
+        if (!isUpdate) {
             if (mPageAnim instanceof ScrollPageAnim) {
                 ((ScrollPageAnim) mPageAnim).resetBitmap();
             }

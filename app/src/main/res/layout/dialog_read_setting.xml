@@ -1,200 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/read_setting_ll_menu"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/book_pop"
     android:layout_width="match_parent"
-    android:layout_height="280dp"
-    android:layout_alignParentBottom="true"
-    android:background="@color/nb.read.menu.bg"
-    android:clickable="true"
-    android:orientation="vertical"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp">
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/nb.read_setting.divider"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/read_setting_iv_brightness_minus"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:scaleType="center"
-            android:src="@drawable/ic_brightness_minus" />
-
-        <SeekBar
-            android:id="@+id/read_setting_sb_brightness"
-            android:layout_width="0dp"
+        <RelativeLayout
+            android:id="@+id/rl_progress"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:max="255"
-            android:maxHeight="3dp"
-            android:minHeight="3dp"
-            android:progressDrawable="@drawable/seekbar_bg"
-            android:thumb="@drawable/seekbar_thumb"
-            android:thumbOffset="10dp" />
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:background="@color/black"
+            android:padding="20dp"
+            android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/read_setting_iv_brightness_plus"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="20dp"
-            android:scaleType="center"
-            android:src="@drawable/ic_brightness_plus" />
+            <TextView
+                android:id="@+id/tv_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="00.00%"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </RelativeLayout>
 
-        <CheckBox
-            android:id="@+id/read_setting_cb_brightness_auto"
-            style="@style/NB.Theme.TextAppearance.Read.BottomMenu"
-            android:layout_width="40dp"
-            android:layout_height="35dp"
-            android:background="@drawable/selector_btn_read_setting"
-            android:button="@null"
-            android:gravity="center"
-            android:text="系统"
-            android:textColor="@color/selector_btn_read_setting" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/nb.read_setting.divider"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/read_setting_tv_font_minus"
-            style="@style/NB.Theme.TextAppearance.Read.BottomMenu"
-            android:layout_width="100dp"
-            android:layout_height="@dimen/nb.read_setting.btn_height"
-            android:background="@drawable/shape_btn_read_setting_normal"
-            android:gravity="center"
-            android:text="Aa-"
-            android:textSize="14dp" />
-
-        <TextView
-            android:id="@+id/read_setting_tv_font"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/bookpop_bottom"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="15"
-            android:textColor="@color/white"
-            android:textSize="14dp" />
+            android:background="@color/read_dialog_bg"
+            android:baselineAligned="false"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/read_setting_tv_font_plus"
-            style="@style/NB.Theme.TextAppearance.Read.BottomMenu"
-            android:layout_width="100dp"
-            android:layout_height="@dimen/nb.read_setting.btn_height"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/shape_btn_read_setting_normal"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Aa+"
-            android:textSize="18dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/read_setting_cb_font_default"
-            style="@style/NB.Theme.TextAppearance.Read.BottomMenu"
-            android:layout_width="40dp"
-            android:layout_height="@dimen/nb.read_setting.btn_height"
-            android:background="@drawable/selector_btn_read_setting"
-            android:button="@null"
-            android:gravity="center"
-            android:text="默认"
-            android:textColor="@color/selector_btn_read_setting" />
+                <TextView
+                    android:id="@+id/tv_pre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/read_setting_pre"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/sb_progress"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:max="10000" />
+
+                <TextView
+                    android:id="@+id/tv_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/read_setting_next"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_directory"
+                    style="@style/text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/read_setting_directory" />
+
+                <TextView
+                    android:id="@+id/tv_dayornight"
+                    style="@style/text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/read_setting_night" />
+
+                <TextView
+                    android:id="@+id/tv_setting"
+                    style="@style/text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/read_setting_set" />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
-
-    <RadioGroup
-        android:id="@+id/read_setting_rg_page_mode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/nb.read_setting.divider"
-        android:orientation="horizontal">
-
-        <RadioButton
-            android:id="@+id/read_setting_rb_simulation"
-            style="@style/NB.Theme.TextAppearance.Read.BottomMenu"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/nb.read_setting.btn_height"
-            android:layout_marginRight="18dp"
-            android:layout_weight="1"
-            android:background="@drawable/selector_btn_read_setting"
-            android:button="@null"
-            android:gravity="center"
-            android:text="仿真"
-            android:textSize="14dp" />
-
-        <RadioButton
-            android:id="@+id/read_setting_rb_cover"
-            style="@style/NB.Theme.TextAppearance.Read.BottomMenu"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/nb.read_setting.btn_height"
-            android:layout_marginRight="18dp"
-            android:layout_weight="1"
-            android:background="@drawable/selector_btn_read_setting"
-            android:button="@null"
-            android:gravity="center"
-            android:text="覆盖"
-            android:textSize="14dp" />
-
-        <RadioButton
-            android:id="@+id/read_setting_rb_slide"
-            style="@style/NB.Theme.TextAppearance.Read.BottomMenu"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/nb.read_setting.btn_height"
-            android:layout_marginRight="18dp"
-            android:layout_weight="1"
-            android:background="@drawable/selector_btn_read_setting"
-            android:button="@null"
-            android:gravity="center"
-            android:text="滑动"
-            android:textSize="14dp"
-            android:visibility="gone" />
-
-        <RadioButton
-            android:id="@+id/read_setting_rb_scroll"
-            style="@style/NB.Theme.TextAppearance.Read.BottomMenu"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/nb.read_setting.btn_height"
-            android:layout_marginRight="18dp"
-            android:layout_weight="1"
-            android:background="@drawable/selector_btn_read_setting"
-            android:button="@null"
-            android:gravity="center"
-            android:text="滚动"
-            android:textSize="14dp" />
-
-        <RadioButton
-            android:id="@+id/read_setting_rb_none"
-            style="@style/NB.Theme.TextAppearance.Read.BottomMenu"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/nb.read_setting.btn_height"
-            android:layout_weight="1"
-            android:background="@drawable/selector_btn_read_setting"
-            android:button="@null"
-            android:gravity="center"
-            android:text="无"
-            android:textSize="14dp" />
-    </RadioGroup>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/read_setting_rv_bg"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="@dimen/nb.read_setting.divider"
-        android:layout_marginRight="5dp"
-        android:scrollbars="none" />
-
-    <TextView
-        android:id="@+id/read_setting_tv_more"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:text="更多设置 >>"
-        android:textColor="@color/nb.read.menu.text" />
-</LinearLayout>
+</RelativeLayout>

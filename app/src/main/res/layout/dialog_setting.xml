@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@color/read_dialog_bg"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_height"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_dark"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/setting_dark"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <SeekBar
+            android:id="@+id/sb_brightness"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:max="100" />
+
+        <TextView
+            android:id="@+id/tv_bright"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/setting_bright"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_xitong"
+            style="@style/setting_dialog_button"
+            android:layout_marginLeft="10dp"
+            android:text="@string/setting_system"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_height"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_subtract"
+            style="@style/setting_dialog_button"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/setting_subtract"
+            android:textColor="@color/read_dialog_button_select"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tv_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="64"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_add"
+            style="@style/setting_dialog_button"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="@string/setting_add"
+            android:textColor="@color/read_dialog_button_select"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tv_size_default"
+            style="@style/setting_dialog_button"
+            android:layout_marginLeft="20dp"
+            android:text="@string/setting_default" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_height"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_default"
+            style="@style/setting_dialog_button"
+            android:layout_weight="1"
+            android:text="@string/font_default"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_qihei"
+            style="@style/setting_dialog_button"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="@string/font_qihei"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_fzxinghei"
+            style="@style/setting_dialog_button"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="@string/font_fzxinghei"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_fzkatong"
+            style="@style/setting_dialog_button"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="@string/font_fzkatong"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_bysong"
+            style="@style/setting_dialog_button"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="@string/font_bysong"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/setting_height"
+        android:orientation="horizontal">
+
+        <com.longluo.ebookreader.view.CircleImageView
+            android:id="@+id/iv_bg_default"
+            style="@style/setting_dialog_iv"
+            android:layout_weight="1"
+            android:src="@color/read_bg_default" />
+
+        <com.longluo.ebookreader.view.CircleImageView
+            android:id="@+id/iv_bg_1"
+            style="@style/setting_dialog_iv"
+            android:layout_weight="1"
+            android:src="@color/read_bg_1" />
+
+        <com.longluo.ebookreader.view.CircleImageView
+            android:id="@+id/iv_bg_2"
+            style="@style/setting_dialog_iv"
+            android:layout_weight="1"
+            android:src="@color/read_bg_2" />
+
+        <com.longluo.ebookreader.view.CircleImageView
+            android:id="@+id/iv_bg_3"
+            style="@style/setting_dialog_iv"
+            android:layout_weight="1"
+            android:src="@color/read_bg_3" />
+
+        <com.longluo.ebookreader.view.CircleImageView
+            android:id="@+id/iv_bg_4"
+            style="@style/setting_dialog_iv"
+            android:layout_weight="1"
+            android:src="@color/read_bg_4" />
+    </LinearLayout>
+</LinearLayout>

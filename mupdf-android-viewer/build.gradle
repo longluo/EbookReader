@@ -12,6 +12,8 @@ android {
 
         consumerProguardFiles "consumer-rules.pro"
 
+        ndkVersion '21.4.7075529'
+
         ndk {
             // 设置支持的SO库架构
             abiFilters "arm64-v8a"

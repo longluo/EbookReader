@@ -254,8 +254,9 @@ public class FileActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case EXTERNAL_STORAGE_REQ_CODE: {
+            case EXTERNAL_STORAGE_REQ_CODE:
                 // 如果请求被拒绝，那么通常grantResults数组为空
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -265,8 +266,10 @@ public class FileActivity extends BaseActivity {
                 } else {
                     //申请失败，可以继续向用户解释。
                 }
-                return;
-            }
+                break;
+
+            default:
+                break;
         }
     }
 

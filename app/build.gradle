@@ -39,6 +39,10 @@ android {
 //    buildFeatures {
 //        viewBinding true
 //    }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 greendao{

@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.baidu.tts.auth.AuthInfo;
 import com.baidu.tts.chainofresponsibility.logger.LoggerProxy;
 import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizer;
@@ -115,6 +114,8 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
     private SpeechSynthesizer mSpeechSynthesizer;
     private boolean isSpeaking = false;
     private boolean isOnlineSDK = true;
+    private String wholePageStr = "";
+    private String pageSegmentStr = "";
 
     private Handler mainHandler;
 
@@ -454,10 +455,18 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             }
         } else if (id == R.id.action_read_book) {
             if (mSpeechSynthesizer != null) {
-                String str = pageFactory.getCurrentPage().getLineToString();
-                Log.e(TAG, "str = " + str.length());
-
-                int result = mSpeechSynthesizer.speak(str);
+                wholePageStr = pageFactory.getCurrentPage().getWholePageStr();
+                int len = wholePageStr.length();
+                Log.d(TAG, "len = " + len + ", str=" + wholePageStr);
+                if (len < 60) {
+                    pageSegmentStr = wholePageStr.substring(0, len);
+                    wholePageStr = "";
+                } else {
+                    pageSegmentStr = wholePageStr.substring(0, 60);
+                    wholePageStr = wholePageStr.substring(60);
+                }
+                Log.d(TAG, "After len = " + wholePageStr.length() + ", str=" + wholePageStr);
+                int result = mSpeechSynthesizer.speak(pageSegmentStr);
                 if (result < 0) {
                     Log.e(TAG, "error result = " + result);
                 } else {
@@ -756,13 +765,38 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
     public void onSpeechFinish(String utteranceId) {
         Log.d(TAG, "onSpeechFinish, utteranceId=" + utteranceId);
 
-        pageFactory.nextPage();
-        if (pageFactory.islastPage()) {
-            isSpeaking = false;
-            Toast.makeText(ReadActivity.this, "小说已经读完了", Toast.LENGTH_SHORT);
+        if (wholePageStr.length() > 0) {
+            int len = wholePageStr.length();
+            Log.d(TAG, "len = " + len + ", str=" + wholePageStr);
+            if (len < 60) {
+                pageSegmentStr = wholePageStr.substring(0, len);
+                wholePageStr = "";
+            } else {
+                pageSegmentStr = wholePageStr.substring(0, 60);
+                wholePageStr = wholePageStr.substring(60);
+            }
+//            Log.d(TAG, "After len = " + wholePageStr.length() + ", str=" + wholePageStr);
+
+            int result = mSpeechSynthesizer.speak(pageSegmentStr);
+            if (result < 0) {
+                Log.e(TAG, "error result = " + result);
+            } else {
+                hideReadSetting();
+                isSpeaking = true;
+            }
         } else {
-            isSpeaking = true;
-            mSpeechSynthesizer.speak(pageFactory.getCurrentPage().getLineToString());
+            pageFactory.nextPage();
+            if (pageFactory.islastPage()) {
+                isSpeaking = false;
+                Toast.makeText(ReadActivity.this, "小说已经读完了", Toast.LENGTH_SHORT);
+            } else {
+                isSpeaking = true;
+                pageFactory.getCurrentPage().setWholePageStr();
+                wholePageStr = pageFactory.getCurrentPage().getWholePageStr();
+                pageSegmentStr = wholePageStr.substring(0, 60);
+                wholePageStr = wholePageStr.substring(60);
+                mSpeechSynthesizer.speak(pageSegmentStr);
+            }
         }
     }
 

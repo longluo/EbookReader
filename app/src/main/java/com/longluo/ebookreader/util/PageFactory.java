@@ -496,6 +496,7 @@ public class PageFactory {
         trPage.setBegin(currentPage.getEnd() + 1);
         Log.e("begin", currentPage.getEnd() + 1 + "");
         trPage.setLines(getNextLines());
+        trPage.setWholePageStr();
         Log.e("end", mBookUtil.getPosition() + "");
         trPage.setEnd(mBookUtil.getPosition());
         return trPage;
@@ -508,6 +509,7 @@ public class PageFactory {
         trPage.setEnd(mBookUtil.getPosition() - 1);
         Log.e("end", mBookUtil.getPosition() - 1 + "");
         trPage.setLines(getPreLines());
+        trPage.setWholePageStr();
         Log.e("begin", mBookUtil.getPosition() + "");
         trPage.setBegin(mBookUtil.getPosition());
         return trPage;
@@ -519,6 +521,7 @@ public class PageFactory {
 
         mBookUtil.setPostition(begin - 1);
         trPage.setLines(getNextLines());
+        trPage.setWholePageStr();
         trPage.setEnd(mBookUtil.getPosition());
         return trPage;
     }

@@ -8,6 +8,8 @@ public class TRPage {
     private long end;
     private List<String> lines;
 
+    private String wholePageStr;
+
     public long getBegin() {
         return begin;
     }
@@ -28,21 +30,26 @@ public class TRPage {
         return lines;
     }
 
+    public void setLines(List<String> lines) {
+        this.lines = lines;
+    }
+
     public String getLineToString() {
         String text = "";
         if (lines != null) {
             for (String line : lines) {
                 text += line;
-                if (text.length() > 40) {
-                    break;
-                }
             }
         }
 
         return text;
     }
 
-    public void setLines(List<String> lines) {
-        this.lines = lines;
+    public String getWholePageStr() {
+        return wholePageStr;
+    }
+
+    public void setWholePageStr() {
+        this.wholePageStr = getLineToString();
     }
 }

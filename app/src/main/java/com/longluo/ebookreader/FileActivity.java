@@ -81,7 +81,6 @@ public class FileActivity extends BaseActivity {
             root = Environment.getExternalStorageDirectory();
             searchFile();
         }
-
     }
 
     @Override

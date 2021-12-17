@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 
 
 public class NetworkUtils {
@@ -14,7 +14,7 @@ public class NetworkUtils {
      * @return NetworkInfo
      */
     public static NetworkInfo getNetworkInfo() {
-        ConnectivityManager cm = (ConnectivityManager) ERApplication
+        ConnectivityManager cm = (ConnectivityManager) App
                 .getContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 

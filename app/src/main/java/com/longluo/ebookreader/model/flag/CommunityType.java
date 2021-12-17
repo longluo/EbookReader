@@ -3,7 +3,7 @@ package com.longluo.ebookreader.model.flag;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 import com.longluo.ebookreader.R;
 
 public enum CommunityType {
@@ -19,7 +19,7 @@ public enum CommunityType {
     private final int iconId;
 
     CommunityType(@StringRes int typeId, String netName, @DrawableRes int iconId) {
-        this.typeName = ERApplication.getContext().getResources().getString(typeId);
+        this.typeName = App.getContext().getResources().getString(typeId);
         this.netName = netName;
         this.iconId = iconId;
     }

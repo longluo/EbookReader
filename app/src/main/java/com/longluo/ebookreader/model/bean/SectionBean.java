@@ -4,7 +4,7 @@ package com.longluo.ebookreader.model.bean;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 
 public class SectionBean {
     private String name;
@@ -16,7 +16,7 @@ public class SectionBean {
     }
 
     public SectionBean(@StringRes int strRes, @DrawableRes int drawableId) {
-        this.name = ERApplication.getContext()
+        this.name = App.getContext()
                 .getString(strRes);
 
         this.drawableId = drawableId;

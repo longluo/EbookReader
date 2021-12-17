@@ -51,13 +51,13 @@ task clean(type: Delete) {
 }
 
 ext {
-    versionCode = 10
-    versionName = '6.2'
+    versionCode = 13
+    versionName = '6.5'
 
     libMinSdkVersion = 23
     appMinSdkVersion = 23
     targetSdkVersion = 23
     compileSdkVersion = 30
-    buildToolsVersion = '30.0.2'
+    buildToolsVersion = '30.0.3'
     supportVersion = '25.3.1'
 }

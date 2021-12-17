@@ -217,13 +217,6 @@ public class BookCommentBean{
         myDao.update(this);
     }
 
-    /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 1667482087)
-    public void __setDaoSession(DaoSession daoSession) {
-        this.daoSession = daoSession;
-        myDao = daoSession != null ? daoSession.getBookCommentBeanDao() : null;
-    }
-
     /** To-one relationship, resolved on first access. */
     @Generated(hash = 625279819)
     public AuthorBean getAuthor() {
@@ -263,5 +256,12 @@ public class BookCommentBean{
             authorId = author == null ? null : author.get_id();
             author__resolvedKey = authorId;
         }
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 1667482087)
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getBookCommentBeanDao() : null;
     }
 }

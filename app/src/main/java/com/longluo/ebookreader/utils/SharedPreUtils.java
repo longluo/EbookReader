@@ -3,7 +3,7 @@ package com.longluo.ebookreader.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 
 
 public class SharedPreUtils {
@@ -13,7 +13,7 @@ public class SharedPreUtils {
     private SharedPreferences.Editor sharedWritable;
 
     private SharedPreUtils() {
-        sharedReadable = ERApplication.getContext()
+        sharedReadable = App.getContext()
                 .getSharedPreferences(SHARED_NAME, Context.MODE_MULTI_PROCESS);
         sharedWritable = sharedReadable.edit();
     }

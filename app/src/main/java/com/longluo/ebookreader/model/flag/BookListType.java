@@ -2,7 +2,7 @@ package com.longluo.ebookreader.model.flag;
 
 import androidx.annotation.StringRes;
 
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 import com.longluo.ebookreader.R;
 
 
@@ -14,7 +14,7 @@ public enum BookListType {
     private final String netName;
 
     BookListType(@StringRes int typeName, String netName) {
-        this.typeName = ERApplication.getContext().getString(typeName);
+        this.typeName = App.getContext().getString(typeName);
         this.netName = netName;
     }
 

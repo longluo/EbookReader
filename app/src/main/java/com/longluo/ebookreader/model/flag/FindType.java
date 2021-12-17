@@ -3,7 +3,7 @@ package com.longluo.ebookreader.model.flag;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 import com.longluo.ebookreader.R;
 
 
@@ -16,7 +16,7 @@ public enum FindType {
     private final int iconId;
 
     FindType(@StringRes int typeNameId, @DrawableRes int iconId) {
-        this.typeName = ERApplication.getContext().getResources().getString(typeNameId);
+        this.typeName = App.getContext().getResources().getString(typeNameId);
         this.iconId = iconId;
     }
 

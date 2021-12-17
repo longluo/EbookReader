@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.model.bean.BookListDetailBean;
 import com.longluo.ebookreader.presenter.BookListDetailPresenter;
@@ -211,11 +211,11 @@ public class BookListDetailActivity extends BaseMVPActivity<BookListDetailContra
             //描述
             tvDesc.setText(detailBean.getDesc());
             //头像
-            Glide.with(ERApplication.getContext())
+            Glide.with(App.getContext())
                     .load(Constant.IMG_BASE_URL+detailBean.getAuthor().getAvatar())
                     .placeholder(R.drawable.ic_loadding)
                     .error(R.drawable.ic_load_error)
-                    .transform(new CircleTransform(ERApplication.getContext()))
+                    .transform(new CircleTransform(App.getContext()))
                     .into(ivPortrait);
             //作者
             tvAuthor.setText(detailBean.getAuthor().getNickname());

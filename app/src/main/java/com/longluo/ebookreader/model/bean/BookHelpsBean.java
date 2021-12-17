@@ -172,13 +172,6 @@ public class BookHelpsBean {
         myDao.update(this);
     }
 
-    /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 1431996007)
-    public void __setDaoSession(DaoSession daoSession) {
-        this.daoSession = daoSession;
-        myDao = daoSession != null ? daoSession.getBookHelpsBeanDao() : null;
-    }
-
     public String getTitle() {
         return this.title;
     }
@@ -222,5 +215,12 @@ public class BookHelpsBean {
             authorId = author == null ? null : author.get_id();
             author__resolvedKey = authorId;
         }
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 1431996007)
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getBookHelpsBeanDao() : null;
     }
 }

@@ -170,13 +170,6 @@ public class BookReviewBean {
         myDao.update(this);
     }
 
-    /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 582781380)
-    public void __setDaoSession(DaoSession daoSession) {
-        this.daoSession = daoSession;
-        myDao = daoSession != null ? daoSession.getBookReviewBeanDao() : null;
-    }
-
     public String getBookId() {
         return this.bookId;
     }
@@ -267,6 +260,13 @@ public class BookReviewBean {
             _id = helpful == null ? null : helpful.get_id();
             helpful__resolvedKey = _id;
         }
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 582781380)
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getBookReviewBeanDao() : null;
     }
 
 

@@ -3,7 +3,7 @@ package com.longluo.ebookreader.model.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 import com.longluo.ebookreader.model.gen.BookChapterBeanDao;
 import com.longluo.ebookreader.model.gen.CollBookBeanDao;
 import com.longluo.ebookreader.model.gen.DaoSession;
@@ -16,6 +16,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.ToMany;
 
 import java.util.List;
+
 
 /**
  * 收藏的书籍
@@ -106,7 +107,7 @@ public class CollBookBean implements Parcelable {
     }
 
     public String getTitle() {
-        return StringUtils.convertCC(title, ERApplication.getContext());
+        return StringUtils.convertCC(title, App.getContext());
     }
 
     public void setTitle(String title) {
@@ -114,7 +115,7 @@ public class CollBookBean implements Parcelable {
     }
 
     public String getAuthor() {
-        return StringUtils.convertCC(author, ERApplication.getContext());
+        return StringUtils.convertCC(author, App.getContext());
     }
 
     public void setAuthor(String author) {
@@ -122,7 +123,7 @@ public class CollBookBean implements Parcelable {
     }
 
     public String getShortIntro() {
-        return StringUtils.convertCC(shortIntro, ERApplication.getContext());
+        return StringUtils.convertCC(shortIntro, App.getContext());
     }
 
     public void setShortIntro(String shortIntro) {
@@ -130,7 +131,7 @@ public class CollBookBean implements Parcelable {
     }
 
     public String getCover() {
-        return StringUtils.convertCC(cover, ERApplication.getContext());
+        return StringUtils.convertCC(cover, App.getContext());
     }
 
     public void setCover(String cover) {
@@ -162,7 +163,7 @@ public class CollBookBean implements Parcelable {
     }
 
     public String getUpdated() {
-        return StringUtils.convertCC(updated, ERApplication.getContext());
+        return StringUtils.convertCC(updated, App.getContext());
     }
 
     public void setUpdated(String updated) {
@@ -178,7 +179,7 @@ public class CollBookBean implements Parcelable {
     }
 
     public String getLastChapter() {
-        return StringUtils.convertCC(lastChapter, ERApplication.getContext());
+        return StringUtils.convertCC(lastChapter, App.getContext());
     }
 
     public void setLastChapter(String lastChapter) {
@@ -214,7 +215,7 @@ public class CollBookBean implements Parcelable {
     }
 
     public String getLastRead() {
-        return StringUtils.convertCC(lastRead, ERApplication.getContext());
+        return StringUtils.convertCC(lastRead, App.getContext());
     }
 
     public void setLastRead(String lastRead) {
@@ -302,13 +303,6 @@ public class CollBookBean implements Parcelable {
         myDao.update(this);
     }
 
-    /** called by internal mechanisms, do not call yourself. */
-    @Generated(hash = 159260324)
-    public void __setDaoSession(DaoSession daoSession) {
-        this.daoSession = daoSession;
-        myDao = daoSession != null ? daoSession.getCollBookBeanDao() : null;
-    }
-
     public boolean getIsLocal() {
         return this.isLocal;
     }
@@ -338,6 +332,13 @@ public class CollBookBean implements Parcelable {
         dest.writeString(this.lastChapter);
         dest.writeByte(this.isUpdate ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isLocal ? (byte) 1 : (byte) 0);
+    }
+
+    /** called by internal mechanisms, do not call yourself. */
+    @Generated(hash = 159260324)
+    public void __setDaoSession(DaoSession daoSession) {
+        this.daoSession = daoSession;
+        myDao = daoSession != null ? daoSession.getCollBookBeanDao() : null;
     }
 
     protected CollBookBean(Parcel in) {

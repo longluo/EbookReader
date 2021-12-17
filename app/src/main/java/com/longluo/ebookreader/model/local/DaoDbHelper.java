@@ -2,7 +2,7 @@ package com.longluo.ebookreader.model.local;
 
 import android.database.sqlite.SQLiteDatabase;
 
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 import com.longluo.ebookreader.model.gen.DaoMaster;
 import com.longluo.ebookreader.model.gen.DaoSession;
 
@@ -17,7 +17,7 @@ public class DaoDbHelper {
 
     private DaoDbHelper() {
         //封装数据库的创建、更新、删除
-        DaoMaster.DevOpenHelper openHelper = new MyOpenHelper(ERApplication.getContext(), DB_NAME, null);
+        DaoMaster.DevOpenHelper openHelper = new MyOpenHelper(App.getContext(), DB_NAME, null);
         //获取数据库
         mDb = openHelper.getWritableDatabase();
         //封装数据库中表的创建、更新、删除

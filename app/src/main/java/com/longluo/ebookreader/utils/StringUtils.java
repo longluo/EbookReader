@@ -4,7 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.StringRes;
 
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 import com.zqc.opencc.android.lib.ChineseConverter;
 import com.zqc.opencc.android.lib.ConversionType;
 
@@ -89,11 +89,11 @@ public class StringUtils {
     }
 
     public static String getString(@StringRes int id) {
-        return ERApplication.getContext().getResources().getString(id);
+        return App.getContext().getResources().getString(id);
     }
 
     public static String getString(@StringRes int id, Object... formatArgs) {
-        return ERApplication.getContext().getResources().getString(id, formatArgs);
+        return App.getContext().getResources().getString(id, formatArgs);
     }
 
     /**

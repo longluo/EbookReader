@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.model.bean.BookCommentBean;
 import com.longluo.ebookreader.ui.base.adapter.ViewHolderImpl;
@@ -48,7 +48,7 @@ public class DiscCommentHolder extends ViewHolderImpl<BookCommentBean>{
                 .load(Constant.IMG_BASE_URL+value.getAuthorBean().getAvatar())
                 .placeholder(R.drawable.ic_default_portrait)
                 .error(R.drawable.ic_load_error)
-                .transform(new CircleTransform(ERApplication.getContext()))
+                .transform(new CircleTransform(App.getContext()))
                 .into(mIvPortrait);
         //名字
         mTvName.setText(value.getAuthorBean().getNickname());

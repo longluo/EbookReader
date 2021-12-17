@@ -2,7 +2,7 @@ package com.longluo.ebookreader.utils;
 
 import android.os.Environment;
 
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -57,11 +57,11 @@ public class FileUtils {
     //获取Cache文件夹
     public static String getCachePath() {
         if (isSdCardExist()) {
-            return ERApplication.getContext()
+            return App.getContext()
                     .getExternalCacheDir()
                     .getAbsolutePath();
         } else {
-            return ERApplication.getContext()
+            return App.getContext()
                     .getCacheDir()
                     .getAbsolutePath();
         }

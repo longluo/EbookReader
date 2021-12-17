@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.longluo.ebookreader.ERApplication;
+import com.longluo.ebookreader.App;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.model.bean.BookReviewBean;
 import com.longluo.ebookreader.ui.base.adapter.ViewHolderImpl;
@@ -40,7 +40,7 @@ public class DiscReviewHolder extends ViewHolderImpl<BookReviewBean>{
     @Override
     public void onBind(BookReviewBean value, int pos) {
         //头像
-        Glide.with(ERApplication.getContext())
+        Glide.with(App.getContext())
                 .load(Constant.IMG_BASE_URL+value.getBookBean().getCover())
                 .placeholder(R.drawable.ic_default_portrait)
                 .error(R.drawable.ic_load_error)

@@ -3,7 +3,7 @@ package com.longluo.ebookreader.presenter;
 import com.longluo.ebookreader.RxBus;
 import com.longluo.ebookreader.model.bean.BookChapterBean;
 import com.longluo.ebookreader.model.bean.BookDetailBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.bean.DownloadTaskBean;
 import com.longluo.ebookreader.model.local.BookRepository;
 import com.longluo.ebookreader.model.remote.RemoteRepository;
@@ -32,18 +32,18 @@ public class BookShelfPresenter extends RxPresenter<BookShelfContract.View>
 
     @Override
     public void refreshCallBooks() {
-        List<CallBookBean> CallBooks = BookRepository
+        List<CollBookBean> CallBooks = BookRepository
                 .getInstance().getCallBooks();
         mView.finishRefresh(CallBooks);
     }
 
     @Override
-    public void createDownloadTask(CallBookBean callBookBean) {
+    public void createDownloadTask(CollBookBean collBookBean) {
         DownloadTaskBean task = new DownloadTaskBean();
-        task.setTaskName(callBookBean.getTitle());
-        task.setBookId(callBookBean.get_id());
-        task.setBookChapters(callBookBean.getBookChapters());
-        task.setLastChapter(callBookBean.getBookChapters().size());
+        task.setTaskName(collBookBean.getTitle());
+        task.setBookId(collBookBean.get_id());
+        task.setBookChapters(collBookBean.getBookChapters());
+        task.setLastChapter(collBookBean.getBookChapters().size());
 
         RxBus.getInstance().post(task);
     }
@@ -53,9 +53,9 @@ public class BookShelfPresenter extends RxPresenter<BookShelfContract.View>
     public void loadRecommendBooks(String gender) {
         Disposable disposable = RemoteRepository.getInstance()
                 .getRecommendBooks(gender)
-                .doOnSuccess(new Consumer<List<CallBookBean>>() {
+                .doOnSuccess(new Consumer<List<CollBookBean>>() {
                     @Override
-                    public void accept(List<CallBookBean> CallBooks) throws Exception{
+                    public void accept(List<CollBookBean> CallBooks) throws Exception{
                         //更新目录
                         updateCategory(CallBooks);
                         //异步存储到数据库中
@@ -81,13 +81,13 @@ public class BookShelfPresenter extends RxPresenter<BookShelfContract.View>
 
     //需要修改
     @Override
-    public void updateCallBooks(List<CallBookBean> callBookBeans) {
-        if (callBookBeans == null || callBookBeans.isEmpty()) return;
-        List<CallBookBean> CallBooks = new ArrayList<>(callBookBeans);
+    public void updateCallBooks(List<CollBookBean> collBookBeans) {
+        if (collBookBeans == null || collBookBeans.isEmpty()) return;
+        List<CollBookBean> CallBooks = new ArrayList<>(collBookBeans);
         List<Single<BookDetailBean>> observables = new ArrayList<>(CallBooks.size());
-        Iterator<CallBookBean> it = CallBooks.iterator();
+        Iterator<CollBookBean> it = CallBooks.iterator();
         while (it.hasNext()){
-            CallBookBean CallBook = it.next();
+            CollBookBean CallBook = it.next();
             //删除本地文件
             if (CallBook.isLocal()) {
                 it.remove();
@@ -98,13 +98,13 @@ public class BookShelfPresenter extends RxPresenter<BookShelfContract.View>
             }
         }
         //zip可能不是一个好方法。
-        Single.zip(observables, new Function<Object[], List<CallBookBean>>() {
+        Single.zip(observables, new Function<Object[], List<CollBookBean>>() {
             @Override
-            public List<CallBookBean> apply(Object[] objects) throws Exception {
-                List<CallBookBean> newCallBooks = new ArrayList<CallBookBean>(objects.length);
+            public List<CollBookBean> apply(Object[] objects) throws Exception {
+                List<CollBookBean> newCallBooks = new ArrayList<CollBookBean>(objects.length);
                 for (int i=0; i<CallBooks.size(); ++i){
-                    CallBookBean oldCallBook = CallBooks.get(i);
-                    CallBookBean newCallBook = ((BookDetailBean)objects[i]).getCallBookBean();
+                    CollBookBean oldCallBook = CallBooks.get(i);
+                    CollBookBean newCallBook = ((BookDetailBean)objects[i]).getCallBookBean();
                     //如果是oldBook是update状态，或者newCallBook与oldBook章节数不同
                     if (oldCallBook.isUpdate() ||
                             !oldCallBook.getLastChapter().equals(newCallBook.getLastChapter())){
@@ -123,14 +123,14 @@ public class BookShelfPresenter extends RxPresenter<BookShelfContract.View>
             }
         })
                 .compose(RxUtils::toSimpleSingle)
-                .subscribe(new SingleObserver<List<CallBookBean>>() {
+                .subscribe(new SingleObserver<List<CollBookBean>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         addDisposable(d);
                     }
 
                     @Override
-                    public void onSuccess(List<CallBookBean> value) {
+                    public void onSuccess(List<CollBookBean> value) {
                         //跟原先比较
                         mView.finishUpdate();
                         mView.complete();
@@ -147,14 +147,14 @@ public class BookShelfPresenter extends RxPresenter<BookShelfContract.View>
     }
 
     //更新每个CallBook的目录
-    private void updateCategory(List<CallBookBean> callBookBeans){
-        List<Single<List<BookChapterBean>>> observables = new ArrayList<>(callBookBeans.size());
-        for (CallBookBean bean : callBookBeans){
+    private void updateCategory(List<CollBookBean> collBookBeans){
+        List<Single<List<BookChapterBean>>> observables = new ArrayList<>(collBookBeans.size());
+        for (CollBookBean bean : collBookBeans){
             observables.add(
                     RemoteRepository.getInstance().getBookChapters(bean.get_id())
             );
         }
-        Iterator<CallBookBean> it = callBookBeans.iterator();
+        Iterator<CollBookBean> it = collBookBeans.iterator();
         //执行在上一个方法中的子线程中
         Single.concat(observables)
                 .subscribe(
@@ -164,7 +164,7 @@ public class BookShelfPresenter extends RxPresenter<BookShelfContract.View>
                                 bean.setId(MD5Utils.strToMd5By16(bean.getLink()));
                             }
 
-                            CallBookBean bean = it.next();
+                            CollBookBean bean = it.next();
                             bean.setLastRead(StringUtils.
                                     dateConvert(System.currentTimeMillis(), Constant.FORMAT_BOOK_DATE));
                             bean.setBookChapters(chapterList);

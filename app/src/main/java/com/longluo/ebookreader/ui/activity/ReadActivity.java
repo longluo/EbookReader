@@ -36,7 +36,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.appbar.AppBarLayout;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.model.bean.BookChapterBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.local.BookRepository;
 import com.longluo.ebookreader.model.local.ReadSettingManager;
 import com.longluo.ebookreader.presenter.ReadPresenter;
@@ -130,7 +130,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
     private Animation mBottomInAnim;
     private Animation mBottomOutAnim;
     private CategoryAdapter mCategoryAdapter;
-    private CallBookBean mCallBook;
+    private CollBookBean mCallBook;
 
     //控制屏幕常亮
     private PowerManager.WakeLock mWakeLock;
@@ -206,7 +206,7 @@ public class ReadActivity extends BaseMVPActivity<ReadContract.Presenter>
 
     private String mBookId;
 
-    public static void startActivity(Context context, CallBookBean collBook, boolean isCollected) {
+    public static void startActivity(Context context, CollBookBean collBook, boolean isCollected) {
         context.startActivity(new Intent(context, ReadActivity.class)
                 .putExtra(EXTRA_IS_COLLECTED, isCollected)
                 .putExtra(EXTRA_CALL_BOOK, collBook));

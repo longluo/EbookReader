@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.widget.animation.CoverPageAnim;
 import com.longluo.ebookreader.widget.animation.HorizonPageAnim;
 import com.longluo.ebookreader.widget.animation.NonePageAnim;
@@ -340,7 +340,7 @@ public class PageView extends View {
      * @param collBook
      * @return
      */
-    public PageLoader getPageLoader(CallBookBean collBook) {
+    public PageLoader getPageLoader(CollBookBean collBook) {
         // 判是否已经存在
         if (mPageLoader != null) {
             return mPageLoader;

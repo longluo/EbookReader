@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.local.BookRepository;
 import com.longluo.ebookreader.ui.base.BaseTabActivity;
 import com.longluo.ebookreader.ui.fragment.BaseFileFragment;
@@ -126,7 +126,7 @@ public class FileSystemActivity extends BaseTabActivity {
                     //获取选中的文件
                     List<File> files = mCurFragment.getCheckedFiles();
                     //转换成CollBook,并存储
-                    List<CallBookBean> collBooks = convertCollBook(files);
+                    List<CollBookBean> collBooks = convertCollBook(files);
                     BookRepository.getInstance()
                             .saveCallBooks(collBooks);
                     //设置HashMap为false
@@ -177,13 +177,13 @@ public class FileSystemActivity extends BaseTabActivity {
      * @param files:需要加载的文件列表
      * @return
      */
-    private List<CallBookBean> convertCollBook(List<File> files) {
-        List<CallBookBean> collBooks = new ArrayList<>(files.size());
+    private List<CollBookBean> convertCollBook(List<File> files) {
+        List<CollBookBean> collBooks = new ArrayList<>(files.size());
         for (File file : files) {
             //判断文件是否存在
             if (!file.exists()) continue;
 
-            CallBookBean collBook = new CallBookBean();
+            CollBookBean collBook = new CollBookBean();
             collBook.set_id(MD5Utils.strToMd5By16(file.getAbsolutePath()));
             collBook.setTitle(file.getName().replace(".txt", ""));
             collBook.setAuthor("");

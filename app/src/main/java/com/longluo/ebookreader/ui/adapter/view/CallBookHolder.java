@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.ui.base.adapter.ViewHolderImpl;
 import com.longluo.ebookreader.utils.Constant;
 import com.longluo.ebookreader.utils.StringUtils;
@@ -17,7 +17,7 @@ import com.longluo.ebookreader.utils.StringUtils;
  * CollectionBookView
  */
 
-public class CallBookHolder extends ViewHolderImpl<CallBookBean>{
+public class CallBookHolder extends ViewHolderImpl<CollBookBean>{
 
     private static final String TAG = "CollBookView";
     private ImageView mIvCover;
@@ -41,7 +41,7 @@ public class CallBookHolder extends ViewHolderImpl<CallBookBean>{
     }
 
     @Override
-    public void onBind(CallBookBean value, int pos) {
+    public void onBind(CollBookBean value, int pos) {
         if (value.isLocal()){
             //本地文件的图片
             Glide.with(getContext())

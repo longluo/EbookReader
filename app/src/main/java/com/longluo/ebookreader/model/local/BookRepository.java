@@ -4,11 +4,11 @@ import android.util.Log;
 
 import com.longluo.ebookreader.model.bean.BookChapterBean;
 import com.longluo.ebookreader.model.bean.BookRecordBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.bean.ChapterInfoBean;
 import com.longluo.ebookreader.model.gen.BookChapterBeanDao;
 import com.longluo.ebookreader.model.gen.BookRecordBeanDao;
-import com.longluo.ebookreader.model.gen.CallBookBeanDao;
+import com.longluo.ebookreader.model.gen.CollBookBeanDao;
 import com.longluo.ebookreader.model.gen.DaoSession;
 import com.longluo.ebookreader.model.gen.DownloadTaskBeanDao;
 import com.longluo.ebookreader.utils.BookManager;
@@ -39,12 +39,12 @@ public class BookRepository {
 
     private static volatile BookRepository sInstance;
     private DaoSession mSession;
-    private CallBookBeanDao mCallBookDao;
+    private CollBookBeanDao mCallBookDao;
 
     private BookRepository() {
         mSession = DaoDbHelper.getInstance()
                 .getSession();
-        mCallBookDao = mSession.getCallBookBeanDao();
+        mCallBookDao = mSession.getCollBookBeanDao();
     }
 
     public static BookRepository getInstance() {
@@ -60,7 +60,7 @@ public class BookRepository {
     }
 
     //存储已收藏书籍
-    public void saveCallBookWithAsync(CallBookBean bean) {
+    public void saveCallBookWithAsync(CollBookBean bean) {
         //启动异步存储
         mSession.startAsyncSession()
                 .runInTx(
@@ -82,11 +82,11 @@ public class BookRepository {
      *
      * @param beans
      */
-    public void saveCallBooksWithAsync(List<CallBookBean> beans) {
+    public void saveCallBooksWithAsync(List<CollBookBean> beans) {
         mSession.startAsyncSession()
                 .runInTx(
                         () -> {
-                            for (CallBookBean bean : beans) {
+                            for (CollBookBean bean : beans) {
                                 if (bean.getBookChapters() != null) {
                                     //存储BookChapterBean(需要修改，如果存在id相同的则无视)
                                     mSession.getBookChapterBeanDao()
@@ -99,11 +99,11 @@ public class BookRepository {
                 );
     }
 
-    public void saveCallBook(CallBookBean bean) {
+    public void saveCallBook(CollBookBean bean) {
         mCallBookDao.insertOrReplace(bean);
     }
 
-    public void saveCallBooks(List<CallBookBean> beans) {
+    public void saveCallBooks(List<CollBookBean> beans) {
         mCallBookDao.insertOrReplaceInTx(beans);
     }
 
@@ -151,17 +151,17 @@ public class BookRepository {
     }
 
     /*****************************get************************************************/
-    public CallBookBean getCallBook(String bookId) {
-        CallBookBean bean = mCallBookDao.queryBuilder()
-                .where(CallBookBeanDao.Properties._id.eq(bookId))
+    public CollBookBean getCallBook(String bookId) {
+        CollBookBean bean = mCallBookDao.queryBuilder()
+                .where(CollBookBeanDao.Properties._id.eq(bookId))
                 .unique();
         return bean;
     }
 
-    public List<CallBookBean> getCallBooks() {
+    public List<CollBookBean> getCallBooks() {
         return mCallBookDao
                 .queryBuilder()
-                .orderDesc(CallBookBeanDao.Properties.LastRead)
+                .orderDesc(CollBookBeanDao.Properties.LastRead)
                 .list();
     }
 
@@ -219,7 +219,7 @@ public class BookRepository {
     /************************************************************/
 
     /************************************************************/
-    public Single<Void> deleteCallBookInRx(CallBookBean bean) {
+    public Single<Void> deleteCallBookInRx(CollBookBean bean) {
         return Single.create(new SingleOnSubscribe<Void>() {
             @Override
             public void subscribe(SingleEmitter<Void> e) throws Exception {
@@ -245,7 +245,7 @@ public class BookRepository {
                 .executeDeleteWithoutDetachingEntities();
     }
 
-    public void deleteCallBook(CallBookBean CallBook) {
+    public void deleteCallBook(CollBookBean CallBook) {
         mCallBookDao.delete(CallBook);
     }
 

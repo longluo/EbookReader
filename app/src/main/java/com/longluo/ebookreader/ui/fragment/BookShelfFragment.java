@@ -18,7 +18,7 @@ import com.longluo.ebookreader.event.DeleteResponseEvent;
 import com.longluo.ebookreader.event.DeleteTaskEvent;
 import com.longluo.ebookreader.event.DownloadMessage;
 import com.longluo.ebookreader.event.RecommendBookEvent;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.local.BookRepository;
 import com.longluo.ebookreader.presenter.BookShelfPresenter;
 import com.longluo.ebookreader.presenter.contract.BookShelfContract;
@@ -140,7 +140,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
         mCallBookAdapter.setOnItemClickListener(
                 (view, pos) -> {
                     // 如果是本地文件，首先判断这个文件是否存在
-                    CallBookBean collBook = mCallBookAdapter.getItem(pos);
+                    CollBookBean collBook = mCallBookAdapter.getItem(pos);
                     if (collBook.isLocal()) {
                         //id表示本地文件的路径
                         String path = collBook.getCover();
@@ -187,7 +187,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
         mRvContent.startRefresh();
     }
 
-    private void openItemDialog(CallBookBean collBook) {
+    private void openItemDialog(CollBookBean collBook) {
         String[] menus;
         if (collBook.isLocal()) {
             menus = getResources().getStringArray(R.array.nb_menu_local_book);
@@ -206,7 +206,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
         collBookDialog.show();
     }
 
-    private void onItemMenuClick(String which, CallBookBean collBook) {
+    private void onItemMenuClick(String which, CollBookBean collBook) {
         switch (which) {
             //置顶
             case "置顶":
@@ -234,7 +234,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
         }
     }
 
-    private void downloadBook(CallBookBean collBook) {
+    private void downloadBook(CollBookBean collBook) {
         //创建任务
         mPresenter.createDownloadTask(collBook);
     }
@@ -244,7 +244,7 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
      *
      * @param collBook
      */
-    private void deleteBook(CallBookBean collBook) {
+    private void deleteBook(CollBookBean collBook) {
         if (collBook.isLocal()) {
             View view = LayoutInflater.from(getContext())
                     .inflate(R.layout.dialog_delete, null);
@@ -302,8 +302,8 @@ public class BookShelfFragment extends BaseMVPFragment<BookShelfContract.Present
     }
 
     @Override
-    public void finishRefresh(List<CallBookBean> callBookBeans) {
-        mCallBookAdapter.refreshItems(callBookBeans);
+    public void finishRefresh(List<CollBookBean> collBookBeans) {
+        mCallBookAdapter.refreshItems(collBookBeans);
         //如果是初次进入，则更新书籍信息
         if (isInit) {
             isInit = false;

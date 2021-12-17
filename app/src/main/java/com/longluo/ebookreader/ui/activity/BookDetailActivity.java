@@ -5,21 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.model.bean.BookDetailBean;
-import com.longluo.ebookreader.model.bean.BookListBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.local.BookRepository;
 import com.longluo.ebookreader.presenter.BookDetailPresenter;
 import com.longluo.ebookreader.presenter.contract.BookDetailContract;
@@ -98,7 +95,7 @@ public class BookDetailActivity extends BaseMVPActivity<BookDetailContract.Prese
     RecyclerView mRvRecommendBookList;
 
     private BookListAdapter mBookListAdapter;
-    private CallBookBean mCallBookBean;
+    private CollBookBean mCollBookBean;
     private ProgressDialog mProgressDialog;
 
     private String mBookId;
@@ -160,7 +157,7 @@ public class BookDetailActivity extends BaseMVPActivity<BookDetailContract.Prese
                     if (isCallected) {
                         //放弃点击
                         BookRepository.getInstance()
-                                .deleteCallBookInRx(mCallBookBean);
+                                .deleteCallBookInRx(mCollBookBean);
 
                         mTvChase.setText(getResources().getString(R.string.nb_book_detail_chase_update));
 
@@ -173,7 +170,7 @@ public class BookDetailActivity extends BaseMVPActivity<BookDetailContract.Prese
 
                         isCallected = false;
                     } else {
-                        mPresenter.addToBookShelf(mCallBookBean);
+                        mPresenter.addToBookShelf(mCollBookBean);
                         mTvChase.setText(getResources().getString(R.string.nb_book_detail_give_up));
 
                         //修改背景
@@ -191,7 +188,7 @@ public class BookDetailActivity extends BaseMVPActivity<BookDetailContract.Prese
         mTvRead.setOnClickListener(
                 (v) -> startActivityForResult(new Intent(this, ReadActivity.class)
                         .putExtra(ReadActivity.EXTRA_IS_COLLECTED, isCallected)
-                        .putExtra(ReadActivity.EXTRA_CALL_BOOK, mCallBookBean), REQUEST_READ)
+                        .putExtra(ReadActivity.EXTRA_CALL_BOOK, mCollBookBean), REQUEST_READ)
         );
     }
 
@@ -234,10 +231,10 @@ public class BookDetailActivity extends BaseMVPActivity<BookDetailContract.Prese
         mTvCommunity.setText(getResources().getString(R.string.nb_book_detail_community, bean.getTitle()));
         //帖子数
         mTvPostsCount.setText(getResources().getString(R.string.nb_book_detail_posts_count, bean.getPostCount()));
-        mCallBookBean = BookRepository.getInstance().getCallBook(bean.get_id());
+        mCollBookBean = BookRepository.getInstance().getCallBook(bean.get_id());
 
         //判断是否收藏
-        if (mCallBookBean != null) {
+        if (mCollBookBean != null) {
             isCallected = true;
 
             mTvChase.setText(getResources().getString(R.string.nb_book_detail_give_up));
@@ -249,7 +246,7 @@ public class BookDetailActivity extends BaseMVPActivity<BookDetailContract.Prese
                     null, null);
             mTvRead.setText("继续阅读");
         } else {
-            mCallBookBean = bean.getCallBookBean();
+            mCollBookBean = bean.getCallBookBean();
         }
     }
 

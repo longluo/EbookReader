@@ -1,12 +1,12 @@
 package com.longluo.ebookreader.event;
 
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 
 
 public class DeleteTaskEvent {
-    public CallBookBean collBook;
+    public CollBookBean collBook;
 
-    public DeleteTaskEvent(CallBookBean collBook) {
+    public DeleteTaskEvent(CollBookBean collBook) {
         this.collBook = collBook;
     }
 }

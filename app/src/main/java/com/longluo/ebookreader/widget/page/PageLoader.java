@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat;
 import android.text.TextPaint;
 
 import com.longluo.ebookreader.model.bean.BookRecordBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.local.BookRepository;
 import com.longluo.ebookreader.model.local.ReadSettingManager;
 import com.longluo.ebookreader.utils.Constant;
@@ -54,7 +54,7 @@ public abstract class PageLoader {
     // 当前章节列表
     protected List<TxtChapter> mChapterList;
     // 书本对象
-    protected CallBookBean mCallBook;
+    protected CollBookBean mCallBook;
     // 监听器
     protected OnPageChangeListener mPageChangeListener;
 
@@ -138,7 +138,7 @@ public abstract class PageLoader {
     private int mLastChapterPos = 0;
 
     /*****************************init params*******************************/
-    public PageLoader(PageView pageView, CallBookBean callBook) {
+    public PageLoader(PageView pageView, CollBookBean callBook) {
         mPageView = pageView;
         mContext = pageView.getContext();
         mCallBook = callBook;
@@ -499,7 +499,7 @@ public abstract class PageLoader {
      *
      * @return
      */
-    public CallBookBean getCallBook() {
+    public CollBookBean getCallBook() {
         return mCallBook;
     }
 

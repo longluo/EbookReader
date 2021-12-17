@@ -1,14 +1,13 @@
 package com.longluo.ebookreader.model.remote;
 
 import com.longluo.ebookreader.model.bean.BookChapterBean;
-import com.longluo.ebookreader.model.bean.BookCommentBean;
 import com.longluo.ebookreader.model.bean.BookDetailBean;
 import com.longluo.ebookreader.model.bean.BookHelpsBean;
 import com.longluo.ebookreader.model.bean.BookListBean;
 import com.longluo.ebookreader.model.bean.BookListDetailBean;
 import com.longluo.ebookreader.model.bean.BookReviewBean;
 import com.longluo.ebookreader.model.bean.BookTagBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.bean.ChapterInfoBean;
 import com.longluo.ebookreader.model.bean.HelpsDetailBean;
 import com.longluo.ebookreader.model.bean.ReviewDetailBean;
@@ -49,7 +48,7 @@ public class RemoteRepository {
         return sInstance;
     }
 
-    public Single<List<CallBookBean>> getRecommendBooks(String gender) {
+    public Single<List<CollBookBean>> getRecommendBooks(String gender) {
         return mBookApi.getRecommendBookPackage(gender)
                 .map(bean -> bean.getBooks());
     }

@@ -1,7 +1,7 @@
 package com.longluo.ebookreader.widget.page;
 
 import com.longluo.ebookreader.model.bean.BookChapterBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.local.BookRepository;
 import com.longluo.ebookreader.model.local.Void;
 import com.longluo.ebookreader.utils.Charset;
@@ -62,7 +62,7 @@ public class LocalPageLoader extends PageLoader {
 
     private Disposable mChapterDisp = null;
 
-    public LocalPageLoader(PageView pageView, CallBookBean collBook) {
+    public LocalPageLoader(PageView pageView, CollBookBean collBook) {
         super(pageView, collBook);
         mStatus = STATUS_PARING;
     }

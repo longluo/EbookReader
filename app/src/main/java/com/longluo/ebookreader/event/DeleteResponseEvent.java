@@ -1,13 +1,13 @@
 package com.longluo.ebookreader.event;
 
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 
 
 public class DeleteResponseEvent {
     public boolean isDelete;
-    public CallBookBean collBook;
+    public CollBookBean collBook;
 
-    public DeleteResponseEvent(boolean isDelete, CallBookBean collBook) {
+    public DeleteResponseEvent(boolean isDelete, CollBookBean collBook) {
         this.isDelete = isDelete;
         this.collBook = collBook;
     }

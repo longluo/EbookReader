@@ -1,11 +1,8 @@
 package com.longluo.ebookreader.presenter.contract;
 
 import com.longluo.ebookreader.model.bean.BookDetailBean;
-import com.longluo.ebookreader.model.bean.BookListBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.ui.base.BaseContract;
-
-import java.util.List;
 
 
 public interface BookDetailContract {
@@ -23,6 +20,6 @@ public interface BookDetailContract {
         void refreshBookDetail(String bookId);
 
         //添加到书架上
-        void addToBookShelf(CallBookBean collBook);
+        void addToBookShelf(CollBookBean collBook);
     }
 }

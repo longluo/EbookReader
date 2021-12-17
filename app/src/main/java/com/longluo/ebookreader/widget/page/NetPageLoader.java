@@ -1,7 +1,7 @@
 package com.longluo.ebookreader.widget.page;
 
 import com.longluo.ebookreader.model.bean.BookChapterBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.local.BookRepository;
 import com.longluo.ebookreader.utils.BookManager;
 import com.longluo.ebookreader.utils.Constant;
@@ -21,7 +21,7 @@ import java.util.List;
 public class NetPageLoader extends PageLoader {
     private static final String TAG = "PageFactory";
 
-    public NetPageLoader(PageView pageView, CallBookBean collBook) {
+    public NetPageLoader(PageView pageView, CollBookBean collBook) {
         super(pageView, collBook);
     }
 

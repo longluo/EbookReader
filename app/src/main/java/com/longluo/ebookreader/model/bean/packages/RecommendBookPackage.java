@@ -1,7 +1,7 @@
 package com.longluo.ebookreader.model.bean.packages;
 
 import com.longluo.ebookreader.model.bean.BaseBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 
 import java.util.List;
 
@@ -11,13 +11,13 @@ import java.util.List;
 
 public class RecommendBookPackage extends BaseBean {
 
-    private List<CallBookBean> books;
+    private List<CollBookBean> books;
 
-    public List<CallBookBean> getBooks() {
+    public List<CollBookBean> getBooks() {
         return books;
     }
 
-    public void setBooks(List<CallBookBean> books) {
+    public void setBooks(List<CollBookBean> books) {
         this.books = books;
     }
 }

@@ -2,7 +2,7 @@ package com.longluo.ebookreader.presenter;
 
 import com.longluo.ebookreader.model.bean.BookChapterBean;
 import com.longluo.ebookreader.model.bean.BookDetailBean;
-import com.longluo.ebookreader.model.bean.CallBookBean;
+import com.longluo.ebookreader.model.bean.CollBookBean;
 import com.longluo.ebookreader.model.local.BookRepository;
 import com.longluo.ebookreader.model.remote.RemoteRepository;
 import com.longluo.ebookreader.presenter.contract.BookDetailContract;
@@ -28,9 +28,9 @@ public class BookDetailPresenter extends RxPresenter<BookDetailContract.View>
     }
 
     @Override
-    public void addToBookShelf(CallBookBean callBookBean)  {
+    public void addToBookShelf(CollBookBean collBookBean)  {
         Disposable disposable = RemoteRepository.getInstance()
-                .getBookChapters(callBookBean.get_id())
+                .getBookChapters(collBookBean.get_id())
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(
                         (d) -> mView.waitToBookShelf() //等待加载
@@ -45,10 +45,10 @@ public class BookDetailPresenter extends RxPresenter<BookDetailContract.View>
                             }
 
                             //设置目录
-                            callBookBean.setBookChapters(beans);
+                            collBookBean.setBookChapters(beans);
                             //存储收藏
                             BookRepository.getInstance()
-                                    .saveCallBookWithAsync(callBookBean);
+                                    .saveCallBookWithAsync(collBookBean);
 
                             mView.succeedToBookShelf();
                         }

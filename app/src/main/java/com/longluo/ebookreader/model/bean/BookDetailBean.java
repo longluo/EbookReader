@@ -74,7 +74,7 @@ public class BookDetailBean {
     private List<String> gender;
     private List<String> tags;
 
-    private CallBookBean callBookBean;
+    private CollBookBean collBookBean;
 
     public String get_id() {
         return _id;
@@ -300,15 +300,15 @@ public class BookDetailBean {
         this.tags = tags;
     }
 
-    public CallBookBean getCallBookBean() {
-        if (callBookBean == null) {
-            callBookBean = createCallBookBean();
+    public CollBookBean getCallBookBean() {
+        if (collBookBean == null) {
+            collBookBean = createCallBookBean();
         }
-        return callBookBean;
+        return collBookBean;
     }
 
-    public CallBookBean createCallBookBean() {
-        CallBookBean bean = new CallBookBean();
+    public CollBookBean createCallBookBean() {
+        CollBookBean bean = new CollBookBean();
         bean.set_id(get_id());
         bean.setTitle(getTitle());
         bean.setAuthor(getAuthor());

@@ -40,6 +40,7 @@ public class PageModeDialog extends Dialog {
 
     public PageModeDialog(Context context) {
         this(context, R.style.setting_dialog);
+
     }
 
     public PageModeDialog(Context context, int themeResId) {
@@ -52,6 +53,8 @@ public class PageModeDialog extends Dialog {
         super.onCreate(savedInstanceState);
         getWindow().setGravity(Gravity.BOTTOM);
         setContentView(R.layout.dialog_pagemode);
+
+        ButterKnife.bind(this);
 
         WindowManager m = getWindow().getWindowManager();
         Display d = m.getDefaultDisplay();

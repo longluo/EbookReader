@@ -18,13 +18,11 @@ import com.longluo.ebookreader.util.DisplayUtils;
 import com.longluo.ebookreader.view.CircleImageView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Administrator on 2016/7/26 0026.
- */
-public class SettingDialog extends Dialog {
 
+public class SettingDialog extends Dialog {
     @BindView(R.id.tv_dark)
     TextView tv_dark;
     @BindView(R.id.sb_brightness)
@@ -87,6 +85,7 @@ public class SettingDialog extends Dialog {
         super.onCreate(savedInstanceState);
         getWindow().setGravity(Gravity.BOTTOM);
         setContentView(R.layout.dialog_setting);
+        ButterKnife.bind(this);
 
         WindowManager m = getWindow().getWindowManager();
         Display d = m.getDefaultDisplay();

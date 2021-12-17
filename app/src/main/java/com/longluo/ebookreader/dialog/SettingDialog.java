@@ -85,7 +85,6 @@ public class SettingDialog extends Dialog {
         super.onCreate(savedInstanceState);
         getWindow().setGravity(Gravity.BOTTOM);
         setContentView(R.layout.dialog_setting);
-        ButterKnife.bind(this);
 
         WindowManager m = getWindow().getWindowManager();
         Display d = m.getDefaultDisplay();
@@ -97,6 +96,8 @@ public class SettingDialog extends Dialog {
         FONT_SIZE_MAX = (int) getContext().getResources().getDimension(R.dimen.reading_max_text_size);
 
         config = Config.getInstance();
+
+        ButterKnife.bind(this);
 
         //初始化亮度
         isSystem = config.isSystemLight();

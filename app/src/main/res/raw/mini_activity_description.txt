@@ -1,0 +1,9 @@
+精简版纯离线合成，仅给出示例集成合成的调用过程。
+
+可以测试离线合成功能，首次使用请联网
+**其中initTTS方法需要在新线程调用，否则会引起UI线程阻塞**
+纯在线模式请修改代码里ttsMode为TtsMode.ONLINE
+离在线模式请修改代码里ttsMode为TtsMode.MIX
+
+需手动将demo app/assets目录下的资源文件复制到TEMP_DIR =/sdcard/baiduTTS
+完整的SDK调用方式可以参见MainActivity

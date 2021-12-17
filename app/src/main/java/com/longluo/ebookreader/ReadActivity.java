@@ -29,6 +29,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.baidu.tts.auth.AuthInfo;
+import com.baidu.tts.chainofresponsibility.logger.LoggerProxy;
+import com.baidu.tts.client.SpeechError;
+import com.baidu.tts.client.SpeechSynthesizer;
+import com.baidu.tts.client.SpeechSynthesizerListener;
+import com.baidu.tts.client.TtsMode;
 import com.google.android.material.appbar.AppBarLayout;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookList;
@@ -45,13 +51,15 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 
-public class ReadActivity extends BaseActivity {
+public class ReadActivity extends BaseActivity implements SpeechSynthesizerListener {
     private static final String TAG = "ReadActivity";
 
     private final static String EXTRA_BOOK = "bookList";
@@ -102,6 +110,11 @@ public class ReadActivity extends BaseActivity {
     private SettingDialog mSettingDialog;
     private PageModeDialog mPageModeDialog;
     private Boolean mDayOrNight;
+
+    // 语音合成客户端
+    private SpeechSynthesizer mSpeechSynthesizer;
+    private boolean isSpeaking = false;
+    private boolean isOnlineSDK = true;
 
     private Handler mainHandler;
 
@@ -181,6 +194,24 @@ public class ReadActivity extends BaseActivity {
         }
 
         initDayOrNight();
+        initView();
+
+        initBaiduTTs();
+    }
+
+    private void initView() {
+        mainHandler = new Handler() {
+            /*
+             * @param msg
+             */
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (msg.obj != null) {
+//                    print(msg.obj.toString());
+                }
+            }
+        };
     }
 
     @Override
@@ -278,7 +309,7 @@ public class ReadActivity extends BaseActivity {
 
             @Override
             public Boolean prePage() {
-                if (isShow) {
+                if (isShow || isSpeaking) {
                     return false;
                 }
 
@@ -293,7 +324,7 @@ public class ReadActivity extends BaseActivity {
             @Override
             public Boolean nextPage() {
                 Log.e("setTouchListener", "nextPage");
-                if (isShow) {
+                if (isShow || isSpeaking) {
                     return false;
                 }
 
@@ -332,11 +363,17 @@ public class ReadActivity extends BaseActivity {
         if (!isShow) {
             hideSystemUI();
         }
+        if (mSpeechSynthesizer != null) {
+            mSpeechSynthesizer.resume();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        if (mSpeechSynthesizer != null) {
+            mSpeechSynthesizer.stop();
+        }
     }
 
     @Override
@@ -344,8 +381,11 @@ public class ReadActivity extends BaseActivity {
         super.onDestroy();
         pageFactory.clear();
         bookpage = null;
-
         unregisterReceiver(myReceiver);
+        isSpeaking = false;
+        if (mSpeechSynthesizer != null) {
+            mSpeechSynthesizer.release();
+        }
     }
 
     @Override
@@ -410,6 +450,19 @@ public class ReadActivity extends BaseActivity {
                     } catch (Exception e) {
                         Toast.makeText(ReadActivity.this, "添加书签失败", Toast.LENGTH_SHORT).show();
                     }
+                }
+            }
+        } else if (id == R.id.action_read_book) {
+            if (mSpeechSynthesizer != null) {
+                String str = pageFactory.getCurrentPage().getLineToString();
+                Log.e(TAG, "str = " + str.length());
+
+                int result = mSpeechSynthesizer.speak(str);
+                if (result < 0) {
+                    Log.e(TAG, "error result = " + result);
+                } else {
+                    hideReadSetting();
+                    isSpeaking = true;
                 }
             }
         }
@@ -510,18 +563,22 @@ public class ReadActivity extends BaseActivity {
         isShow = true;
         rl_progress.setVisibility(View.GONE);
 
+        if (isSpeaking) {
+            Animation topAnim = AnimationUtils.loadAnimation(this, R.anim.dialog_top_enter);
+            rl_read_bottom.startAnimation(topAnim);
+            rl_read_bottom.setVisibility(View.VISIBLE);
+        } else {
+            showSystemUI();
 
-        showSystemUI();
-
-        Animation bottomAnim = AnimationUtils.loadAnimation(this, R.anim.dialog_enter);
-        Animation topAnim = AnimationUtils.loadAnimation(this, R.anim.dialog_top_enter);
-        rl_bottom.startAnimation(topAnim);
-        appbar.startAnimation(topAnim);
+            Animation bottomAnim = AnimationUtils.loadAnimation(this, R.anim.dialog_enter);
+            Animation topAnim = AnimationUtils.loadAnimation(this, R.anim.dialog_top_enter);
+            rl_bottom.startAnimation(topAnim);
+            appbar.startAnimation(topAnim);
 //        ll_top.startAnimation(topAnim);
-        rl_bottom.setVisibility(View.VISIBLE);
+            rl_bottom.setVisibility(View.VISIBLE);
 //        ll_top.setVisibility(View.VISIBLE);
-        appbar.setVisibility(View.VISIBLE);
-
+            appbar.setVisibility(View.VISIBLE);
+        }
     }
 
     private void hideReadSetting() {
@@ -537,12 +594,49 @@ public class ReadActivity extends BaseActivity {
         if (rl_read_bottom.getVisibility() == View.VISIBLE) {
             rl_read_bottom.startAnimation(topAnim);
         }
-//        ll_top.startAnimation(topAnim);
+
         rl_bottom.setVisibility(View.GONE);
         rl_read_bottom.setVisibility(View.GONE);
-//        ll_top.setVisibility(View.GONE);
+
         appbar.setVisibility(View.GONE);
         hideSystemUI();
+    }
+
+    /**
+     * 注意此处为了说明流程，故意在UI线程中调用。
+     * 实际集成中，该方法一定在新线程中调用，并且该线程不能结束。具体可以参考NonBlockSyntherizer的写法
+     */
+    private void initBaiduTTs() {
+        LoggerProxy.printable(true); // 日志打印在logcat中
+
+        // 1. 获取实例
+        mSpeechSynthesizer = SpeechSynthesizer.getInstance();
+        mSpeechSynthesizer.setContext(this);
+
+        // 2. 设置listener
+        mSpeechSynthesizer.setSpeechSynthesizerListener(this);
+
+        // 3. 设置appId，appKey.secretKey
+        int result = mSpeechSynthesizer.setAppId("25367863");
+        result = mSpeechSynthesizer.setApiKey("atqtokGtwgi8GIVkYMxGClnZ", "Of6IheDaVL6547r4HL6kv5WhpwX3NGsA");
+
+        // 5. 以下setParam 参数选填。不填写则默认值生效
+        // 设置在线发声音人： 0 普通女声（默认） 1 普通男声  3 情感男声<度逍遥> 4 情感儿童声<度丫丫>
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEAKER, "0");
+        // 设置合成的音量，0-15 ，默认 5
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_VOLUME, "9");
+        // 设置合成的语速，0-15 ，默认 5
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_SPEED, "5");
+        // 设置合成的语调，0-15 ，默认 5
+        mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_PITCH, "5");
+
+        // x. 额外 ： 自动so文件是否复制正确及上面设置的参数
+        Map<String, String> params = new HashMap<>();
+        // 复制下上面的 mSpeechSynthesizer.setParam参数
+
+        // 6. 初始化
+        result = mSpeechSynthesizer.initTts(TtsMode.ONLINE);
+
     }
 
     @OnClick({R.id.tv_progress, R.id.rl_progress, R.id.tv_pre, R.id.sb_progress, R.id.tv_next, R.id.tv_directory, R.id.tv_dayornight, R.id.tv_pagemode, R.id.tv_setting, R.id.bookpop_bottom, R.id.rl_bottom, R.id.tv_stop_read})
@@ -590,8 +684,99 @@ public class ReadActivity extends BaseActivity {
             case R.id.rl_bottom:
                 break;
 
-            default:
+            case R.id.tv_stop_read:
+                if (mSpeechSynthesizer != null) {
+                    mSpeechSynthesizer.stop();
+                    isSpeaking = false;
+                    hideReadSetting();
+                }
                 break;
         }
+    }
+
+    @Override
+    public void onSynthesizeStart(String s) {
+        Log.d(TAG, "onSynthesizeStart, s=" + s);
+
+    }
+
+    /**
+     * 合成数据和进度的回调接口，分多次回调
+     *
+     * @param utteranceId
+     * @param data        合成的音频数据。该音频数据是采样率为16K，2字节精度，单声道的pcm数据。
+     * @param progress    文本按字符划分的进度，比如:你好啊 进度是0-3
+     */
+    @Override
+    public void onSynthesizeDataArrived(String utteranceId, byte[] data, int progress, int engineType) {
+        Log.d(TAG, "onSynthesizeDataArrived, progress=" + progress);
+
+    }
+
+    /**
+     * 合成正常结束，每句合成正常结束都会回调，如果过程中出错，则回调onError，不再回调此接口
+     *
+     * @param utteranceId
+     */
+    @Override
+    public void onSynthesizeFinish(String utteranceId) {
+        Log.d(TAG, "onSynthesizeFinish, utteranceId=" + utteranceId);
+
+    }
+
+    /**
+     * 播放开始，每句播放开始都会回调
+     *
+     * @param utteranceId
+     */
+    @Override
+    public void onSpeechStart(String utteranceId) {
+        Log.d(TAG, "onSpeechStart, utteranceId=" + utteranceId);
+
+    }
+
+    /**
+     * 播放进度回调接口，分多次回调
+     *
+     * @param utteranceId
+     * @param progress    文本按字符划分的进度，比如:你好啊 进度是0-3
+     */
+    @Override
+    public void onSpeechProgressChanged(String utteranceId, int progress) {
+        Log.d(TAG, "onSpeechProgressChanged, utteranceId=" + utteranceId);
+
+    }
+
+    /**
+     * 播放正常结束，每句播放正常结束都会回调，如果过程中出错，则回调onError,不再回调此接口
+     *
+     * @param utteranceId
+     */
+    @Override
+    public void onSpeechFinish(String utteranceId) {
+        Log.d(TAG, "onSpeechFinish, utteranceId=" + utteranceId);
+
+        pageFactory.nextPage();
+        if (pageFactory.islastPage()) {
+            isSpeaking = false;
+            Toast.makeText(ReadActivity.this, "小说已经读完了", Toast.LENGTH_SHORT);
+        } else {
+            isSpeaking = true;
+            mSpeechSynthesizer.speak(pageFactory.getCurrentPage().getLineToString());
+        }
+    }
+
+    /**
+     * 当合成或者播放过程中出错时回调此接口
+     *
+     * @param utteranceId
+     * @param error       包含错误码和错误信息
+     */
+    @Override
+    public void onError(String utteranceId, SpeechError error) {
+        Log.e(TAG, "onError, utteranceId=" + utteranceId + ", error=" + error.code + "," + error.description);
+
+        mSpeechSynthesizer.stop();
+        isSpeaking = false;
     }
 }

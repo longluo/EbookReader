@@ -17,9 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * Created by Administrator on 2016/8/30 0030.
- */
+
 public class PageModeDialog extends Dialog {
 
     @BindView(R.id.tv_simulation)

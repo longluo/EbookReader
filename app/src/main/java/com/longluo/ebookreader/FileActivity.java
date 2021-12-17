@@ -19,7 +19,6 @@ import com.longluo.ebookreader.adapter.FileAdapter;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookList;
 import com.longluo.ebookreader.util.FileUtils;
-import com.longluo.ebookreader.util.Fileutil;
 
 import org.litepal.crud.DataSupport;
 
@@ -44,7 +43,7 @@ public class FileActivity extends BaseActivity {
 
     public static final int EXTERNAL_STORAGE_REQ_CODE = 10;
 
-    //文件根目录
+    // 文件根目录
     private File root;
     private List<File> listFile = new ArrayList<>();
     private static FileAdapter adapter;
@@ -106,6 +105,7 @@ public class FileActivity extends BaseActivity {
                 setAddFileText(adapter.getCheckNum());
             }
         });
+
         //全选
         btnChooseAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +113,7 @@ public class FileActivity extends BaseActivity {
                 adapter.checkAll();
             }
         });
+
         //取消选择
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +121,7 @@ public class FileActivity extends BaseActivity {
                 adapter.cancel();
             }
         });
+
         //把已经选择的书加入书架
         btnAddFile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +149,7 @@ public class FileActivity extends BaseActivity {
             List<BookList> bookLists = new ArrayList<BookList>();
             for (File file : files) {
                 BookList bookList = new BookList();
-                String bookName = Fileutil.getFileNameNoEx(file.getName());
+                String bookName = FileUtils.getFileNameNoEx(file.getName());
                 bookList.setBookname(bookName);
                 bookList.setBookpath(file.getAbsolutePath());
                 bookLists.add(bookList);
@@ -191,13 +193,18 @@ public class FileActivity extends BaseActivity {
                 case FAIL:
                     msg = "由于一些原因添加书本失败";
                     break;
+
                 case SUCCESS:
                     msg = "添加书本成功";
                     setAddFileText(0);
                     adapter.cancel();
                     break;
+
                 case REPEAT:
                     msg = "书本" + repeatBookList.getBookname() + "重复了";
+                    break;
+
+                default:
                     break;
             }
 
@@ -230,9 +237,14 @@ public class FileActivity extends BaseActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             listFile = FileUtils.getSuffixFile(root.getAbsolutePath(), ".txt");
+            listFile.addAll(FileUtils.getSuffixFile(root.getAbsolutePath(), ".epub"));
+            listFile.addAll(FileUtils.getSuffixFile(root.getAbsolutePath(), ".azw3"));
+            listFile.addAll(FileUtils.getSuffixFile(root.getAbsolutePath(), ".mobi"));
+
             if (listFile == null || listFile.isEmpty()) {
                 return false;
             }
+
             return true;
         }
 
@@ -272,5 +284,4 @@ public class FileActivity extends BaseActivity {
                 break;
         }
     }
-
 }

@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.util.Fileutil;
+import com.longluo.ebookreader.util.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,9 +24,6 @@ import java.util.Map;
 import butterknife.BindView;
 
 
-/**
- * Created by Administrator on 2015/12/19.
- */
 public class FileAdapter extends BaseAdapter {
     private List<File> files;
     private HashMap<File, Boolean> checkMap = new HashMap<>();
@@ -174,7 +171,7 @@ public class FileAdapter extends BaseAdapter {
         } else {
             viewHolder.fileIcon.setImageResource(R.mipmap.file_type_txt);
             viewHolder.checkBox.setVisibility(View.VISIBLE);
-            viewHolder.textSize.setText(Fileutil.formatFileSize(file.length()));
+            viewHolder.textSize.setText(FileUtils.formatFileSize(file.length()));
         }
     }
 

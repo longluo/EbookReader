@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.filechooser;
+package com.longluo.ebookreader.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -30,6 +30,8 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.filechooser.BaseFragmentAdapter;
+import com.longluo.ebookreader.filechooser.TextDetailDocumentsCell;
 import com.longluo.ebookreader.ui.activity.ReadActivity;
 import com.longluo.ebookreader.db.BookList;
 import com.longluo.ebookreader.util.FileUtils;

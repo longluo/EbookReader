@@ -1,11 +1,3 @@
-/*
- * This is the source code of Telegram for Android v. 1.7.x.
- * It is licensed under GNU GPL v. 2 or later.
- * You should have received a copy of the license in this archive (see LICENSE).
- *
- * Copyright Nikolai Kudashov, 2013-2014.
- */
-
 package com.longluo.ebookreader.filechooser;
 
 import android.content.Context;
@@ -19,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 
 public class TextDetailDocumentsCell extends FrameLayout {
 
@@ -101,7 +94,7 @@ public class TextDetailDocumentsCell extends FrameLayout {
         layoutParams.width = LayoutParams.WRAP_CONTENT;
         layoutParams.height = LayoutParams.WRAP_CONTENT;
 //        layoutParams.topMargin = AndroidUtilities.dp(34);
-        layoutParams.leftMargin = AndroidUtilities.dp(16) ;
+        layoutParams.leftMargin = AndroidUtilities.dp(16);
         layoutParams.rightMargin = AndroidUtilities.dp(16);
         layoutParams.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
         checkBox.setLayoutParams(layoutParams);
@@ -119,7 +112,7 @@ public class TextDetailDocumentsCell extends FrameLayout {
         layoutParams = (LayoutParams) storageTextView.getLayoutParams();
         layoutParams.width = LayoutParams.WRAP_CONTENT;
         layoutParams.height = LayoutParams.WRAP_CONTENT;
-        layoutParams.leftMargin = AndroidUtilities.dp(16) ;
+        layoutParams.leftMargin = AndroidUtilities.dp(16);
         layoutParams.rightMargin = AndroidUtilities.dp(16);
         layoutParams.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
         storageTextView.setLayoutParams(layoutParams);
@@ -130,7 +123,7 @@ public class TextDetailDocumentsCell extends FrameLayout {
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(AndroidUtilities.dp(64), MeasureSpec.EXACTLY));
     }
 
-    public void setTextAndValueAndTypeAndThumb(String text, String value, String type, String thumb, int resId,boolean isStorage) {
+    public void setTextAndValueAndTypeAndThumb(String text, String value, String type, String thumb, int resId, boolean isStorage) {
         textView.setText(text);
         valueTextView.setText(value);
 
@@ -138,10 +131,10 @@ public class TextDetailDocumentsCell extends FrameLayout {
             typeTextView.setVisibility(VISIBLE);
             typeTextView.setText(type);
 
-            if (isStorage){
+            if (isStorage) {
                 storageTextView.setVisibility(VISIBLE);
                 checkBox.setVisibility(View.GONE);
-            }else{
+            } else {
                 storageTextView.setVisibility(GONE);
                 checkBox.setVisibility(View.VISIBLE);
             }
@@ -154,7 +147,7 @@ public class TextDetailDocumentsCell extends FrameLayout {
         if (resId != 0) {
             if (thumb != null) {
 //                imageView.setImage(thumb, "40_40", null);
-            } else  {
+            } else {
                 imageView.setImageResource(resId);
             }
             imageView.setVisibility(VISIBLE);
@@ -163,7 +156,7 @@ public class TextDetailDocumentsCell extends FrameLayout {
         }
     }
 
-    public CheckBox getCheckBox(){
+    public CheckBox getCheckBox() {
         return checkBox;
     }
 

@@ -35,7 +35,6 @@ import com.longluo.ebookreader.widget.animation.ContentScaleAnimation;
 import com.longluo.ebookreader.widget.animation.Rotate3DAnimation;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookList;
-import com.longluo.ebookreader.filechooser.FileChooserActivity;
 import com.longluo.ebookreader.util.DisplayUtils;
 import com.longluo.ebookreader.view.DragGridView;
 

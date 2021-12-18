@@ -76,7 +76,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".filechooser.FileChooserActivity"
+            android:name=".ui.activity.FileChooserActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
 

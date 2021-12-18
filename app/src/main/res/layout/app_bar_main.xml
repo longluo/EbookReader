@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.longluo.ebookreader.MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@mipmap/bookshelf_header_bg"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.longluo.ebookreader.view.DragGridView
+        android:id="@+id/bookShelf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="#00000000"
+        android:columnWidth="90.0dip"
+        android:fadingEdge="none"
+        android:horizontalSpacing="5dp"
+        android:listSelector="#00000000"
+        android:numColumns="3"
+        android:paddingBottom="30dp"
+        android:scrollbars="none"
+        android:verticalSpacing="3dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="@dimen/fab_margin"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/select_file"
+        app:backgroundTint="@color/halfColorPrimary"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"
+        app:rippleColor="?attr/colorPrimary" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

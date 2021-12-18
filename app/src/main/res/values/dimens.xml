@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="fab_margin">22dp</dimen>
+    <dimen name="app_bar_height">256dp</dimen>
+
+    <!-- 状态栏电池厚度 -->
+    <dimen name="reading_board_battery_border_width">1dp</dimen>
+    <!-- 书本宽边距 -->
+    <dimen name="readingMarginWidth">15dp</dimen>
+    <!-- 书本高边距 -->
+    <dimen name="readingMarginHeight">30dp</dimen>
+    <!-- 状态栏离底部距离 -->
+    <dimen name="reading_status_margin_bottom">3dp</dimen>
+    <!-- 行间距 -->
+    <dimen name="reading_line_spacing">10dp</dimen>
+    <!-- 段间距 -->
+    <dimen name="reading_paragraph_spacing">30dp</dimen>
+    <!-- 书本字体默认大小 -->
+    <dimen name="reading_default_text_size">20sp</dimen>
+    <!-- 书本字体最小大小 -->
+    <dimen name="reading_min_text_size">10sp</dimen>
+    <!-- 书本字体最大大小 -->
+    <dimen name="reading_max_text_size">30sp</dimen>
+    <!-- 设置行高 -->
+    <dimen name="setting_height">60dp</dimen>
+
+
     <dimen name="wh_button">36dp</dimen>
     <dimen name="wh_button_big">38dp</dimen>
     <dimen name="wh_button_small">25dp</dimen>

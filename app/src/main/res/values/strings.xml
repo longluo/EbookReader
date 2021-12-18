@@ -2,6 +2,102 @@
     <string name="app_name">EbookReader</string>
     <string name="action_settings">Settings</string>
 
+
+    <string name="sync_button">纯离线语音合成</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_select_file">导入书本</string>
+    <string name="action_search_file">搜索文件</string>
+    <string name="action_add_bookmark">添加书签</string>
+    <string name="action_read_book">读书</string>
+
+    <string name="press_twice_to_exit">连续点击才能退出</string>
+    <string name="root">根目录</string>
+    <string name="add_files">加入书架</string>
+    <string name="choose_all">全选</string>
+    <string name="delete">取消</string>
+    <string name="bookpop_size">字体</string>
+    <string name="bookpop_light">亮度</string>
+    <string name="bookpop_card">书签</string>
+    <string name="bookpop_send">跳转</string>
+
+    <string name="read_setting_directory">目录</string>
+    <string name="read_setting_night">夜间</string>
+    <string name="read_setting_day">日间</string>
+    <string name="read_setting_pagemode">翻页</string>
+    <string name="read_setting_set">设置</string>
+    <string name="read_setting_pre">上一章</string>
+    <string name="read_setting_next">下一章</string>
+
+    <string name="setting_system">系统</string>
+    <string name="setting_dark">暗</string>
+    <string name="setting_bright">亮</string>
+    <string name="setting_add">A+</string>
+    <string name="setting_subtract">A-</string>
+    <string name="setting_default">默认</string>
+
+    <string name="font_default">系统默认</string>
+    <string name="font_qihei">羿创旗黑</string>
+    <string name="font_xinshou">新宋体</string>
+    <string name="font_wawa">娃娃体</string>
+    <string name="font_fzxinghei">行黑</string>
+    <string name="font_fzkatong">卡通</string>
+    <string name="font_bysong">繁宋体</string>
+    
+    <string name="page_mode_simulation">仿真</string>
+    <string name="page_mode_cover">覆盖</string>
+    <string name="page_mode_slide">滑动</string>
+    <string name="page_mode_none">无</string>
+
+    <string name="readseting">设置</string>
+
+     <string name="aboutContent">如风小说阅读是专注于提供更舒适的阅读体验,主打本地阅读,操作方式简单易上手,目前支持txt格式。</string>
+
+    <string-array name="voicer_cloud_entries">
+        <item>小燕—女青、中英、普通话</item>
+        <item>小艾—女青、中英、普通话、支持情感</item>
+        <item>小宇—男青、中英、普通话</item>
+        <item>凯瑟琳—女青、英</item>
+        <item>亨利—男青、英</item>
+        <item>玛丽—女青、英</item>
+        <item>小研—女青、中英、普通话</item>
+        <item>小琪—女青、中英、普通话</item>
+        <item>小峰—男青、中英、普通话</item>
+        <item>小梅—女青、中英、粤语</item>
+        <item>小莉—女青、中英、台湾普通话</item>
+        <item>小蓉—女青、中、四川话</item>
+        <item>小芸—女青、中、东北话</item>
+        <item>小坤—男青、中、河南话</item>
+        <item>小强—男青、中、湖南话</item>
+        <item>小莹—女青、中、陕西话</item>
+        <item>小新—男童、中、普通话</item>
+        <item>楠楠—女童、中、普通话</item>
+        <item>老孙—男老、中、普通话</item>
+    </string-array>
+    <string-array name="voicer_cloud_values">
+        <item>xiaoyan</item>
+        <item>aisxa</item>
+        <item>xiaoyu</item>
+        <item>catherine</item>
+        <item>henry</item>
+        <item>vimary</item>
+        <item>vixy</item>
+        <item>xiaoqi</item>
+        <item>vixf</item>
+        <item>xiaomei</item>
+        <item>xiaolin</item>
+        <item>xiaorong</item>
+        <item>xiaoqian</item>
+        <item>xiaokun</item>
+        <item>xiaoqiang</item>
+        <item>vixying</item>
+        <item>xiaoxin</item>
+        <item>nannan</item>
+        <item>vils</item>
+    </string-array>
+
     <string-array name="nb_fragment_title">
         <item>@string/nb.fragment.title.bookshelf</item>
         <item>@string/nb.fragment.title.community</item>
@@ -463,7 +559,6 @@
     <string name="make_text_reflow">Reflow PDF</string>
     <string name="open_with">Open with</string>
     <string name="send_file">Send file</string>
-    <string name="delete">Delete</string>
     <string name="remove_from_library">Remove from Library</string>
     <string name="send_snapshot_of_the_page">Send page</string>
     <string name="file_info">File info</string>

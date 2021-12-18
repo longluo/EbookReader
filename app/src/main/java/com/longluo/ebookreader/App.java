@@ -1,17 +1,17 @@
 package com.longluo.ebookreader;
 
+import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 
-import androidx.multidex.MultiDexApplication;
-
-import com.longluo.ebookreader.service.DownloadService;
+import com.longluo.ebookreader.util.PageFactory;
 import com.squareup.leakcanary.LeakCanary;
 
-public class App extends MultiDexApplication {
+import org.litepal.LitePal;
 
-    private static Context sInstance;
+
+public class App extends Application {
+
+    private static volatile Context sInstance = null;
 
     @Override
     public void onCreate() {
@@ -19,9 +19,9 @@ public class App extends MultiDexApplication {
 
         sInstance = getApplicationContext();
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            startService(new Intent(getContext(), DownloadService.class));
-        }
+        LitePal.initialize(this);
+        Config.createConfig(this);
+        PageFactory.createPageFactory(this);
 
         // 初始化内存分析工具
         if (!LeakCanary.isInAnalyzerProcess(this)) {

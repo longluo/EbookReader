@@ -18,7 +18,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.6.3"
+        classpath 'com.android.tools.build:gradle:3.6.3'
         // Added for bufferknife for BindView
         classpath 'com.jakewharton:butterknife-gradle-plugin:10.2.1'
 
@@ -51,8 +51,8 @@ task clean(type: Delete) {
 }
 
 ext {
-    versionCode = 14
-    versionName = '6.6'
+    versionCode = 15
+    versionName = '6.6.1'
 
     libMinSdkVersion = 23
     appMinSdkVersion = 23

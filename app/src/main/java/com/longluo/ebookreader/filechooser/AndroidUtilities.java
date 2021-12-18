@@ -8,6 +8,7 @@ import android.view.WindowManager;
 
 import com.longluo.ebookreader.App;
 
+
 public class AndroidUtilities {
 
 	public static float density = 1;

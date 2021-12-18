@@ -1,4 +1,4 @@
-package com.longluo.ebookreader;
+package com.longluo.ebookreader.ui.activity;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -11,7 +11,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.android.material.appbar.AppBarLayout;
-import com.longluo.ebookreader.adapter.MyPagerAdapter;
+import com.longluo.ebookreader.Config;
+import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.ui.adapter.MyPagerAdapter;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookCatalogue;
 import com.longluo.ebookreader.util.FileUtils;

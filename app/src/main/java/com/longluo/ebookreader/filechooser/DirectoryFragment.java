@@ -30,7 +30,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.ReadActivity;
+import com.longluo.ebookreader.ui.activity.ReadActivity;
 import com.longluo.ebookreader.db.BookList;
 import com.longluo.ebookreader.util.FileUtils;
 

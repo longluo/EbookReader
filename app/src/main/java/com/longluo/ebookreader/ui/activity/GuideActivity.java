@@ -1,10 +1,12 @@
-package com.longluo.ebookreader;
+package com.longluo.ebookreader.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.longluo.ebookreader.R;
 
 
 public class GuideActivity extends AppCompatActivity {

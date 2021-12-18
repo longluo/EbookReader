@@ -1,4 +1,4 @@
-package com.longluo.ebookreader;
+package com.longluo.ebookreader.ui.activity;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -35,11 +35,13 @@ import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
 import com.google.android.material.appbar.AppBarLayout;
+import com.longluo.ebookreader.Config;
+import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookList;
 import com.longluo.ebookreader.db.BookMarks;
-import com.longluo.ebookreader.dialog.PageModeDialog;
-import com.longluo.ebookreader.dialog.SettingDialog;
+import com.longluo.ebookreader.ui.dialog.PageModeDialog;
+import com.longluo.ebookreader.ui.dialog.SettingDialog;
 import com.longluo.ebookreader.util.BrightnessUtil;
 import com.longluo.ebookreader.util.PageFactory;
 import com.longluo.ebookreader.view.PageWidget;

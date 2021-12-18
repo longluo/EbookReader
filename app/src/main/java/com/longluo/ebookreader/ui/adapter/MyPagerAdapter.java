@@ -1,11 +1,11 @@
-package com.longluo.ebookreader.adapter;
+package com.longluo.ebookreader.ui.adapter;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.longluo.ebookreader.fragment.BookMarkFragment;
-import com.longluo.ebookreader.fragment.CatalogFragment;
+import com.longluo.ebookreader.ui.fragment.BookMarkFragment;
+import com.longluo.ebookreader.ui.fragment.CatalogFragment;
 
 /**
  * Created by Administrator on 2016/1/12.

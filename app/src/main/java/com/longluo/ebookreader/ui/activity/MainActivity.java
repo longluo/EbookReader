@@ -1,4 +1,4 @@
-package com.longluo.ebookreader;
+package com.longluo.ebookreader.ui.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -28,9 +28,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.longluo.ebookreader.adapter.ShelfAdapter;
-import com.longluo.ebookreader.animation.ContentScaleAnimation;
-import com.longluo.ebookreader.animation.Rotate3DAnimation;
+import com.longluo.ebookreader.Config;
+import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.ui.adapter.ShelfAdapter;
+import com.longluo.ebookreader.widget.animation.ContentScaleAnimation;
+import com.longluo.ebookreader.widget.animation.Rotate3DAnimation;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookList;
 import com.longluo.ebookreader.filechooser.FileChooserActivity;

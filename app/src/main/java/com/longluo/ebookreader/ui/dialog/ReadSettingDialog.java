@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.dialog;
+package com.longluo.ebookreader.ui.dialog;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;

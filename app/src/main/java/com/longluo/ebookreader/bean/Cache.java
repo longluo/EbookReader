@@ -2,9 +2,7 @@ package com.longluo.ebookreader.bean;
 
 import java.lang.ref.WeakReference;
 
-/**
- * Created by Administrator on 2016/8/15 0015.
- */
+
 public class Cache {
     private long size;
     private WeakReference<char[]> data;

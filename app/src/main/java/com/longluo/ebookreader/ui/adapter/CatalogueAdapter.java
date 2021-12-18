@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.adapter;
+package com.longluo.ebookreader.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;

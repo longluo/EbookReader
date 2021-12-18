@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.animation;
+package com.longluo.ebookreader.widget.animation;
 
 import android.graphics.Camera;
 import android.graphics.Matrix;

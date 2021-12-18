@@ -1,4 +1,4 @@
-package com.longluo.ebookreader;
+package com.longluo.ebookreader.ui.activity;
 
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +11,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.util.CommonUtil;
 

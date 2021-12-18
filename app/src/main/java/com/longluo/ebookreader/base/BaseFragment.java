@@ -1,20 +1,19 @@
 package com.longluo.ebookreader.base;
 
-import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
 import butterknife.ButterKnife;
 
-/**
- * Created by Administrator on 2016/8/31 0031.
- */
+
 public abstract class BaseFragment extends Fragment {
 
     private View rootView;
+
     /**
      * 初始化布局
      */
@@ -35,7 +34,7 @@ public abstract class BaseFragment extends Fragment {
         return view;
     }
 
-    public View getRootView(){
+    public View getRootView() {
         return rootView;
     }
 

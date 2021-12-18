@@ -1,18 +1,15 @@
-package com.longluo.ebookreader.fragment;
+package com.longluo.ebookreader.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.adapter.MarkAdapter;
+import com.longluo.ebookreader.ui.adapter.MarkAdapter;
 import com.longluo.ebookreader.base.BaseFragment;
-import com.longluo.ebookreader.db.BookList;
 import com.longluo.ebookreader.db.BookMarks;
 import com.longluo.ebookreader.util.PageFactory;
 
@@ -22,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2016/8/31 0031.

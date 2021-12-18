@@ -1,4 +1,4 @@
-package com.longluo.ebookreader;
+package com.longluo.ebookreader.ui.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -15,7 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 
-import com.longluo.ebookreader.adapter.FileAdapter;
+import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.ui.adapter.FileAdapter;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookList;
 import com.longluo.ebookreader.util.FileUtils;

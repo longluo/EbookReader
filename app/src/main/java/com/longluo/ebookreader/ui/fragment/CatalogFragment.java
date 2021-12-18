@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.fragment;
+package com.longluo.ebookreader.ui.fragment;
 
 import android.os.Bundle;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.adapter.CatalogueAdapter;
+import com.longluo.ebookreader.ui.adapter.CatalogueAdapter;
 import com.longluo.ebookreader.base.BaseFragment;
 import com.longluo.ebookreader.db.BookCatalogue;
 import com.longluo.ebookreader.util.PageFactory;

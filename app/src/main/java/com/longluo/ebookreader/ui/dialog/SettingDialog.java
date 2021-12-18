@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.dialog;
+package com.longluo.ebookreader.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

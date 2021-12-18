@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.longluo.ebookreader.FileActivity;
+import com.longluo.ebookreader.ui.activity.FileActivity;
 import com.longluo.ebookreader.R;
 
 import java.util.ArrayList;

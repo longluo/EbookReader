@@ -21,7 +21,7 @@ public class SplashActivity extends AppCompatActivity {
      * Number of seconds to count down before showing the app open ad. This simulates the time needed
      * to load the app.
      */
-    private static final long COUNTER_TIME = 5;
+    private static final long COUNTER_TIME = 1;
 
     private long secondsRemaining;
 
@@ -77,6 +77,7 @@ public class SplashActivity extends AppCompatActivity {
                                         });
                     }
                 };
+
         countDownTimer.start();
     }
 

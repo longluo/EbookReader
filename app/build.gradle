@@ -119,9 +119,8 @@ dependencies {
     
     implementation 'com.google.android.gms:play-services-ads:20.5.0'
 
-    def lifecycle_version = '2.3.1'
-    implementation 'androidx.lifecycle:lifecycle-process:$lifecycle_version'
-    implementation 'androidx.lifecycle:lifecycle-runtime:$lifecycle_version'
-    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:$lifecycle_version'
+    implementation 'androidx.lifecycle:lifecycle-process:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.3.1'
+    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.3.1'
 
 }

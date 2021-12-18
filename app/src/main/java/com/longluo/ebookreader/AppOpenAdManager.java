@@ -200,5 +200,4 @@ public class AppOpenAdManager {
         return isShowingAd;
     }
 
-
 }

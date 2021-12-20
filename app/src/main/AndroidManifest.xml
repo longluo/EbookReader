@@ -43,7 +43,7 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <activity
+<!--        <activity
             android:name=".ui.activity.SplashActivity"
             android:exported="true"
             android:noHistory="true"
@@ -53,7 +53,19 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>-->
+
+        <activity
+            android:name=".ui.activity.GuideActivity"
+            android:label="@string/app_name"
+            android:theme="@style/guideTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
 
         <activity
             android:name=".ui.activity.MainActivity"
@@ -88,10 +100,6 @@
         <activity android:name="com.longluo.viewer.DocumentActivity" />
 
         <activity android:name="com.longluo.viewer.OutlineActivity" />
-
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-9593277592990114~7381749732" />
 
     </application>
 </manifest>

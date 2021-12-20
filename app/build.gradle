@@ -117,7 +117,7 @@ dependencies {
     // OpenCC to convert Simp. Chinese to Trad. Chinese
     implementation 'com.zqc.opencc.android.lib:lib-opencc-android:0.8.0@aar'
     
-    implementation 'com.google.android.gms:play-services-ads:20.5.0'
+    //implementation 'com.google.android.gms:play-services-ads:20.5.0'
 
     implementation 'androidx.lifecycle:lifecycle-process:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-runtime:2.3.1'

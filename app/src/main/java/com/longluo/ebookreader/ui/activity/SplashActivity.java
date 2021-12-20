@@ -64,17 +64,6 @@ public class SplashActivity extends AppCompatActivity {
                             startMainActivity();
                             return;
                         }
-
-                        // Show the app open ad.
-                        ((App) application)
-                                .showAdIfAvailable(
-                                        SplashActivity.this,
-                                        new App.OnShowAdCompleteListener() {
-                                            @Override
-                                            public void onShowAdComplete() {
-                                                startMainActivity();
-                                            }
-                                        });
                     }
                 };
 

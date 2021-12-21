@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,8 +31,15 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        initData();
+
         // Create a timer so the SplashActivity will be displayed for a fixed amount of time.
-        createTimer(COUNTER_TIME);
+//        createTimer(COUNTER_TIME);
+    }
+
+    private void initData() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        startMainActivity();
     }
 
     /**
@@ -73,5 +81,6 @@ public class SplashActivity extends AppCompatActivity {
     public void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         this.startActivity(intent);
+        SplashActivity.this.finish();
     }
 }

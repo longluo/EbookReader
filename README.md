@@ -1,28 +1,29 @@
 # EbookReader
 
-电子书阅读器
-
-The EbookReader is an Android application for reading books in HTML, SVG, PDF, EPUB, CBZ, MOBI, TXT, AZW, AZW3 formats on Android devices.
+The EbookReader is an Android application for reading books on Android devices. It supports many document formats, such as TXT, MOBI, AZW, AZW3, AZW4, PDF, XPS, OpenXPS, CBZ, EPUB, and FictionBook 2.
 
 -----------------------
 
-2021.12.11 增加html, svg, mobi, azw, azw3, azw4格式电子书支持。
+2021.12.11 增加mobi, azw, azw3, azw4, fb2, cbz, xps, openxps格式电子书支持;
 
-2021.12.13 增加txt阅读界面
+2021.12.13 修复之前的txt阅读界面bug;
 
-2021.12.15 增加tts阅读支持
+2021.12.15 增加tts阅读支持;
+
 
 ---------------
 
 App Screen Shots:
 
-![Epub](https://upload-images.jianshu.io/upload_images/577271-19c56e77cc8e81d5.png?imageMogr2/auto-orient/strip|imageView2/2/w/320/format/webp)
+支持Epub格式和Pdf格式文件
 
-![pdf](https://upload-images.jianshu.io/upload_images/577271-23c8dd5bd9dcf793.png?imageMogr2/auto-orient/strip|imageView2/2/w/320/format/webp)
+<a href="./screenshots/EbookReader_Epub.png"><img src="./screenshots/EbookReader_Epub.png" width="30%" /></a><a href="./screenshots/EbookReader_Pdf.png"><img src="./screenshots/EbookReader_Pdf.png" width="30%" /></a>
 
-![Reading Page](https://upload-images.jianshu.io/upload_images/577271-4ad5df3d9a9d06a3.png?imageMogr2/auto-orient/strip|imageView2/2/w/320/format/webp)
+阅读界面：
 
-![Setting](https://upload-images.jianshu.io/upload_images/577271-074d8b05795449d1.png?imageMogr2/auto-orient/strip|imageView2/2/w/320/format/webp)
+<a href="./screenshots/EbookReader_Reader_Page.png"><img src="./screenshots/EbookReader_Reader_Page.png" width="40%" /></a><a href="./screenshots/EbookReader_Read_Contents.png"><img src="./screenshots/EbookReader_Read_Contents.png" width="40%" /></a>
 
-![Contents](https://upload-images.jianshu.io/upload_images/577271-093da2ebf917b738.png?imageMogr2/auto-orient/strip|imageView2/2/w/320/format/webp)
+阅读设置：
+
+<a href="./screenshots/EbookReader_Read_Setting.png"><img src="./screenshots/EbookReader_Read_Setting.png" width="40%" /></a>
 

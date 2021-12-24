@@ -15,9 +15,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 
-/**
- * Created by Administrator on 2016/8/31 0031.
- */
+
 public class CatalogFragment extends BaseFragment {
     public static final String ARGUMENT = "argument";
 

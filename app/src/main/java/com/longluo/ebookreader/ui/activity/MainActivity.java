@@ -33,6 +33,7 @@ import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookList;
 import com.longluo.ebookreader.ui.adapter.ShelfAdapter;
+import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.util.DisplayUtils;
 import com.longluo.ebookreader.view.DragGridView;
 import com.longluo.ebookreader.widget.animation.ContentScaleAnimation;
@@ -167,7 +168,7 @@ public class MainActivity extends BaseActivity
                         return;
                     }
 
-                    ReadActivity.openBook(bookList, MainActivity.this);
+                    BookUtils.openBook(MainActivity.this, bookList);
 
 //                    if (!isOpen){
 //                        bookLists = DataSupport.findAll(BookList.class);
@@ -353,7 +354,8 @@ public class MainActivity extends BaseActivity
 //                bookLists = DataSupport.findAll(BookList.class);
                 BookList bookList = bookLists.get(itemPosition);
                 bookList.setId(bookLists.get(0).getId());
-                ReadActivity.openBook(bookList, MainActivity.this);
+
+                BookUtils.openBook(MainActivity.this, bookList);
             }
 
         } else {

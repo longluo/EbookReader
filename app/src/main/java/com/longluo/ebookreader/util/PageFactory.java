@@ -137,7 +137,7 @@ public class PageFactory {
     private int currentCharter = 0;
     //当前电量
     private int level = 0;
-    private BookUtil mBookUtil;
+    private BookUtils mBookUtils;
     private PageEvent mPageEvent;
     private TRPage currentPage;
     private TRPage prePage;
@@ -165,7 +165,7 @@ public class PageFactory {
     }
 
     private PageFactory(Context context) {
-        mBookUtil = new BookUtil();
+        mBookUtils = new BookUtils();
         mContext = context.getApplicationContext();
         config = Config.getInstance();
         //获取屏幕宽高
@@ -320,7 +320,7 @@ public class PageFactory {
 
         //画进度及时间
         int dateWith = (int) (mBatterryPaint.measureText(date) + mBorderWidth);//时间宽度
-        float fPercent = (float) (currentPage.getBegin() * 1.0 / mBookUtil.getBookLen());//进度
+        float fPercent = (float) (currentPage.getBegin() * 1.0 / mBookUtils.getBookLen());//进度
         currentProgress = fPercent;
         if (mPageEvent != null) {
             mPageEvent.changeProgress(fPercent);
@@ -390,7 +390,7 @@ public class PageFactory {
 
     //向后翻页
     public void nextPage() {
-        if (currentPage.getEnd() >= mBookUtil.getBookLen()) {
+        if (currentPage.getEnd() >= mBookUtils.getBookLen()) {
             Log.e(TAG, "已经是最后一页了");
             if (!m_islastPage) {
                 Toast.makeText(mContext, "已经是最后一页了", Toast.LENGTH_SHORT).show();
@@ -479,7 +479,7 @@ public class PageFactory {
         protected Boolean doInBackground(Long... params) {
             begin = params[0];
             try {
-                mBookUtil.openBook(bookList);
+                mBookUtils.openBook(bookList);
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -490,28 +490,28 @@ public class PageFactory {
     }
 
     public TRPage getNextPage() {
-        mBookUtil.setPostition(currentPage.getEnd());
+        mBookUtils.setPostition(currentPage.getEnd());
 
         TRPage trPage = new TRPage();
         trPage.setBegin(currentPage.getEnd() + 1);
         Log.e("begin", currentPage.getEnd() + 1 + "");
         trPage.setLines(getNextLines());
         trPage.setWholePageStr();
-        Log.e("end", mBookUtil.getPosition() + "");
-        trPage.setEnd(mBookUtil.getPosition());
+        Log.e("end", mBookUtils.getPosition() + "");
+        trPage.setEnd(mBookUtils.getPosition());
         return trPage;
     }
 
     public TRPage getPrePage() {
-        mBookUtil.setPostition(currentPage.getBegin());
+        mBookUtils.setPostition(currentPage.getBegin());
 
         TRPage trPage = new TRPage();
-        trPage.setEnd(mBookUtil.getPosition() - 1);
-        Log.e("end", mBookUtil.getPosition() - 1 + "");
+        trPage.setEnd(mBookUtils.getPosition() - 1);
+        Log.e("end", mBookUtils.getPosition() - 1 + "");
         trPage.setLines(getPreLines());
         trPage.setWholePageStr();
-        Log.e("begin", mBookUtil.getPosition() + "");
-        trPage.setBegin(mBookUtil.getPosition());
+        Log.e("begin", mBookUtils.getPosition() + "");
+        trPage.setBegin(mBookUtils.getPosition());
         return trPage;
     }
 
@@ -519,10 +519,10 @@ public class PageFactory {
         TRPage trPage = new TRPage();
         trPage.setBegin(begin);
 
-        mBookUtil.setPostition(begin - 1);
+        mBookUtils.setPostition(begin - 1);
         trPage.setLines(getNextLines());
         trPage.setWholePageStr();
-        trPage.setEnd(mBookUtil.getPosition());
+        trPage.setEnd(mBookUtils.getPosition());
         return trPage;
     }
 
@@ -531,11 +531,11 @@ public class PageFactory {
         float width = 0;
         float height = 0;
         String line = "";
-        while (mBookUtil.next(true) != -1) {
-            char word = (char) mBookUtil.next(false);
+        while (mBookUtils.next(true) != -1) {
+            char word = (char) mBookUtils.next(false);
             //判断是否换行
-            if ((word + "").equals("\r") && (((char) mBookUtil.next(true)) + "").equals("\n")) {
-                mBookUtil.next(false);
+            if ((word + "").equals("\r") && (((char) mBookUtils.next(true)) + "").equals("\n")) {
+                mBookUtils.next(false);
                 if (!line.isEmpty()) {
                     lines.add(line);
                     line = "";
@@ -559,7 +559,7 @@ public class PageFactory {
 
             if (lines.size() == mLineCount) {
                 if (!line.isEmpty()) {
-                    mBookUtil.setPostition(mBookUtil.getPosition() - 1);
+                    mBookUtils.setPostition(mBookUtils.getPosition() - 1);
                 }
                 break;
             }
@@ -579,7 +579,7 @@ public class PageFactory {
         float width = 0;
         String line = "";
 
-        char[] par = mBookUtil.preLine();
+        char[] par = mBookUtils.preLine();
         while (par != null) {
             List<String> preLines = new ArrayList<>();
             for (int i = 0; i < par.length; i++) {
@@ -605,7 +605,7 @@ public class PageFactory {
             }
             width = 0;
             line = "";
-            par = mBookUtil.preLine();
+            par = mBookUtils.preLine();
         }
 
         List<String> reLines = new ArrayList<>();
@@ -620,10 +620,10 @@ public class PageFactory {
         }
 
         if (num > 0) {
-            if (mBookUtil.getPosition() > 0) {
-                mBookUtil.setPostition(mBookUtil.getPosition() + num + 2);
+            if (mBookUtils.getPosition() > 0) {
+                mBookUtils.setPostition(mBookUtils.getPosition() + num + 2);
             } else {
-                mBookUtil.setPostition(mBookUtil.getPosition() + num);
+                mBookUtils.setPostition(mBookUtils.getPosition() + num);
             }
         }
 
@@ -632,14 +632,14 @@ public class PageFactory {
 
     //上一章
     public void preChapter() {
-        if (mBookUtil.getDirectoryList().size() > 0) {
+        if (mBookUtils.getDirectoryList().size() > 0) {
             int num = currentCharter;
             if (num == 0) {
                 num = getCurrentCharter();
             }
             num--;
             if (num >= 0) {
-                long begin = mBookUtil.getDirectoryList().get(num).getBookCatalogueStartPos();
+                long begin = mBookUtils.getDirectoryList().get(num).getBookCatalogueStartPos();
                 currentPage = getPageForBegin(begin);
                 currentPage(true);
                 currentCharter = num;
@@ -704,7 +704,7 @@ public class PageFactory {
 
     //改变进度
     public void changeProgress(float progress) {
-        long begin = (long) (mBookUtil.getBookLen() * progress);
+        long begin = (long) (mBookUtils.getBookLen() * progress);
         currentPage = getPageForBegin(begin);
         currentPage(true);
     }
@@ -821,7 +821,7 @@ public class PageFactory {
     }
 
     public long getBookLen() {
-        return mBookUtil.getBookLen();
+        return mBookUtils.getBookLen();
     }
 
     public TRPage getCurrentPage() {
@@ -830,7 +830,7 @@ public class PageFactory {
 
     //获取书本的章
     public List<BookCatalogue> getDirectoryList() {
-        return mBookUtil.getDirectoryList();
+        return mBookUtils.getDirectoryList();
     }
 
     public String getBookPath() {

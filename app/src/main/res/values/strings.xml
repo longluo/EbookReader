@@ -2,13 +2,12 @@
     <string name="app_name">EbookReader</string>
     <string name="action_settings">Settings</string>
 
-   <string name="main_activity" translatable="false">Main Activity</string>
+    <string name="main_activity" translatable="false">Main Activity</string>
     <string name="main_activity_text" translatable="false">
         Leave and switch back to the app to see the ad.
     </string>
     <string name="splash_activity_image_text" translatable="false">Splash Activity Image</string>
     <string name="splash_activity_text" translatable="false">AdMob App Open Example</string>
-
 
     <string name="sync_button">纯离线语音合成</string>
 
@@ -52,7 +51,7 @@
     <string name="font_fzxinghei">行黑</string>
     <string name="font_fzkatong">卡通</string>
     <string name="font_bysong">繁宋体</string>
-    
+
     <string name="page_mode_simulation">仿真</string>
     <string name="page_mode_cover">覆盖</string>
     <string name="page_mode_slide">滑动</string>
@@ -60,7 +59,7 @@
 
     <string name="readseting">设置</string>
 
-     <string name="aboutContent">如风小说阅读是专注于提供更舒适的阅读体验,主打本地阅读,操作方式简单易上手,目前支持txt格式。</string>
+    <string name="aboutContent">EbookReader是专注于提供更舒适的阅读体验，主打本地阅读，操作方式简单易上手，目前支持txt/mobi/azw/azw3格式等。</string>
 
     <string-array name="voicer_cloud_entries">
         <item>小燕—女青、中英、普通话</item>

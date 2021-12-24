@@ -1,22 +1,44 @@
 package com.longluo.ebookreader.ui.activity;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.longluo.ebookreader.App;
 import com.longluo.ebookreader.R;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class SplashActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "SplashActivity";
+
+    /**
+     * permissions request code
+     */
+    private final static int REQUEST_CODE_ASK_PERMISSIONS = 101;
+
+    /**
+     * Permissions that need to be explicitly requested from end user.
+     */
+    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
+            Manifest.permission_group.PHONE,
+            Manifest.permission_group.STORAGE};
 
     /**
      * Number of seconds to count down before showing the app open ad. This simulates the time needed
@@ -32,6 +54,8 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         initData();
+
+        checkPermissions();
 
         // Create a timer so the SplashActivity will be displayed for a fixed amount of time.
 //        createTimer(COUNTER_TIME);
@@ -82,5 +106,53 @@ public class SplashActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         this.startActivity(intent);
         SplashActivity.this.finish();
+    }
+
+    /**
+     * Checks the dynamically-controlled permissions and requests missing permissions from end user.
+     *
+     */
+    protected void checkPermissions() {
+        final List<String> missingPermissions = new ArrayList<String>();
+        // check all required dynamic permissions
+        for (final String permission : REQUIRED_SDK_PERMISSIONS) {
+            final int result = ContextCompat.checkSelfPermission(this, permission);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                missingPermissions.add(permission);
+            }
+        }
+        if (!missingPermissions.isEmpty()) {
+            // request all missing permissions
+            final String[] permissions = missingPermissions
+                    .toArray(new String[missingPermissions.size()]);
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE_ASK_PERMISSIONS);
+        } else {
+            final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
+            Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
+            onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,
+                    grantResults);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                for (int index = permissions.length - 1; index >= 0; --index) {
+                    if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+                        // exit the app if one permission is not granted
+                        Toast.makeText(this, "Required permission '" + permissions[index]
+                                + "' not granted, exiting", Toast.LENGTH_LONG).show();
+                        finish();
+                        return;
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 }

@@ -33,12 +33,16 @@ import butterknife.BindView;
 public class FileActivity extends BaseActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     @BindView(R.id.btn_choose_all)
     Button btnChooseAll;
+
     @BindView(R.id.btn_delete)
     Button btnDelete;
+
     @BindView(R.id.btn_add_file)
     Button btnAddFile;
+
     @BindView(R.id.lv_file_drawer)
     ListView lvFileDrawer;
 
@@ -68,8 +72,9 @@ public class FileActivity extends BaseActivity {
                 finish();
             }
         });
+
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("导入图书");
+            getSupportActionBar().setTitle(getResources().getString(R.string.action_select_file));
         }
 
         adapter = new FileAdapter(this, listFile);

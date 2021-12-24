@@ -30,10 +30,10 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.db.BookList;
 import com.longluo.ebookreader.filechooser.BaseFragmentAdapter;
 import com.longluo.ebookreader.filechooser.TextDetailDocumentsCell;
-import com.longluo.ebookreader.ui.activity.ReadActivity;
-import com.longluo.ebookreader.db.BookList;
+import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.util.FileUtils;
 
 import org.litepal.crud.DataSupport;
@@ -47,7 +47,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class DirectoryFragment extends Fragment implements View.OnClickListener {
+    private static final String LOG_TAG = DirectoryFragment.class.getSimpleName();
 
     private View fragmentView;
     private boolean receiverRegistered = false;
@@ -72,7 +74,7 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
     private List<BookList> bookLists;
     private long sizeLimit = 1024 * 1024 * 1024;
 
-    private String[] chhosefileType = {".txt"};
+    private String[] chhosefileType = {".txt", ".epub", ".mobi", ".azw", ".azw3"};
 
     private class HistoryEntry {
         int scrollItem, scrollOffset;
@@ -268,7 +270,6 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
                             showErrorBox("请选择正确的文件！");
                             return;
                         }
-
                     }
                 }
             });
@@ -565,7 +566,12 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
             }
         });
         for (File file : files) {
-            if (file.getName().startsWith(".") || (!file.isDirectory() && !file.getName().endsWith(".txt"))) {
+            if (file.getName().startsWith(".") || (!file.isDirectory()
+                    && !file.getName().endsWith(".txt")
+                    && !file.getName().endsWith(".epub")
+                    && !file.getName().endsWith(".mobi")
+                    && !file.getName().endsWith(".azw")
+                    && !file.getName().endsWith(".azw3"))) {
                 continue;
             }
             ListItem item = new ListItem();
@@ -640,6 +646,7 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
     }
 
     public void showReadBox(final String path) {
+        Log.d(LOG_TAG, "showReadBox: path=" + path);
         if (getActivity() == null) {
             return;
         }
@@ -652,7 +659,6 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
                 String bookName = FileUtils.getFileName(path);
                 bookList.setBookname(bookName);
                 bookList.setBookpath(path);
-
                 boolean isSave = false;
                 for (BookList book : bookLists) {
                     if (book.getBookpath().equals(bookList.getBookpath())) {
@@ -663,11 +669,11 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
                 if (!isSave) {
                     bookList.save();
                 }
-                ReadActivity.openBook(bookList, getActivity());
+
+                BookUtils.openBook(getActivity(), bookList);
             }
         }).show();
     }
-
 
     private String getRootSubtitle(String path) {
         StatFs stat = new StatFs(path);

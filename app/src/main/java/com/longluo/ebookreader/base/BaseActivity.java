@@ -1,5 +1,6 @@
 package com.longluo.ebookreader.base;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
@@ -11,12 +12,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import butterknife.ButterKnife;
 
 
 public abstract class BaseActivity extends AppCompatActivity {
 
     private ProgressDialog mProgressDialog;
+
+    /**
+     * permissions request code
+     */
+    private final static int REQUEST_CODE_ASK_PERMISSIONS = 101;
+
+    /**
+     * Permissions that need to be explicitly requested from end user.
+     */
+    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
+            Manifest.permission_group.PHONE,
+            Manifest.permission_group.STORAGE};
 
     /**
      * 初始化布局
@@ -72,12 +89,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
     }
 
     /**

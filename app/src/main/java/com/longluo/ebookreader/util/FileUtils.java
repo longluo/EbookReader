@@ -5,6 +5,8 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.longluo.ebookreader.db.BookList;
 
 import org.mozilla.universalchardet.UniversalDetector;
@@ -468,6 +470,14 @@ public class FileUtils {
         } else {
             return "";
         }
+    }
+
+    public static final String getPrefix(@NonNull String fileName) {
+        return fileName.substring(0, fileName.lastIndexOf("."));
+    }
+
+    public static final String getSuffix(@NonNull String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
     public static List<File> getSuffixFile(String filePath, String suffix) {

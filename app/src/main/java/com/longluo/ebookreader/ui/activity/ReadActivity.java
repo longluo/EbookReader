@@ -481,8 +481,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         return super.onOptionsItemSelected(item);
     }
 
-
-    public static boolean openBook(final BookList bookList, Activity context) {
+    public static boolean openBook(Activity context, final BookList bookList) {
         if (bookList == null) {
             throw new NullPointerException("BookList can not be null");
         }

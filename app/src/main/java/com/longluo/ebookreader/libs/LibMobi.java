@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.libmobi;
+package com.longluo.ebookreader.libs;
 
 /**
  *  added for support mobi, azw, azw3, azw4.

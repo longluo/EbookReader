@@ -13,7 +13,7 @@ import com.longluo.ebookreader.base.BaseFragment;
 import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.ui.adapter.BookMarkAdapter;
 import com.longluo.ebookreader.util.PageFactory;
-import com.longluo.ebookreader.widget.animation.RecycleViewDivider;
+import com.longluo.ebookreader.widget.itemdecoration.RecycleViewDivider;
 
 import org.litepal.crud.DataSupport;
 

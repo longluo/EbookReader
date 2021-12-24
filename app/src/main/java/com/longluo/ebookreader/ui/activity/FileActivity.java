@@ -33,6 +33,8 @@ import butterknife.BindView;
 
 
 public class FileActivity extends BaseActivity {
+    private static final String LOG_TAG = FileActivity.class.getSimpleName();
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -76,7 +78,7 @@ public class FileActivity extends BaseActivity {
         });
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getResources().getString(R.string.action_select_file));
+            getSupportActionBar().setTitle(R.string.action_select_file);
         }
 
         mFileAdapter = new FileAdapter(this, listFile);

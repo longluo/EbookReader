@@ -11,7 +11,7 @@ import android.util.Log;
 import com.longluo.ebookreader.bean.Cache;
 import com.longluo.ebookreader.db.BookContent;
 import com.longluo.ebookreader.db.BookMeta;
-import com.longluo.ebookreader.libmobi.LibMobi;
+import com.longluo.ebookreader.libs.LibMobi;
 import com.longluo.ebookreader.ui.activity.ReadActivity;
 import com.longluo.viewer.DocumentActivity;
 
@@ -102,6 +102,25 @@ public class BookUtils {
         File convertFile = new File(convertFilePath);
         if (!convertFile.exists()) {
             LibMobi.convertToEpub(path, new File(folderPath, hashCodeStr).getPath());
+        }
+        File firstConvertFile = new File(folderPath + File.separator + hashCodeStr + hashCodeStr + ".epub");
+        if (firstConvertFile.exists()) {
+            firstConvertFile.renameTo(new File(convertFilePath));
+        }
+        openEpubPdfBook(activity, convertFile);
+    }
+
+    public static void openDocFile(Activity activity, File file) {
+        String path = file.getAbsolutePath();
+        String folderPath = path.substring(0, path.lastIndexOf("/"));
+
+        String hashCodeStr = path.hashCode() + "";
+        String convertFilePath = folderPath + File.separator + hashCodeStr + ".epub";
+        Log.d(LOG_TAG, "openMobiAzwBook: file=" + path + ", folder=" + folderPath
+                + ",convertFilePath=" + convertFilePath);
+        File convertFile = new File(convertFilePath);
+        if (!convertFile.exists()) {
+            LibMobi.convertDocToHtml(path, new File(folderPath, hashCodeStr).getPath());
         }
         File firstConvertFile = new File(folderPath + File.separator + hashCodeStr + hashCodeStr + ".epub");
         if (firstConvertFile.exists()) {

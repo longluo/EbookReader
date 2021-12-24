@@ -2,7 +2,7 @@ package com.longluo.ebookreader.ext;
 
 import android.util.Log;
 
-import com.longluo.ebookreader.libmobi.LibMobi;
+import com.longluo.ebookreader.libs.LibMobi;
 
 import java.io.File;
 import java.io.IOException;

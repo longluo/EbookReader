@@ -9,8 +9,8 @@ ext {
             minSdkVersion           : 23,
             targetSdkVersion        : 28,
             ndkVersion              : "21.4.7075529",
-            versionCode             : 18,
-            versionName             : "6.8.1",
+            versionCode             : 19,
+            versionName             : "6.8.2",
     ]
 
     //version配置
@@ -35,18 +35,50 @@ ext {
 
     //依赖第三方配置
     dependencies = [
+            //commons-compress
+            "commons-compress"                     : "org.apache.commons:commons-compress:1.21",
+
+            // slf4j
+            "slf4j"                                : "org.slf4j:slf4j-android:1.7.32",
+
             //ButterKnife
             "butterknife"                          : "com.jakewharton:butterknife:10.2.1",
             "butterknife-compiler"                 : "com.jakewharton:butterknife-compiler:10.2.1",
 
+            // UMeng
+            "umsdk-common"                        : "com.umeng.umsdk:common:9.4.4",
+            "umsdk-asms"                          : "com.umeng.umsdk:asms:1.4.1",
+
             // DataBase
+            // SQLite
+             'sqlite'                              : "androidx.sqlite:sqlite:2.0.1",
             // GreenDao
             "greendao"                             : "org.greenrobot:greendao:3.3.0",
+            "greendao-api"                         : "org.greenrobot:greendao-api:3.3.0",
+
             // LitePal
             "litepal"                              : "org.litepal.android:core:1.6.1",
 
             //json解析
             "gson"                                 : "com.google.code.gson:gson:2.8.7",
+
+            // juniversalchardet
+            "juniversalchardet"                    : "com.googlecode.juniversalchardet:juniversalchardet:1.0.3",
+
+            // jsoup
+            "jsoup"                                : "org.jsoup:jsoup:jsoup:1.14.1",
+
+            // zip4j
+            "zip4j"                                : "net.lingala.zip4j:zip4j:2.9.1",
+
+            // io
+            "okio-parent"                          : "com.squareup.okio:okio-parent:1.17.5",
+
+            // rtfparserkit
+            "rtfparserkit"                         : "com.github.joniles:rtfparserkit:1.16.0",
+
+            // mammoth
+            "mammoth"                              : "org.zwobble.mammoth:mammoth:1.4.2",
 
             // EventBus
             "eventbus"                             : "org.greenrobot:eventbus:3.2.0",
@@ -65,11 +97,18 @@ ext {
             //rx 6.0权限请求
             "rxpermissions"                        : "com.github.tbruyelle:rxpermissions:0.10.2",
 
+            // html-textview
+            "html-textview"                             : "org.sufficientlysecure:html-textview:4.0",
+
             //network
-            "okhttp"                               : "com.squareup.okhttp3:okhttp:3.10.0",
-            "retrofit"                             : "com.squareup.retrofit2:retrofit:2.4.0",
+            "okhttp3"                              : "com.squareup.okhttp3:okhttp:3.12.3",
+
+            // retrofit2
+            "retrofit2"                            : "com.squareup.retrofit2:retrofit:2.4.0",
             "converter-gson"                       : "com.squareup.retrofit2:converter-gson:2.4.0",
             "adapter-rxjava"                       : "com.squareup.retrofit2:adapter-rxjava2:2.4.0",
+
+            "okhttp-digest"                        : 'io.github.rburgst:okhttp-digest:1.21',
 
             // memory
             "leakcanary"                           : "com.squareup.leakcanary:leakcanary-android:1.6.3",

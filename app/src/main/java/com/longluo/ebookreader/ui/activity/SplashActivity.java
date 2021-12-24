@@ -25,7 +25,6 @@ import java.util.List;
 
 
 public class SplashActivity extends AppCompatActivity {
-
     private static final String LOG_TAG = "SplashActivity";
 
     /**
@@ -36,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
     /**
      * Permissions that need to be explicitly requested from end user.
      */
-    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] {
+    private static final String[] REQUIRED_SDK_PERMISSIONS = new String[]{
             Manifest.permission_group.PHONE,
             Manifest.permission_group.STORAGE};
 
@@ -104,13 +103,13 @@ public class SplashActivity extends AppCompatActivity {
 
     public void startMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+//        Intent intent = new Intent(this, HtmlViewActivity.class);
         this.startActivity(intent);
         SplashActivity.this.finish();
     }
 
     /**
      * Checks the dynamically-controlled permissions and requests missing permissions from end user.
-     *
      */
     protected void checkPermissions() {
         final List<String> missingPermissions = new ArrayList<String>();

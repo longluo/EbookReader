@@ -13,6 +13,9 @@
     <color name="light_yellow">#fffff99e</color>
     <color name="dark_gray">#ff999999</color>
 
+    <color name="blue">#03DAC5</color>
+    <color name="whitish">#ccc</color>
+
     <color name="silver">#ffecebe8</color>
     <color name="skyblue">#87CEEB</color>
     <color name="full_transparent">#00000000</color>
@@ -36,7 +39,7 @@
     <color name="read_background">#FAF9DE</color>
     <color name="read_background_paperYellow">#D4C5A3</color>
     <color name="read_textColor">#3B3A38</color>
-    
+
     <color name="read_dialog_bg">#2C2C2C</color>
     <color name="read_dialog_button_select">#E25754</color>
 

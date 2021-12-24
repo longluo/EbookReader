@@ -23,10 +23,15 @@ import com.longluo.ebookreader.R;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class FileChooserActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private FragmentManager fragmentManager = null;
     private FragmentTransaction fragmentTransaction = null;
     private DirectoryFragment mDirectoryFragment;
@@ -37,8 +42,8 @@ public class FileChooserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filechooser);
+        ButterKnife.bind(this);
 
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
         toolbar.setTitle("目录");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

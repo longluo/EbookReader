@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.widget.animation;
+package com.longluo.ebookreader.widget.itemdecoration;
 
 import android.content.Context;
 import android.content.res.TypedArray;

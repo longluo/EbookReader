@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.ui.adapter.FileAdapter;
@@ -43,15 +45,15 @@ public class FileActivity extends BaseActivity {
     @BindView(R.id.btn_add_file)
     Button btnAddFile;
 
-    @BindView(R.id.lv_file_drawer)
-    ListView lvFileDrawer;
+    @BindView(R.id.rv_file_drawer)
+    RecyclerView rvFileDrawer;
 
     public static final int EXTERNAL_STORAGE_REQ_CODE = 10;
 
     // 文件根目录
     private File root;
     private List<File> listFile = new ArrayList<>();
-    private static FileAdapter adapter;
+    private FileAdapter mFileAdapter;
     private SearchTextFileTask mSearchTextFileTask;
     private SaveBookToSqlLiteTask mSaveBookToSqlLiteTask;
 
@@ -77,8 +79,9 @@ public class FileActivity extends BaseActivity {
             getSupportActionBar().setTitle(getResources().getString(R.string.action_select_file));
         }
 
-        adapter = new FileAdapter(this, listFile);
-        lvFileDrawer.setAdapter(adapter);
+        mFileAdapter = new FileAdapter(this, listFile);
+        rvFileDrawer.setLayoutManager(new LinearLayoutManager(this));
+        rvFileDrawer.setAdapter(mFileAdapter);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkPermission(FileActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE, EXTERNAL_STORAGE_REQ_CODE, "添加图书需要此权限，请允许");
@@ -90,25 +93,25 @@ public class FileActivity extends BaseActivity {
 
     @Override
     protected void initListener() {
-        lvFileDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mFileAdapter.setOnItemClickListener(new FileAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                adapter.setSelectedPosition(position);
+            public void onClick(int position) {
+
             }
         });
 
-        lvFileDrawer.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        mFileAdapter.setOnItemLongClickListener(new FileAdapter.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                return true;
+            public void onClick(int position) {
+
             }
         });
 
-        adapter.setCheckedChangeListener(new FileAdapter.CheckedChangeListener() {
+        mFileAdapter.setCheckedChangeListener(new FileAdapter.CheckedChangeListener() {
 
             @Override
             public void onCheckedChanged(int position, CompoundButton buttonView, boolean isChecked) {
-                setAddFileText(adapter.getCheckNum());
+                setAddFileText(mFileAdapter.getCheckNum());
             }
         });
 
@@ -116,7 +119,7 @@ public class FileActivity extends BaseActivity {
         btnChooseAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.checkAll();
+                mFileAdapter.checkAll();
             }
         });
 
@@ -124,7 +127,7 @@ public class FileActivity extends BaseActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                adapter.cancel();
+                mFileAdapter.cancel();
             }
         });
 
@@ -150,7 +153,7 @@ public class FileActivity extends BaseActivity {
 
     //保存选择的txt文件
     private void saveBookList() {
-        List<File> files = adapter.getCheckFiles();
+        List<File> files = mFileAdapter.getCheckFiles();
         if (files.size() > 0) {
             List<BookMeta> bookMetas = new ArrayList<BookMeta>();
             for (File file : files) {
@@ -203,7 +206,7 @@ public class FileActivity extends BaseActivity {
                 case SUCCESS:
                     msg = "添加书本成功";
                     setAddFileText(0);
-                    adapter.cancel();
+                    mFileAdapter.cancel();
                     break;
 
                 case REPEAT:
@@ -259,10 +262,8 @@ public class FileActivity extends BaseActivity {
             super.onPostExecute(result);
             hideProgress();
             if (result) {
-                adapter.setFiles(listFile);  //list值传到adapter
+                mFileAdapter.setFiles(listFile);  //list值传到adapter
                 setAddFileText(0);
-//                endTime = System.currentTimeMillis();
-//                Log.e("time",endTime - startTime + "");
             } else {
                 Toast.makeText(FileActivity.this, "本机查不到txt文件", Toast.LENGTH_SHORT)
                         .show();

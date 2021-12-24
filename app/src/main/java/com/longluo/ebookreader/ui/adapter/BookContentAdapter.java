@@ -23,8 +23,8 @@ public class BookContentAdapter extends RecyclerView.Adapter<BookContentViewHold
     private Config config;
     private int currentCharter = 0;
 
-    private BookMarkAdapter.OnItemClickListener listener;
-    private BookMarkAdapter.OnItemLongClickListener longClickListener;
+    private OnItemClickListener listener;
+    private OnItemLongClickListener longClickListener;
 
     public interface OnItemClickListener {
         void onClick(int position);
@@ -34,11 +34,11 @@ public class BookContentAdapter extends RecyclerView.Adapter<BookContentViewHold
         void onClick(int position);
     }
 
-    public void setOnItemClickListener(BookMarkAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void setOnItemLongClickListener(BookMarkAdapter.OnItemLongClickListener longClickListener) {
+    public void setOnItemLongClickListener(OnItemLongClickListener longClickListener) {
         this.longClickListener = longClickListener;
     }
 

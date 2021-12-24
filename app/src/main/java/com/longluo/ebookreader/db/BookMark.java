@@ -2,9 +2,6 @@ package com.longluo.ebookreader.db;
 
 import org.litepal.crud.DataSupport;
 
-/**
- * Created by Administrator on 2015/12/27.
- */
 public class BookMark extends DataSupport {
     private int id ;
   //  private int page;

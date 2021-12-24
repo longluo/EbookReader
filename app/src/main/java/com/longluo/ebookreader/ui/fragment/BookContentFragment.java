@@ -59,7 +59,7 @@ public class BookContentFragment extends BaseFragment {
 
     @Override
     protected void initListener() {
-        bookContentAdapter.setOnItemClickListener(new BookMarkAdapter.OnItemClickListener() {
+        bookContentAdapter.setOnItemClickListener(new BookContentAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
                 pageFactory.changeChapter(catalogueList.get(position).getBookContentStartPos());

@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.filechooser;
+package com.longluo.ebookreader.widget;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.longluo.ebookreader.filechooser.AndroidUtilities;
 
 public class TextDetailDocumentsCell extends FrameLayout {
 

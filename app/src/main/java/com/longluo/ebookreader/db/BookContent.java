@@ -2,7 +2,6 @@ package com.longluo.ebookreader.db;
 
 import org.litepal.crud.DataSupport;
 
-
 public class BookContent extends DataSupport {
     private int id;
 

@@ -32,7 +32,7 @@ import androidx.fragment.app.Fragment;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.filechooser.BaseFragmentAdapter;
-import com.longluo.ebookreader.filechooser.TextDetailDocumentsCell;
+import com.longluo.ebookreader.widget.TextDetailDocumentsCell;
 import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.util.FileUtils;
 
@@ -798,5 +798,4 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
     public void finishFragment() {
 
     }
-
 }

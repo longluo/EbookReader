@@ -4,14 +4,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.ui.adapter.view.FileItemViewHolder;
 import com.longluo.ebookreader.util.FileUtils;
 
 import java.io.File;
@@ -21,50 +19,107 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-
-
-public class FileAdapter extends BaseAdapter {
-    private List<File> files;
+public class FileAdapter extends RecyclerView.Adapter<FileItemViewHolder> {
+    private Context mContext;
+    private List<File> mFiles;
     private HashMap<File, Boolean> checkMap = new HashMap<>();
-
-    private Context context;
     private CheckedChangeListener mCheckedChangeListener;
 
-    public FileAdapter(Context context) {
-        this.context = context;
+    private OnItemClickListener listener;
+    private OnItemLongClickListener longClickListener;
+
+    public interface OnItemClickListener {
+        void onClick(int position);
+    }
+
+    public interface OnItemLongClickListener {
+        void onClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener longClickListener) {
+        this.longClickListener = longClickListener;
     }
 
     public FileAdapter(Context context, List<File> files) {
-        this.context = context;
-        this.files = files;
+        mContext = context;
+        mFiles = files;
         initCheckMap();
     }
 
-    private void initCheckMap() {
-        if (files != null) {
-            for (File file : files) {
-                checkMap.put(file, false);
-            }
-        }
+    @Override
+    public FileItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_file_item, parent, false);
+        FileItemViewHolder holder = new FileItemViewHolder(view);
+        return holder;
     }
 
     @Override
-    public int getCount() {
-        if (files == null) {
+    public void onBindViewHolder(FileItemViewHolder holder, int position) {
+        final File file = mFiles.get(position);
+
+        //CheckBox状态变化监听
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                checkMap.put(file, isChecked);
+                if (mCheckedChangeListener != null) {
+                    mCheckedChangeListener.onCheckedChanged(position, buttonView, isChecked);
+                }
+            }
+        });
+
+        initFileData(file, holder);
+        initCheckBox(file, holder);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onClick(position);
+                }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (longClickListener != null) {
+                    longClickListener.onClick(position);
+                }
+
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        if (mFiles == null) {
             return 0;
         }
-        return files.size();
-    }
 
-    @Override
-    public Object getItem(int position) {
-        return files.get(position);
+        return mFiles.size();
     }
 
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    private void initCheckMap() {
+        if (mFiles != null) {
+            for (File file : mFiles) {
+                checkMap.put(file, false);
+            }
+        }
+    }
+
+    public Object getItem(int position) {
+        return mFiles.get(position);
     }
 
     //全选
@@ -74,6 +129,7 @@ public class FileAdapter extends BaseAdapter {
             Map.Entry entry = (Map.Entry) iter.next();
             checkMap.put((File) entry.getKey(), true);
         }
+
         notifyDataSetChanged();
     }
 
@@ -84,6 +140,7 @@ public class FileAdapter extends BaseAdapter {
             Map.Entry entry = (Map.Entry) iter.next();
             checkMap.put((File) entry.getKey(), false);
         }
+
         notifyDataSetChanged();
     }
 
@@ -97,6 +154,7 @@ public class FileAdapter extends BaseAdapter {
                 num++;
             }
         }
+
         return num;
     }
 
@@ -109,6 +167,7 @@ public class FileAdapter extends BaseAdapter {
                 files.add((File) entry.getKey());
             }
         }
+
         return files;
     }
 
@@ -117,78 +176,33 @@ public class FileAdapter extends BaseAdapter {
     }
 
     public List<File> getFiles() {
-        return files;
+        return mFiles;
     }
 
     public void setFiles(List<File> files) {
-        this.files = files;
+        mFiles = files;
         initCheckMap();
         notifyDataSetChanged();
     }
 
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        final ViewHolder viewHolder;
-        final File file = files.get(position);
-        if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(
-                    R.layout.layout_file_item, null);
-            viewHolder = new ViewHolder(convertView);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-        //CheckBox状态变化监听
-        viewHolder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checkMap.put(file, isChecked);
-                if (mCheckedChangeListener != null) {
-                    mCheckedChangeListener.onCheckedChanged(position, buttonView, isChecked);
-                }
-            }
-        });
-        initFileData(file, viewHolder);
-        initCheckBox(file, viewHolder);
-        return convertView;
-    }
-
-    private void initCheckBox(File file, ViewHolder viewHolder) {
+    private void initCheckBox(File file, FileItemViewHolder holder) {
         if (checkMap.get(file) != null) {
-            viewHolder.checkBox.setChecked(checkMap.get(file));
+            holder.checkBox.setChecked(checkMap.get(file));
         }
     }
 
-    private void initFileData(File file, ViewHolder viewHolder) {
+    private void initFileData(File file, FileItemViewHolder holder) {
         //设置文件名
-        viewHolder.textView.setText(file.getName());
+        holder.textView.setText(file.getName());
         //文件夹和文件逻辑判断
         if (file.isDirectory()) {
-            viewHolder.fileIcon.setImageResource(R.mipmap.folder);
-            viewHolder.checkBox.setVisibility(View.INVISIBLE);
-            viewHolder.textSize.setText("项");
+            holder.fileIcon.setImageResource(R.mipmap.folder);
+            holder.checkBox.setVisibility(View.INVISIBLE);
+            holder.textSize.setText("项");
         } else {
-            viewHolder.fileIcon.setImageResource(R.mipmap.file_type_txt);
-            viewHolder.checkBox.setVisibility(View.VISIBLE);
-            viewHolder.textSize.setText(FileUtils.formatFileSize(file.length()));
-        }
-    }
-
-    static class ViewHolder {
-        @BindView(R.id.tv_file_text)
-        TextView textView;
-        @BindView(R.id.tv_file_text_size)
-        TextView textSize;
-        @BindView(R.id.iv_file_icon)
-        ImageView fileIcon;
-        @BindView(R.id.cb_file_image)
-        CheckBox checkBox;
-        @BindView(R.id.ll_file_lin)
-        LinearLayout linearLayout;
-
-        public ViewHolder(View view) {
-
+            holder.fileIcon.setImageResource(R.mipmap.file_type_txt);
+            holder.checkBox.setVisibility(View.VISIBLE);
+            holder.textSize.setText(FileUtils.formatFileSize(file.length()));
         }
     }
 

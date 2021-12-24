@@ -12,14 +12,17 @@ The EbookReader is an Android application for reading books in HTML, SVG, PDF, E
 
 2021.12.15 增加tts阅读支持
 
-![Epub](http://gn9394.bvimg.com/14226/f7c14d69601ab702.png)
+---------------
 
-![pdf](http://gn9394.bvimg.com/14226/c3bb5354e7b266fa.png)
+App Screen Shots:
 
-![Reading Page](http://gn9394.bvimg.com/14226/7b02dd183015c479.png)
+![Epub](https://upload-images.jianshu.io/upload_images/577271-19c56e77cc8e81d5.png?imageMogr2/auto-orient/strip|imageView2/2/w/320/format/webp)
 
-![Setting](http://gn9394.bvimg.com/14226/bddf370a1ecc3231.png)
+![pdf](https://upload-images.jianshu.io/upload_images/577271-23c8dd5bd9dcf793.png?imageMogr2/auto-orient/strip|imageView2/2/w/320/format/webp)
 
+![Reading Page](https://upload-images.jianshu.io/upload_images/577271-4ad5df3d9a9d06a3.png?imageMogr2/auto-orient/strip|imageView2/2/w/320/format/webp)
 
+![Setting](https://upload-images.jianshu.io/upload_images/577271-074d8b05795449d1.png?imageMogr2/auto-orient/strip|imageView2/2/w/320/format/webp)
 
+![Contents](https://upload-images.jianshu.io/upload_images/577271-093da2ebf917b738.png?imageMogr2/auto-orient/strip|imageView2/2/w/320/format/webp)
 

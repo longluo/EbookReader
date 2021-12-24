@@ -1,18 +1,18 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion rootProject.ext.libMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        minSdkVersion rootProject.ext.android.libMinSdkVersion
+        targetSdkVersion rootProject.ext.android.libTargetSdkVersion
         versionCode 1
         versionName '1.0'
 
         consumerProguardFiles 'consumer-rules.pro'
 
-        ndkVersion '21.4.7075529'
+        ndkVersion rootProject.ext.android.ndkVersion
 
         ndk {
             // 设置支持的SO库架构
@@ -23,8 +23,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            minifyEnabled false
         }
     }
     
@@ -39,5 +43,5 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation rootProject.ext.support["appcompat"]
 }

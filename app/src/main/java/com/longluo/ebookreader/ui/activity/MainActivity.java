@@ -30,13 +30,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.longluo.ebookreader.Config;
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.ui.adapter.ShelfAdapter;
-import com.longluo.ebookreader.widget.animation.ContentScaleAnimation;
-import com.longluo.ebookreader.widget.animation.Rotate3DAnimation;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookList;
+import com.longluo.ebookreader.ui.adapter.ShelfAdapter;
 import com.longluo.ebookreader.util.DisplayUtils;
 import com.longluo.ebookreader.view.DragGridView;
+import com.longluo.ebookreader.widget.animation.ContentScaleAnimation;
+import com.longluo.ebookreader.widget.animation.Rotate3DAnimation;
 
 import org.litepal.crud.DataSupport;
 

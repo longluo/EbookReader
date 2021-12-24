@@ -5,24 +5,22 @@ plugins {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
-        applicationId 'com.longluo.ebookreader'
+        applicationId rootProject.ext.android.applicationId
+	
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
 
-        minSdkVersion rootProject.ext.appMinSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
-
-        ndkVersion '21.4.7075529'
+        ndkVersion rootProject.ext.android.ndkVersion
 
         ndk {
             // 设置支持的SO库架构
-            abiFilters 'arm64-v8a'
-            abiFilters 'armeabi-v7a'
+            abiFilters 'armeabi-v7a', 'armeabi', 'x86'
         }
     }
 
@@ -32,7 +30,7 @@ android {
         }
 	
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -60,39 +58,38 @@ greendao{
 dependencies {
     api fileTree(exclude: '*.bak', dir: 'libs')
 
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    compile files('libs/slf4j-android-1.5.8.jar')
 
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation project(':mupdf-android-viewer')
 
-    implementation 'com.jakewharton:butterknife:10.2.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
+    implementation rootProject.ext.support["appcompat"]
+    implementation rootProject.ext.support["constraintlayout"]
+
+    implementation rootProject.ext.support["recyclerview"]
+    implementation rootProject.ext.support["cardview"]
+    implementation rootProject.ext.support["support-v4"]
+
+    implementation rootProject.ext.support["design"]
+
+    // ButterKnife
+    implementation rootProject.ext.dependencies["butterknife"]
+    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
 
     // LitePal Database
-    implementation 'org.litepal.android:core:1.6.1'
+    implementation rootProject.ext.dependencies["litepal"]
     
     implementation 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
     implementation 'org.jsoup:jsoup:1.14.1'
 
-    compile files('libs/slf4j-android-1.5.8.jar')
-
-    implementation project(':mupdf-android-viewer')
-
-    implementation 'com.google.code.gson:gson:2.8.7'
-
-    // implementation 'androidx.multidex:multidex:2.0.1'
+    implementation rootProject.ext.dependencies["gson"]
 
     // EventBus
-    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation rootProject.ext.dependencies["eventbus"]
 
     //RxJava
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.19'
+    implementation rootProject.ext.dependencies["rxjava"]
+    implementation rootProject.ext.dependencies["rxandroid"]
     
     //NetWork
     //implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -101,8 +98,8 @@ dependencies {
     //implementation 'com.squareup.retrofit2:adapter-rxjava2:2.7.2'
 
     // ImageLoader Glide
-    implementation 'com.github.bumptech.glide:glide:4.12.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation rootProject.ext.dependencies["glide"]
+    annotationProcessor rootProject.ext.dependencies["glide-compiler"]
     
     // GreenDao
     implementation('org.greenrobot:greendao:3.3.0') {
@@ -112,7 +109,7 @@ dependencies {
 
     // Android Leak Analysis
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
     
     // OpenCC to convert Simp. Chinese to Trad. Chinese
     implementation 'com.zqc.opencc.android.lib:lib-opencc-android:0.8.0@aar'
@@ -120,7 +117,7 @@ dependencies {
     //implementation 'com.google.android.gms:play-services-ads:20.5.0'
 
     implementation 'androidx.lifecycle:lifecycle-process:2.3.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.4.0'
     annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.3.1'
 
 }

@@ -125,6 +125,16 @@
     <color name="link_color">#07c</color>
     <color name="ic_color">#478c53</color>
 
+    <color name="error">#eb4333</color>
+    <color name="success">#439b53</color>
+
+    <color name="night_mask">#00000000</color>
+
+    <color name="background">@color/md_grey_100</color>
+    <color name="background_card">#dedede</color>
+    <color name="background_menu">#fcfcfc</color>
+
+
     <color name="nb.theme.background">@color/white</color>
 
     <!--list-->
@@ -188,5 +198,19 @@
     <color name="nb.read.menu.bg">#191919</color>
     <color name="nb.read.menu.text">#CBCBCB</color>
     <color name="nb.read.bar.translucent">#88000000</color>
+
+    <!-- Grey -->
+    <color name="md_grey_50">#FAFAFA</color>
+    <color name="md_grey_100">#F5F5F5</color>
+    <color name="md_grey_200">#EEEEEE</color>
+    <color name="md_grey_300">#E0E0E0</color>
+    <color name="md_grey_400">#BDBDBD</color>
+    <color name="md_grey_500">#9E9E9E</color>
+    <color name="md_grey_600">#757575</color>
+    <color name="md_grey_700">#616161</color>
+    <color name="md_grey_800">#424242</color>
+    <color name="md_grey_850">#303030</color>
+    <color name="md_grey_900">#212121</color>
+
 
 </resources>

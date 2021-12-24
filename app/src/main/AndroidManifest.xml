@@ -71,7 +71,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".ui.activity.MarkActivity"
+            android:name=".ui.activity.BookMarkActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
 

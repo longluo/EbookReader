@@ -14,10 +14,8 @@ import com.longluo.ebookreader.R;
 
 import java.lang.reflect.Method;
 
-/**
- * Created by Administrator on 2016/1/17.
- */
-public class CommonUtil {
+
+public class CommonUtils {
 
     /**
      * 获取屏幕原始尺寸高度，包括虚拟功能键高度

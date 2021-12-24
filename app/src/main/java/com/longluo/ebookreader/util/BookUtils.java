@@ -9,8 +9,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.longluo.ebookreader.bean.Cache;
-import com.longluo.ebookreader.db.BookCatalogue;
-import com.longluo.ebookreader.db.BookList;
+import com.longluo.ebookreader.db.BookContent;
+import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.libmobi.LibMobi;
 import com.longluo.ebookreader.ui.activity.ReadActivity;
 import com.longluo.viewer.DocumentActivity;
@@ -38,14 +38,14 @@ public class BookUtils {
 
     protected final ArrayList<Cache> myArray = new ArrayList<>();
     //目录
-    private List<BookCatalogue> directoryList = new ArrayList<>();
+    private List<BookContent> directoryList = new ArrayList<>();
 
     private String m_strCharsetName;
     private String bookName;
     private String bookPath;
     private long bookLen;
     private long position;
-    private BookList bookList;
+    private BookMeta bookMeta;
 
     public BookUtils() {
         File file = new File(cachedPath);
@@ -54,27 +54,27 @@ public class BookUtils {
         }
     }
 
-    public synchronized void openBook(BookList bookList) throws IOException {
-        this.bookList = bookList;
+    public synchronized void openBook(BookMeta bookMeta) throws IOException {
+        this.bookMeta = bookMeta;
         //如果当前缓存不是要打开的书本就缓存书本同时删除缓存
 
-        if (bookPath == null || !bookPath.equals(bookList.getBookpath())) {
+        if (bookPath == null || !bookPath.equals(bookMeta.getBookPath())) {
             cleanCacheFile();
-            this.bookPath = bookList.getBookpath();
+            this.bookPath = bookMeta.getBookPath();
             bookName = FileUtils.getFileName(bookPath);
             cacheBook();
         }
     }
 
-    public static void openBook(Activity activity, BookList bookList) {
-        String filePath = bookList.getBookpath();
+    public static void openBook(Activity activity, BookMeta bookMeta) {
+        String filePath = bookMeta.getBookPath();
         File file = new File(filePath);
         String suffix = FileUtils.getSuffix(filePath);
 
         Log.d(LOG_TAG, "openBook: filePath=" + filePath + ", suffix=" + suffix);
 
         if (suffix.equals("txt")) {
-            ReadActivity.openBook(activity, bookList);
+            ReadActivity.openBook(activity, bookMeta);
         } else if (suffix.equals("epub")) {
             openEpubPdfBook(activity, file);
         } else if (suffix.equals("mobi") || suffix.equals("azw") || suffix.equals("azw3") || suffix.equals("azw4")) {
@@ -95,10 +95,10 @@ public class BookUtils {
         String path = file.getAbsolutePath();
         String folderPath = path.substring(0, path.lastIndexOf("/"));
 
-        Log.d(LOG_TAG, "openMobiAzwBook: file=" + path + ", folder=" + folderPath);
         String hashCodeStr = path.hashCode() + "";
         String convertFilePath = folderPath + File.separator + hashCodeStr + ".epub";
-        Log.e(LOG_TAG, "convertFilePath=" + convertFilePath);
+        Log.d(LOG_TAG, "openMobiAzwBook: file=" + path + ", folder=" + folderPath
+                + ",convertFilePath=" + convertFilePath);
         File convertFile = new File(convertFilePath);
         if (!convertFile.exists()) {
             LibMobi.convertToEpub(path, new File(folderPath, hashCodeStr).getPath());
@@ -219,16 +219,16 @@ public class BookUtils {
 
     //缓存书本
     private void cacheBook() throws IOException {
-        if (TextUtils.isEmpty(bookList.getCharset())) {
+        if (TextUtils.isEmpty(bookMeta.getCharset())) {
             m_strCharsetName = FileUtils.getCharset(bookPath);
             if (m_strCharsetName == null) {
                 m_strCharsetName = "utf-8";
             }
             ContentValues values = new ContentValues();
             values.put("charset", m_strCharsetName);
-            DataSupport.update(BookList.class, values, bookList.getId());
+            DataSupport.update(BookMeta.class, values, bookMeta.getId());
         } else {
-            m_strCharsetName = bookList.getCharset();
+            m_strCharsetName = bookMeta.getCharset();
         }
 
         File file = new File(bookPath);
@@ -295,11 +295,11 @@ public class BookUtils {
                 String[] paragraphs = bufStr.split("\r\n");
                 for (String str : paragraphs) {
                     if (str.length() <= 30 && (str.matches(".*第.{1,8}章.*") || str.matches(".*第.{1,8}节.*"))) {
-                        BookCatalogue bookCatalogue = new BookCatalogue();
-                        bookCatalogue.setBookCatalogueStartPos(size);
-                        bookCatalogue.setBookCatalogue(str);
-                        bookCatalogue.setBookpath(bookPath);
-                        directoryList.add(bookCatalogue);
+                        BookContent bookContent = new BookContent();
+                        bookContent.setBookContentStartPos(size);
+                        bookContent.setBookContent(str);
+                        bookContent.setBookPath(bookPath);
+                        directoryList.add(bookContent);
                     }
                     if (str.contains("\u3000\u3000")) {
                         size += str.length() + 2;
@@ -315,7 +315,7 @@ public class BookUtils {
         }
     }
 
-    public List<BookCatalogue> getDirectoryList() {
+    public List<BookContent> getDirectoryList() {
         return directoryList;
     }
 
@@ -357,7 +357,7 @@ public class BookUtils {
             cache.setData(new WeakReference<char[]>(block));
 //            myArray.set(index, new WeakReference<char[]>(block));
         }
+
         return block;
     }
-
 }

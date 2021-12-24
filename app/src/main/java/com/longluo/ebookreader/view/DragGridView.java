@@ -26,16 +26,13 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.util.CommonUtil;
+import com.longluo.ebookreader.util.CommonUtils;
 
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by Lxq on 2016/4/12.
- */
-public class DragGridView extends GridView implements View.OnClickListener{
 
+public class DragGridView extends GridView implements View.OnClickListener {
     /**
      * DragGridView的item长按响应的时间， 默认是1000毫秒，也可以自行设置
      */
@@ -50,6 +47,7 @@ public class DragGridView extends GridView implements View.OnClickListener{
     private int mDownY;
     private int moveX;
     private int moveY;
+
     /**
      * 正在拖拽的position
      */
@@ -84,7 +82,7 @@ public class DragGridView extends GridView implements View.OnClickListener{
     /**
      * 按下的点到所在item的上边缘的距离
      */
-    private int mPoint2ItemTop ;
+    private int mPoint2ItemTop;
 
     /**
      * 按下的点到所在item的左边缘的距离
@@ -156,8 +154,8 @@ public class DragGridView extends GridView implements View.OnClickListener{
 
         background = BitmapFactory.decodeResource(getResources(),
                 R.mipmap.bookshelf_layer_center);
-        bookshelf_dock = BitmapFactory.decodeResource(getResources(),R.mipmap.bookshelf_dock);
-        if(!mNumColumnsSet){
+        bookshelf_dock = BitmapFactory.decodeResource(getResources(), R.mipmap.bookshelf_dock);
+        if (!mNumColumnsSet) {
             mNumColumns = AUTO_FIT;
         }
         mcontext = context;
@@ -178,16 +176,14 @@ public class DragGridView extends GridView implements View.OnClickListener{
             createDragImage(mDragBitmap, mDownX, mDownY);
 
             setIsShowDeleteButton(true);
-            for (int i = 0;i < getChildCount();i++) {
+            for (int i = 0; i < getChildCount(); i++) {
                 final View mGridItemView = getChildAt(i);
                 mDeleteButton = (ImageButton) mGridItemView.findViewById(R.id.ib_close);
                 mDeleteButton.setOnClickListener(DragGridView.this);
-                if(mDeleteButton.getVisibility()!=VISIBLE) {
+                if (mDeleteButton.getVisibility() != VISIBLE) {
                     //   mDeleteButton.setVisibility(VISIBLE);
                 }
-
             }
-
         }
     };
 
@@ -195,13 +191,12 @@ public class DragGridView extends GridView implements View.OnClickListener{
     public void setAdapter(ListAdapter adapter) {
         super.setAdapter(adapter);
 
-        if(adapter instanceof DragGridListener){
+        if (adapter instanceof DragGridListener) {
             mDragAdapter = (DragGridListener) adapter;//回调方法的关键,拿到了该接口被实现后的实例
-        }else{
+        } else {
             throw new IllegalStateException("the adapter must be implements DragGridListener");
         }
     }
-
 
     @Override
     public void setNumColumns(int numColumns) {
@@ -210,20 +205,17 @@ public class DragGridView extends GridView implements View.OnClickListener{
         this.mNumColumns = numColumns;
     }
 
-
     @Override
     public void setColumnWidth(int columnWidth) {
         super.setColumnWidth(columnWidth);
         mColumnWidth = columnWidth;
     }
 
-
     @Override
     public void setHorizontalSpacing(int horizontalSpacing) {
         super.setHorizontalSpacing(horizontalSpacing);
         this.mHorizontalSpacing = horizontalSpacing;
     }
-
 
     /**
      * 若设置为AUTO_FIT，计算有多少列
@@ -259,6 +251,7 @@ public class DragGridView extends GridView implements View.OnClickListener{
 
     /**
      * 设置响应拖拽的毫秒数，默认是1000毫秒
+     *
      * @param dragResponseMS
      */
     public void setDragResponseMS(long dragResponseMS) {
@@ -267,7 +260,7 @@ public class DragGridView extends GridView implements View.OnClickListener{
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        switch(ev.getAction()){
+        switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = (int) ev.getX();
                 mDownY = (int) ev.getY();
@@ -276,14 +269,14 @@ public class DragGridView extends GridView implements View.OnClickListener{
                 mDragPosition = pointToPosition(mDownX, mDownY);
                 // Log.d("mDagPosition is", "" + mDragPosition);
 
-                if(mDragPosition == AdapterView.INVALID_POSITION){
+                if (mDragPosition == AdapterView.INVALID_POSITION) {
                     return super.dispatchTouchEvent(ev);
                 }
 
                 //使用Handler延迟dragResponseMS执行mLongClickRunnable,
                 // 大于20dp才执行mLongClickRunnable避免与Drawlayout发生冲突
-                int panding = (int) CommonUtil.convertDpToPixel(mcontext,20);
-                if(mDownX > panding) {
+                int panding = (int) CommonUtils.convertDpToPixel(mcontext, 20);
+                if (mDownX > panding) {
                     mHandler.postDelayed(mLongClickRunnable, dragResponseMS);
                 }
                 //根据position获取该item所对应的View
@@ -299,8 +292,7 @@ public class DragGridView extends GridView implements View.OnClickListener{
                 //获取DragGridView自动向上滚动的偏移量，小于这个值，DragGridView向下滚动
                 mDownScrollBorder = getHeight() / 5;
                 //获取DragGridView自动向下滚动的偏移量，大于这个值，DragGridView向上滚动
-                mUpScrollBorder = getHeight() * 4/5;
-
+                mUpScrollBorder = getHeight() * 4 / 5;
 
 
                 //开启mDragItemView绘图缓存
@@ -310,59 +302,62 @@ public class DragGridView extends GridView implements View.OnClickListener{
                 mDragBitmap = Bitmap.createBitmap(mStartDragItemView.getDrawingCache());
                 //这一步很关键，释放绘图缓存，避免出现重复的镜像
                 mStartDragItemView.destroyDrawingCache();
-
-
                 break;
+
             case MotionEvent.ACTION_MOVE:
-                int moveX = (int)ev.getX();
+                int moveX = (int) ev.getX();
                 int moveY = (int) ev.getY();
 
                 //如果我们在按下的item上面移动，只要不超过item的边界我们就不移除mRunnable
-                if(!isTouchInItem(mStartDragItemView, moveX, moveY)){
+                if (!isTouchInItem(mStartDragItemView, moveX, moveY)) {
                     mHandler.removeCallbacks(mLongClickRunnable);
                 }
                 break;
+
             case MotionEvent.ACTION_UP:
                 mHandler.removeCallbacks(mLongClickRunnable);
                 mHandler.removeCallbacks(mScrollRunnable);
                 break;
+
+            default:
+                break;
         }
+
         return super.dispatchTouchEvent(ev);
     }
 
-
     /**
      * 是否点击在GridView的item上面
+     *
      * @param dragView
      * @param x
      * @param y
      * @return
      */
-    private boolean isTouchInItem(View dragView, int x, int y){
-        if(dragView == null){
+    private boolean isTouchInItem(View dragView, int x, int y) {
+        if (dragView == null) {
             return false;
         }
         int leftOffset = dragView.getLeft();
         int topOffset = dragView.getTop();
-        if(x < leftOffset || x > leftOffset + dragView.getWidth()){
+        if (x < leftOffset || x > leftOffset + dragView.getWidth()) {
             return false;
         }
 
-        if(y < topOffset || y > topOffset + dragView.getHeight()){
+        if (y < topOffset || y > topOffset + dragView.getHeight()) {
             return false;
         }
 
         return true;
     }
 
-
-
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if(isDrag && mDragImageView != null){
-            switch(ev.getAction()){
+        if (isDrag && mDragImageView != null) {
+            switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     break;
+
                 case MotionEvent.ACTION_MOVE:
                     moveX = (int) ev.getX();
                     moveY = (int) ev.getY();
@@ -370,25 +365,30 @@ public class DragGridView extends GridView implements View.OnClickListener{
                     //拖动item
                     onDragItem(moveX, moveY);
                     break;
+
                 case MotionEvent.ACTION_UP:
                     onStopDrag();
                     isDrag = false;
                     break;
+
+                default:
+                    break;
             }
+
             return true;
         }
+
         return super.onTouchEvent(ev);
     }
 
     /**
      * 创建拖动的镜像
+     *
      * @param bitmap
-     * @param downX
-     * 			按下的点相对父控件的X坐标
-     * @param downY
-     * 			按下的点相对父控件的X坐标
+     * @param downX  按下的点相对父控件的X坐标
+     * @param downY  按下的点相对父控件的X坐标
      */
-    private void createDragImage(Bitmap bitmap, int downX , int downY){
+    private void createDragImage(Bitmap bitmap, int downX, int downY) {
         mWindowLayoutParams = new WindowManager.LayoutParams();
         mWindowLayoutParams.format = PixelFormat.TRANSLUCENT; //图片之外的其他地方透明
         mWindowLayoutParams.gravity = Gravity.TOP | Gravity.LEFT;
@@ -397,10 +397,10 @@ public class DragGridView extends GridView implements View.OnClickListener{
         mWindowLayoutParams.alpha = 1.0f; //透明度
         // mWindowLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         //  mWindowLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        mWindowLayoutParams.width = (int)(1.05*mStartDragItemView.getWidth());
-        mWindowLayoutParams.height = (int)(1.05*mStartDragItemView.getHeight());
+        mWindowLayoutParams.width = (int) (1.05 * mStartDragItemView.getWidth());
+        mWindowLayoutParams.height = (int) (1.05 * mStartDragItemView.getHeight());
         mWindowLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE ;
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
 
         mDragImageView = new ImageView(getContext());
         mDragImageView.setImageBitmap(bitmap);
@@ -410,8 +410,8 @@ public class DragGridView extends GridView implements View.OnClickListener{
     /**
      * 从界面上面移动拖动镜像
      */
-    private void removeDragImage(){
-        if(mDragImageView != null){
+    private void removeDragImage() {
+        if (mDragImageView != null) {
             mWindowManager.removeView(mDragImageView);
             mDragImageView = null;
         }
@@ -419,10 +419,11 @@ public class DragGridView extends GridView implements View.OnClickListener{
 
     /**
      * 拖动item，在里面实现了item镜像的位置更新，item的相互交换以及GridView的自行滚动
+     *
      * @param moveX
      * @param moveY
      */
-    private void onDragItem(int moveX, int moveY){
+    private void onDragItem(int moveX, int moveY) {
         mWindowLayoutParams.x = moveX - mPoint2ItemLeft + mOffset2Left;
         mWindowLayoutParams.y = moveY - mPoint2ItemTop + mOffset2Top - mStatusHeight;
         mWindowManager.updateViewLayout(mDragImageView, mWindowLayoutParams); //更新镜像的位置
@@ -432,28 +433,25 @@ public class DragGridView extends GridView implements View.OnClickListener{
         mHandler.post(mScrollRunnable);
     }
 
-
     /**
      * 当moveY的值大于向上滚动的边界值，触发GridView自动向上滚动
      * 当moveY的值小于向下滚动的边界值，触发GridView自动向下滚动
      * 否则不进行滚动
      */
     private Runnable mScrollRunnable = new Runnable() {
-
         @Override
         public void run() {
             int scrollY;
-            if(getFirstVisiblePosition() == 0 || getLastVisiblePosition() == getCount() - 1){
+            if (getFirstVisiblePosition() == 0 || getLastVisiblePosition() == getCount() - 1) {
                 mHandler.removeCallbacks(mScrollRunnable);
             }
-
-            if(moveY > mUpScrollBorder){
+            if (moveY > mUpScrollBorder) {
                 scrollY = speed;
                 mHandler.postDelayed(mScrollRunnable, 25);
-            }else if(moveY < mDownScrollBorder){
+            } else if (moveY < mDownScrollBorder) {
                 scrollY = -speed;
                 mHandler.postDelayed(mScrollRunnable, 25);
-            }else{
+            } else {
                 scrollY = 0;
                 mHandler.removeCallbacks(mScrollRunnable);
             }
@@ -462,27 +460,23 @@ public class DragGridView extends GridView implements View.OnClickListener{
         }
     };
 
-
     /**
      * 交换item,并且控制item之间的显示与隐藏效果
+     *
      * @param moveX
      * @param moveY
      */
-    private void onSwapItem(int moveX, int moveY){
+    private void onSwapItem(int moveX, int moveY) {
         //获取我们手指移动到的那个item的position
         final int tempPosition = pointToPosition(moveX, moveY);
 
         //假如tempPosition 改变了并且tempPosition不等于-1,则进行交换
-        if(tempPosition != mDragPosition && tempPosition != AdapterView.INVALID_POSITION && mAnimationEnd ){
-
+        if (tempPosition != mDragPosition && tempPosition != AdapterView.INVALID_POSITION && mAnimationEnd) {
             mDragAdapter.setHideItem(tempPosition);
-
             mDragAdapter.reorderItems(mDragPosition, tempPosition);
-
 
             final ViewTreeObserver observer = getViewTreeObserver();
             observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-
                 @Override
                 public boolean onPreDraw() {
                     observer.removeOnPreDrawListener(this);
@@ -490,14 +484,13 @@ public class DragGridView extends GridView implements View.OnClickListener{
                     mDragPosition = tempPosition;  //交换结束更新mDragPosition
                     return true;
                 }
-            } );
-
+            });
         }
-
     }
 
     /**
      * 创建移动动画
+     *
      * @param view
      * @param startX
      * @param endX
@@ -516,9 +509,9 @@ public class DragGridView extends GridView implements View.OnClickListener{
         return animSetXY;
     }
 
-
     /**
      * item的交换动画效果
+     *
      * @param oldPosition
      * @param newPosition
      */
@@ -533,7 +526,7 @@ public class DragGridView extends GridView implements View.OnClickListener{
                 //双数
                 if ((pos + 1) % mNumColumns == 0) {
                     resultList.add(createTranslationAnimations(view,
-                            - view.getWidth() * (mNumColumns - 1), 0,
+                            -view.getWidth() * (mNumColumns - 1), 0,
                             view.getHeight(), 0));
                 } else {
                     resultList.add(createTranslationAnimations(view,
@@ -571,15 +564,14 @@ public class DragGridView extends GridView implements View.OnClickListener{
         });
 
         resultSet.start();
-
     }
 
     /**
      * 停止拖拽我们将之前隐藏的item显示出来，并将镜像移除
      */
-    private void onStopDrag(){
+    private void onStopDrag() {
         View view = getChildAt(mDragPosition - getFirstVisiblePosition());
-        if(view != null){
+        if (view != null) {
             view.setVisibility(View.VISIBLE);
         }
         mDragAdapter.setHideItem(-1);
@@ -592,34 +584,30 @@ public class DragGridView extends GridView implements View.OnClickListener{
      * @param context
      * @return
      */
-    public static int getStatusHeight(Context context)
-    {
+    public static int getStatusHeight(Context context) {
         int statusHeight = -1;
-        try
-        {
+        try {
             Class<?> clazz = Class.forName("com.android.internal.R$dimen");
             Object object = clazz.newInstance();
             int height = Integer.parseInt(clazz.getField("status_bar_height")
                     .get(object).toString());
             statusHeight = context.getResources().getDimensionPixelSize(height);
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return statusHeight;
     }
 
-
     @Override
     protected void dispatchDraw(Canvas canvas) {
         i++;
-        int backgroundHeightPanding = (int) CommonUtil.convertDpToPixel(mcontext,4);
-        int dockHightPanding = (int) CommonUtil.convertDpToPixel(mcontext,3);
+        int backgroundHeightPanding = (int) CommonUtils.convertDpToPixel(mcontext, 4);
+        int dockHightPanding = (int) CommonUtils.convertDpToPixel(mcontext, 3);
         int count = getChildCount();
         int top = count > 0 ? getChildAt(0).getTop() : 0;
         int bottom = getChildAt(0).getBottom();
         int backgroundWidth = background.getWidth();
-        int backgroundHeight = background.getHeight()-backgroundHeightPanding;
+        int backgroundHeight = background.getHeight() - backgroundHeightPanding;
         int dockWith = bookshelf_dock.getWidth();
         int dockHight = bookshelf_dock.getHeight();
         int width = getWidth();
@@ -629,11 +617,11 @@ public class DragGridView extends GridView implements View.OnClickListener{
             for (int x = 0; x < width; x += backgroundWidth) {
                 canvas.drawBitmap(background, x, y, null);
             }
-            if(y > top) {
-                canvas.drawBitmap(bookshelf_dock, 0 , y-dockHightPanding, null);
+            if (y > top) {
+                canvas.drawBitmap(bookshelf_dock, 0, y - dockHightPanding, null);
             }
         }
-        if(i == 1) {
+        if (i == 1) {
             firtView = getChildAt(0);
             firstItemTextView = (TextView) firtView.findViewById(R.id.tv_name);
             firstItemTextView.getLocationInWindow(firstLocation);
@@ -648,11 +636,11 @@ public class DragGridView extends GridView implements View.OnClickListener{
         mDragAdapter.removeItem(mDragPosition);
     }
 
-    public static boolean getShowDeleteButton () {
+    public static boolean getShowDeleteButton() {
         return isShowDeleteButton;
     }
 
-    public static void setIsShowDeleteButton (boolean a) {
+    public static void setIsShowDeleteButton(boolean a) {
         isShowDeleteButton = a;
     }
 
@@ -660,11 +648,11 @@ public class DragGridView extends GridView implements View.OnClickListener{
         this.touchable = isable;
     }
 
-    public boolean getTouchable () {
+    public boolean getTouchable() {
         return touchable;
     }
 
-    public static void setNoMove (boolean ismove) {
+    public static void setNoMove(boolean ismove) {
         isMove = ismove;
     }
 

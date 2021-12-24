@@ -5,13 +5,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.longluo.ebookreader.ui.fragment.BookMarkFragment;
-import com.longluo.ebookreader.ui.fragment.CatalogFragment;
+import com.longluo.ebookreader.ui.fragment.BookContentFragment;
 
-/**
- * Created by Administrator on 2016/1/12.
- */
+
 public class MyPagerAdapter extends FragmentPagerAdapter {
-    private CatalogFragment catalogueFragment;
+    private BookContentFragment catalogueFragment;
     private BookMarkFragment bookMarkFragment;
     private String bookPath;
     private final String[] titles = {"目录", "书签"};
@@ -36,25 +34,20 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 if (catalogueFragment == null) {
-                    //  bookMarkFragment = new BookMarkFragment();
-                    //创建bookMarkFragment实例时同时把需要intent中的值传入
-//                    catalogueFragment = CatalogFragment
-                    // bookMarkFragment = BookMarkFragment.newInstance(MarkActivity.getBookpath_intent());
-                    catalogueFragment = CatalogFragment.newInstance(bookPath);
+                    catalogueFragment = BookContentFragment.newInstance(bookPath);
                 }
                 return catalogueFragment;
 
             case 1:
                 if (bookMarkFragment == null) {
-                    //catalogueFragment = new CatalogueFragment();
-                    //  catalogueFragment = CatalogueFragment.newInstance(MarkActivity.getBookpath_intent());
-//                    bookMarkFragment = BookMarkFragment.newInstance(MarkActivity.getBookpath_intent());
                     bookMarkFragment = BookMarkFragment.newInstance(bookPath);
                 }
                 return bookMarkFragment;
+
+            default:
+                break;
         }
 
         return null;
     }
-
 }

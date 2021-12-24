@@ -19,14 +19,15 @@
     <string name="action_add_bookmark">添加书签</string>
     <string name="action_read_book">读书</string>
 
+    <string name="book_mark">书签</string>
+
     <string name="press_twice_to_exit">连续点击才能退出</string>
     <string name="root">根目录</string>
     <string name="add_files">加入书架</string>
     <string name="choose_all">全选</string>
-    <string name="delete">取消</string>
+    <string name="delete">删除</string>
     <string name="bookpop_size">字体</string>
     <string name="bookpop_light">亮度</string>
-    <string name="bookpop_card">书签</string>
     <string name="bookpop_send">跳转</string>
 
     <string name="read_setting_directory">目录</string>
@@ -127,16 +128,16 @@
 
     <!--CollBook的长按点击-->
     <string-array name="nb_menu_net_book">
-        <item>@string/nb.menu.action.top</item>
-        <item>@string/nb.menu.action.cache</item>
-        <item>@string/nb.menu.action.delete</item>
-        <item>@string/nb.menu.action.batch_manage</item>
+        <item>@string/top</item>
+        <item>@string/cache</item>
+        <item>@string/delete</item>
+        <item>@string/batch_manage</item>
     </string-array>
 
     <string-array name="nb_menu_local_book">
-        <item>@string/nb.menu.action.top</item>
-        <item>@string/nb.menu.action.delete</item>
-        <item>@string/nb.menu.action.batch_manage</item>
+        <item>@string/top</item>
+        <item>@string/delete</item>
+        <item>@string/batch_manage</item>
     </string-array>
 
     <!--常用-->
@@ -208,10 +209,9 @@
     <string name="nb.menu.action.night_mode">夜间模式</string>
     <string name="nb.menu.action.setting">设置</string>
 
-    <string name="nb.menu.action.top">置顶</string>
-    <string name="nb.menu.action.cache">缓存</string>
-    <string name="nb.menu.action.delete">删除</string>
-    <string name="nb.menu.action.batch_manage">批量管理</string>
+    <string name="top">置顶</string>
+    <string name="cache">缓存</string>
+    <string name="batch_manage">批量管理</string>
 
     <!--SplashActivity-->
     <string name="nb.splash.skip">跳过</string>
@@ -265,11 +265,11 @@
     <string name="nb.mode.morning">日间</string>
 
     <!--read-->
+    <string name="book_content">目录</string>
     <string name="nb.read.community">社区</string>
     <string name="nb.read.brief">简介</string>
     <string name="nb.read.setting">设置</string>
     <string name="nb.read.download">缓存</string>'
-    <string name="nb.read.category">目录</string>
     <string name="nb.read.no_chapter">第 %1$d 章(%2$d)</string>
 
     <!--file system-->
@@ -406,7 +406,7 @@
     <string name="automatic_hyphenation">Enable hyphenation</string>
     <string name="empty_line">Stanza break</string>
     <string name="margin_width">Page margins</string>
-    <string name="top">Top</string>
+<!--    <string name="top">Top</string>-->
     <string name="bottom">Bottom</string>
     <string name="links_color_day">Links color (day)</string>
     <string name="links_color_night">Links color (night)</string>

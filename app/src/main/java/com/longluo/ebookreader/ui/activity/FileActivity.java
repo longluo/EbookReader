@@ -18,7 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.ui.adapter.FileAdapter;
 import com.longluo.ebookreader.base.BaseActivity;
-import com.longluo.ebookreader.db.BookList;
+import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.util.FileUtils;
 
 import org.litepal.crud.DataSupport;
@@ -152,38 +152,38 @@ public class FileActivity extends BaseActivity {
     private void saveBookList() {
         List<File> files = adapter.getCheckFiles();
         if (files.size() > 0) {
-            List<BookList> bookLists = new ArrayList<BookList>();
+            List<BookMeta> bookMetas = new ArrayList<BookMeta>();
             for (File file : files) {
-                BookList bookList = new BookList();
+                BookMeta bookMeta = new BookMeta();
                 String bookName = FileUtils.getFileNameNoEx(file.getName());
-                bookList.setBookname(bookName);
-                bookList.setBookpath(file.getAbsolutePath());
-                bookLists.add(bookList);
+                bookMeta.setBookName(bookName);
+                bookMeta.setBookPath(file.getAbsolutePath());
+                bookMetas.add(bookMeta);
             }
             mSaveBookToSqlLiteTask = new SaveBookToSqlLiteTask();
-            mSaveBookToSqlLiteTask.execute(bookLists);
+            mSaveBookToSqlLiteTask.execute(bookMetas);
         }
     }
 
-    private class SaveBookToSqlLiteTask extends AsyncTask<List<BookList>, Void, Integer> {
+    private class SaveBookToSqlLiteTask extends AsyncTask<List<BookMeta>, Void, Integer> {
         private static final int FAIL = 0;
         private static final int SUCCESS = 1;
         private static final int REPEAT = 2;
-        private BookList repeatBookList;
+        private BookMeta repeatBookMeta;
 
         @Override
-        protected Integer doInBackground(List<BookList>... params) {
-            List<BookList> bookLists = params[0];
-            for (BookList bookList : bookLists) {
-                List<BookList> books = DataSupport.where("bookpath = ?", bookList.getBookpath()).find(BookList.class);
+        protected Integer doInBackground(List<BookMeta>... params) {
+            List<BookMeta> bookMetas = params[0];
+            for (BookMeta bookMeta : bookMetas) {
+                List<BookMeta> books = DataSupport.where("bookpath = ?", bookMeta.getBookPath()).find(BookMeta.class);
                 if (books.size() > 0) {
-                    repeatBookList = bookList;
+                    repeatBookMeta = bookMeta;
                     return REPEAT;
                 }
             }
 
             try {
-                DataSupport.saveAll(bookLists);
+                DataSupport.saveAll(bookMetas);
             } catch (Exception e) {
                 e.printStackTrace();
                 return FAIL;
@@ -207,7 +207,7 @@ public class FileActivity extends BaseActivity {
                     break;
 
                 case REPEAT:
-                    msg = "书本" + repeatBookList.getBookname() + "重复了";
+                    msg = "书本" + repeatBookMeta.getBookName() + "重复了";
                     break;
 
                 default:

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.longluo.ebookreader.Config;
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.db.BookList;
+import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.view.DragGridListener;
 import com.longluo.ebookreader.view.DragGridView;
 
@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 
 public class ShelfAdapter extends BaseAdapter implements DragGridListener {
     private Context mContex;
-    private List<BookList> bilist;
+    private List<BookMeta> bilist;
     private static LayoutInflater inflater = null;
     private int mHidePosition = -1;
     private Typeface typeface;
@@ -38,7 +38,7 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
     private int[] firstLocation;
     private Config config;
 
-    public ShelfAdapter(Context context, List<BookList> bilist) {
+    public ShelfAdapter(Context context, List<BookMeta> bilist) {
         this.mContex = context;
         this.bilist = bilist;
         config = Config.getInstance();
@@ -70,7 +70,7 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
     public View getView(int position, View contentView, ViewGroup arg2) {
         final ViewHolder viewHolder;
         if (contentView == null) {
-            contentView = inflater.inflate(R.layout.shelfitem, null);
+            contentView = inflater.inflate(R.layout.layout_shelf_item, null);
             viewHolder = new ViewHolder(contentView);
             viewHolder.name.setTypeface(typeface);
             contentView.setTag(viewHolder);
@@ -91,7 +91,7 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
                 viewHolder.deleteItem_IB.setVisibility(View.INVISIBLE);
             }
             viewHolder.name.setVisibility(View.VISIBLE);
-            String fileName = bilist.get(position).getBookname();
+            String fileName = bilist.get(position).getBookName();
             viewHolder.name.setText(fileName);
         } else {
             contentView.setVisibility(View.INVISIBLE);
@@ -120,9 +120,9 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
     @Override
     public void reorderItems(int oldPosition, int newPosition) {
 
-        BookList temp = bilist.get(oldPosition);
-        List<BookList> bookLists1 = new ArrayList<>();
-        bookLists1 = DataSupport.findAll(BookList.class);
+        BookMeta temp = bilist.get(oldPosition);
+        List<BookMeta> bookLists1 = new ArrayList<>();
+        bookLists1 = DataSupport.findAll(BookMeta.class);
 
         int tempId = bookLists1.get(newPosition).getId();
         // Log.d("oldposotion is",oldPosition+"");
@@ -130,9 +130,9 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
         if (oldPosition < newPosition) {
             for (int i = oldPosition; i < newPosition; i++) {
                 //获得交换前的ID,必须是数据库的真正的ID，如果使用bilist获取id是错误的，因为bilist交换后id是跟着交换的
-                List<BookList> bookLists = new ArrayList<>();
-                bookLists = DataSupport.findAll(BookList.class);
-                int dataBasesId = bookLists.get(i).getId();
+                List<BookMeta> bookMetas = new ArrayList<>();
+                bookMetas = DataSupport.findAll(BookMeta.class);
+                int dataBasesId = bookMetas.get(i).getId();
                 Collections.swap(bilist, i, i + 1);
 
                 updateBookPosition(i, dataBasesId, bilist);
@@ -140,9 +140,9 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
             }
         } else if (oldPosition > newPosition) {
             for (int i = oldPosition; i > newPosition; i--) {
-                List<BookList> bookLists = new ArrayList<>();
-                bookLists = DataSupport.findAll(BookList.class);
-                int dataBasesId = bookLists.get(i).getId();
+                List<BookMeta> bookMetas = new ArrayList<>();
+                bookMetas = DataSupport.findAll(BookMeta.class);
+                int dataBasesId = bookMetas.get(i).getId();
 
                 Collections.swap(bilist, i, i - 1);
 
@@ -158,19 +158,19 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
      * 两个item数据交换结束后，把不需要再交换的item更新到数据库中
      *
      * @param position
-     * @param bookLists
+     * @param bookMetas
      */
-    public void updateBookPosition(int position, int databaseId, List<BookList> bookLists) {
-        BookList bookList = new BookList();
-        String bookpath = bookLists.get(position).getBookpath();
-        String bookname = bookLists.get(position).getBookname();
-        bookList.setBookpath(bookpath);
-        bookList.setBookname(bookname);
-        bookList.setBegin(bookLists.get(position).getBegin());
-        bookList.setCharset(bookLists.get(position).getCharset());
+    public void updateBookPosition(int position, int databaseId, List<BookMeta> bookMetas) {
+        BookMeta bookMeta = new BookMeta();
+        String bookpath = bookMetas.get(position).getBookPath();
+        String bookname = bookMetas.get(position).getBookName();
+        bookMeta.setBookPath(bookpath);
+        bookMeta.setBookName(bookname);
+        bookMeta.setBegin(bookMetas.get(position).getBegin());
+        bookMeta.setCharset(bookMetas.get(position).getCharset());
         //开线程保存改动的数据到数据库
         //使用litepal数据库框架update时每次只能update一个id中的一条信息，如果相同则不更新。
-        upDateBookToSqlite3(databaseId, bookList);
+        upDateBookToSqlite3(databaseId, bookMeta);
     }
 
     /**
@@ -192,8 +192,8 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
     @Override
     public void removeItem(int deletePosition) {
 
-        String bookpath = bilist.get(deletePosition).getBookpath();
-        DataSupport.deleteAll(BookList.class, "bookpath = ?", bookpath);
+        String bookpath = bilist.get(deletePosition).getBookPath();
+        DataSupport.deleteAll(BookMeta.class, "bookpath = ?", bookpath);
         bilist.remove(deletePosition);
         // Log.d("删除的书本是", bookpath);
 
@@ -201,8 +201,8 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
 
     }
 
-    public void setBookList(List<BookList> bookLists) {
-        this.bilist = bookLists;
+    public void setBookList(List<BookMeta> bookMetas) {
+        this.bilist = bookMetas;
         notifyDataSetChanged();
     }
 
@@ -214,16 +214,16 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
     @Override
     public void setItemToFirst(int openPosition) {
 
-        List<BookList> bookLists1 = new ArrayList<>();
-        bookLists1 = DataSupport.findAll(BookList.class);
+        List<BookMeta> bookLists1 = new ArrayList<>();
+        bookLists1 = DataSupport.findAll(BookMeta.class);
         int tempId = bookLists1.get(0).getId();
-        BookList temp = bookLists1.get(openPosition);
+        BookMeta temp = bookLists1.get(openPosition);
         // Log.d("setitem adapter ",""+openPosition);
         if (openPosition != 0) {
             for (int i = openPosition; i > 0; i--) {
-                List<BookList> bookListsList = new ArrayList<>();
-                bookListsList = DataSupport.findAll(BookList.class);
-                int dataBasesId = bookListsList.get(i).getId();
+                List<BookMeta> bookListsMeta = new ArrayList<>();
+                bookListsMeta = DataSupport.findAll(BookMeta.class);
+                int dataBasesId = bookListsMeta.get(i).getId();
 
                 Collections.swap(bookLists1, i, i - 1);
                 updateBookPosition(i, dataBasesId, bookLists1);
@@ -232,7 +232,7 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
             bookLists1.set(0, temp);
             updateBookPosition(0, tempId, bookLists1);
             for (int j = 0; j < bookLists1.size(); j++) {
-                String bookpath = bookLists1.get(j).getBookpath();
+                String bookpath = bookLists1.get(j).getBookPath();
                 //  Log.d("移动到第一位",bookpath);
             }
         }
@@ -252,9 +252,9 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
      * 数据库书本信息更新
      *
      * @param databaseId 要更新的数据库的书本ID
-     * @param bookList
+     * @param bookMeta
      */
-    public void upDateBookToSqlite3(final int databaseId, final BookList bookList) {
+    public void upDateBookToSqlite3(final int databaseId, final BookMeta bookMeta) {
 
         putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
             @Override
@@ -265,7 +265,7 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
             @Override
             protected Boolean doInBackground(Void... params) {
                 try {
-                    bookList.update(databaseId);
+                    bookMeta.update(databaseId);
                 } catch (DataSupportException e) {
                     return false;
                 }

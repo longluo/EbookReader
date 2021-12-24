@@ -4,10 +4,9 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/lv_bookmark"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_book_mark"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/list_item_divider"
-        android:dividerHeight="1dp" />
+        android:layout_height="match_parent" />
+
 </LinearLayout>

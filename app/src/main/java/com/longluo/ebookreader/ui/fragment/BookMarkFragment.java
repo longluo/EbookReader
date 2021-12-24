@@ -4,14 +4,16 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.ui.adapter.MarkAdapter;
 import com.longluo.ebookreader.base.BaseFragment;
-import com.longluo.ebookreader.db.BookMarks;
+import com.longluo.ebookreader.db.BookMark;
+import com.longluo.ebookreader.ui.adapter.BookMarkAdapter;
 import com.longluo.ebookreader.util.PageFactory;
+import com.longluo.ebookreader.widget.animation.RecycleViewDivider;
 
 import org.litepal.crud.DataSupport;
 
@@ -22,20 +24,27 @@ import butterknife.BindView;
 
 
 public class BookMarkFragment extends BaseFragment {
-    public static final String ARGUMENT = "argument";
+    private static final String BOOK_PATH = "book_path";
 
-    @BindView(R.id.lv_bookmark)
-    ListView lv_bookmark;
+    @BindView(R.id.rv_book_mark)
+    RecyclerView rvBookMark;
 
-    private String bookpath;
-    private String mArgument;
-    private List<BookMarks> bookMarksList;
-    private MarkAdapter markAdapter;
+    private String bookPath;
+    private List<BookMark> bookMarkList;
+    private BookMarkAdapter bookMarkAdapter;
     private PageFactory pageFactory;
+
+    public static BookMarkFragment newInstance(String bookPath) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BOOK_PATH, bookPath);
+        BookMarkFragment bookMarkFragment = new BookMarkFragment();
+        bookMarkFragment.setArguments(bundle);
+        return bookMarkFragment;
+    }
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_bookmark;
+        return R.layout.fragment_book_mark;
     }
 
     @Override
@@ -43,26 +52,31 @@ public class BookMarkFragment extends BaseFragment {
         pageFactory = PageFactory.getInstance();
         Bundle bundle = getArguments();
         if (bundle != null) {
-            bookpath = bundle.getString(ARGUMENT);
+            bookPath = bundle.getString(BOOK_PATH);
         }
-        bookMarksList = new ArrayList<>();
-        bookMarksList = DataSupport.where("bookpath = ?", bookpath).find(BookMarks.class);
-        markAdapter = new MarkAdapter(getActivity(), bookMarksList);
-        lv_bookmark.setAdapter(markAdapter);
+        bookMarkList = new ArrayList<>();
+        bookMarkList = DataSupport.where("bookpath = ?", bookPath).find(BookMark.class);
+        bookMarkAdapter = new BookMarkAdapter(getActivity(), bookMarkList);
+        rvBookMark.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvBookMark.setAdapter(bookMarkAdapter);
+        rvBookMark.addItemDecoration(new RecycleViewDivider(
+                getActivity(), LinearLayoutManager.VERTICAL, 3, getResources().getColor(R.color.list_item_divider)));
     }
 
     @Override
     protected void initListener() {
-        lv_bookmark.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        bookMarkAdapter.setOnItemClickListener(new BookMarkAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pageFactory.changeChapter(bookMarksList.get(position).getBegin());
+            public void onClick(int position) {
+                pageFactory.changeChapter(bookMarkList.get(position).getBegin());
                 getActivity().finish();
             }
         });
-        lv_bookmark.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+        bookMarkAdapter.setOnItemLongClickListener(new BookMarkAdapter.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            public void onClick(int position) {
                 new AlertDialog.Builder(getActivity())
                         .setTitle("提示")
                         .setMessage("是否删除书签？")
@@ -75,29 +89,13 @@ public class BookMarkFragment extends BaseFragment {
                         .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                DataSupport.delete(BookMarks.class,bookMarksList.get(position).getId());
-                                bookMarksList.clear();
-                                bookMarksList.addAll(DataSupport.where("bookpath = ?", bookpath).find(BookMarks.class));
-                                markAdapter.notifyDataSetChanged();
+                                DataSupport.delete(BookMark.class, bookMarkList.get(position).getId());
+                                bookMarkList.clear();
+                                bookMarkList.addAll(DataSupport.where("bookpath = ?", bookPath).find(BookMark.class));
+                                bookMarkAdapter.notifyDataSetChanged();
                             }
                         }).setCancelable(true).show();
-                return false;
             }
         });
     }
-
-    /**
-     * 用于从Activity传递数据到Fragment
-     * @param bookpath
-     * @return
-     */
-    public static BookMarkFragment newInstance(String bookpath)
-    {
-        Bundle bundle = new Bundle();
-        bundle.putString(ARGUMENT, bookpath);
-        BookMarkFragment bookMarkFragment = new BookMarkFragment();
-        bookMarkFragment.setArguments(bundle);
-        return bookMarkFragment;
-    }
-
 }

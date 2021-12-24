@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.longluo.ebookreader.db.BookList;
+import com.longluo.ebookreader.db.BookMeta;
 
 import org.mozilla.universalchardet.UniversalDetector;
 
@@ -247,7 +247,7 @@ public class FileUtils {
      * @param //本地文件夹路径
      */
     public static List<File> getFileListByPath(String path) {
-        BookList bookList = new BookList();
+        BookMeta bookMeta = new BookMeta();
         int fileNum = 0;
 
         File dir = new File(path);

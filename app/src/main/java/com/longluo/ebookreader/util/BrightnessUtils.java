@@ -6,10 +6,8 @@ import android.net.Uri;
 import android.provider.Settings;
 import android.view.WindowManager;
 
-/**
- * Created by Administrator on 2016/7/27 0027.
- */
-public class BrightnessUtil {
+
+public class BrightnessUtils {
     /**
      * 判断是否开启了自动亮度调节
      *

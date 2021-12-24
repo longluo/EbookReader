@@ -20,8 +20,8 @@ import android.widget.Toast;
 
 import com.longluo.ebookreader.Config;
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.db.BookCatalogue;
-import com.longluo.ebookreader.db.BookList;
+import com.longluo.ebookreader.db.BookContent;
+import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.view.PageWidget;
 
 import org.litepal.crud.DataSupport;
@@ -132,7 +132,7 @@ public class PageFactory {
     private String bookPath = "";
     //书本名字
     private String bookName = "";
-    private BookList bookList;
+    private BookMeta bookMeta;
     //书本章节
     private int currentCharter = 0;
     //当前电量
@@ -206,7 +206,7 @@ public class PageFactory {
 
         mBorderWidth = mContext.getResources().getDimension(R.dimen.reading_board_battery_border_width);
         mBatterryPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBatterryFontSize = CommonUtil.sp2px(context, 12);
+        mBatterryFontSize = CommonUtils.sp2px(context, 12);
         mBatterryPaint.setTextSize(mBatterryFontSize);
         mBatterryPaint.setTypeface(typeface);
         mBatterryPaint.setTextAlign(Paint.Align.LEFT);
@@ -288,13 +288,13 @@ public class PageFactory {
             currentCharter = getCurrentCharter();
         }
         //更新数据库进度
-        if (currentPage != null && bookList != null) {
+        if (currentPage != null && bookMeta != null) {
             new Thread() {
                 @Override
                 public void run() {
                     super.run();
                     values.put("begin", currentPage.getBegin());
-                    DataSupport.update(BookList.class, values, bookList.getId());
+                    DataSupport.update(BookMeta.class, values, bookMeta.getId());
                 }
             }.start();
         }
@@ -335,8 +335,8 @@ public class PageFactory {
         mBatteryPercentage = (float) level / scale;
         float rect1Left = marginWidth + dateWith + statusMarginBottom;//电池外框left位置
         //画电池外框
-        float width = CommonUtil.convertDpToPixel(mContext, 20) - mBorderWidth;
-        float height = CommonUtil.convertDpToPixel(mContext, 10);
+        float width = CommonUtils.convertDpToPixel(mContext, 20) - mBorderWidth;
+        float height = CommonUtils.convertDpToPixel(mContext, 10);
         rect1.set(rect1Left, mHeight - height - statusMarginBottom, rect1Left + width, mHeight - statusMarginBottom);
         rect2.set(rect1Left + mBorderWidth, mHeight - height + mBorderWidth - statusMarginBottom, rect1Left + width - mBorderWidth, mHeight - mBorderWidth - statusMarginBottom);
         c.save();
@@ -351,17 +351,17 @@ public class PageFactory {
         rect2.bottom -= mBorderWidth;
         c.drawRect(rect2, mBatterryPaint);
         //画电池头
-        int poleHeight = (int) CommonUtil.convertDpToPixel(mContext, 10) / 2;
+        int poleHeight = (int) CommonUtils.convertDpToPixel(mContext, 10) / 2;
         rect2.left = rect1.right;
         rect2.top = rect2.top + poleHeight / 4;
         rect2.right = rect1.right + mBorderWidth;
         rect2.bottom = rect2.bottom - poleHeight / 4;
         c.drawRect(rect2, mBatterryPaint);
         //画书名
-        c.drawText(CommonUtil.subString(bookName, 12), marginWidth, statusMarginBottom + mBatterryFontSize, mBatterryPaint);
+        c.drawText(CommonUtils.subString(bookName, 12), marginWidth, statusMarginBottom + mBatterryFontSize, mBatterryPaint);
         //画章
         if (getDirectoryList().size() > 0) {
-            String charterName = CommonUtil.subString(getDirectoryList().get(currentCharter).getBookCatalogue(), 12);
+            String charterName = CommonUtils.subString(getDirectoryList().get(currentCharter).getBookContent(), 12);
             int nChaterWidth = (int) mBatterryPaint.measureText(charterName) + 1;
             c.drawText(charterName, mWidth - marginWidth - nChaterWidth, statusMarginBottom + mBatterryFontSize, mBatterryPaint);
         }
@@ -419,14 +419,14 @@ public class PageFactory {
      *
      * @throws IOException
      */
-    public void openBook(BookList bookList) throws IOException {
+    public void openBook(BookMeta bookMeta) throws IOException {
         //清空数据
         currentCharter = 0;
 //        m_mbBufLen = 0;
         initBg(config.getDayOrNight());
 
-        this.bookList = bookList;
-        bookPath = bookList.getBookpath();
+        this.bookMeta = bookMeta;
+        bookPath = bookMeta.getBookPath();
         bookName = FileUtils.getFileName(bookPath);
 
         mStatus = Status.OPENING;
@@ -436,7 +436,7 @@ public class PageFactory {
             bookTask.cancel(true);
         }
         bookTask = new BookTask();
-        bookTask.execute(bookList.getBegin());
+        bookTask.execute(bookMeta.getBegin());
     }
 
     private class BookTask extends AsyncTask<Long, Void, Boolean> {
@@ -479,7 +479,7 @@ public class PageFactory {
         protected Boolean doInBackground(Long... params) {
             begin = params[0];
             try {
-                mBookUtils.openBook(bookList);
+                mBookUtils.openBook(bookMeta);
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -639,7 +639,7 @@ public class PageFactory {
             }
             num--;
             if (num >= 0) {
-                long begin = mBookUtils.getDirectoryList().get(num).getBookCatalogueStartPos();
+                long begin = mBookUtils.getDirectoryList().get(num).getBookContentStartPos();
                 currentPage = getPageForBegin(begin);
                 currentPage(true);
                 currentCharter = num;
@@ -655,7 +655,7 @@ public class PageFactory {
         }
         num++;
         if (num < getDirectoryList().size()) {
-            long begin = getDirectoryList().get(num).getBookCatalogueStartPos();
+            long begin = getDirectoryList().get(num).getBookContentStartPos();
             currentPage = getPageForBegin(begin);
             currentPage(true);
             currentCharter = num;
@@ -666,8 +666,8 @@ public class PageFactory {
     public int getCurrentCharter() {
         int num = 0;
         for (int i = 0; getDirectoryList().size() > i; i++) {
-            BookCatalogue bookCatalogue = getDirectoryList().get(i);
-            if (currentPage.getEnd() >= bookCatalogue.getBookCatalogueStartPos()) {
+            BookContent bookContent = getDirectoryList().get(i);
+            if (currentPage.getEnd() >= bookContent.getBookContentStartPos()) {
                 num = i;
             } else {
                 break;
@@ -754,7 +754,7 @@ public class PageFactory {
                 if (getBgBitmap() != null) {
                     getBgBitmap().recycle();
                 }
-                bitmap = BitmapUtil.decodeSampledBitmapFromResource(
+                bitmap = BitmapUtils.decodeSampledBitmapFromResource(
                         mContext.getResources(), R.drawable.paper, mWidth, mHeight);
                 color = mContext.getResources().getColor(R.color.read_font_default);
                 setBookPageBg(mContext.getResources().getColor(R.color.read_bg_default));
@@ -808,7 +808,7 @@ public class PageFactory {
         currentCharter = 0;
         bookPath = "";
         bookName = "";
-        bookList = null;
+        bookMeta = null;
         mBookPageWidget = null;
         mPageEvent = null;
         cancelPage = null;
@@ -829,7 +829,7 @@ public class PageFactory {
     }
 
     //获取书本的章
-    public List<BookCatalogue> getDirectoryList() {
+    public List<BookContent> getDirectoryList() {
         return mBookUtils.getDirectoryList();
     }
 

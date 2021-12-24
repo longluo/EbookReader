@@ -59,7 +59,7 @@
 
         <include
             android:id="@+id/layout_bottom"
-            layout="@layout/activity_file_bottom"
+            layout="@layout/layout_file_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true" />

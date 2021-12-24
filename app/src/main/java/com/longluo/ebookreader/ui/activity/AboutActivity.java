@@ -13,7 +13,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseActivity;
-import com.longluo.ebookreader.util.CommonUtil;
+import com.longluo.ebookreader.util.CommonUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -49,7 +49,7 @@ public class AboutActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
         toolbarLayout.setTitle(getResources().getString(R.string.app_name));
-        tvVersion.setText(String.format("当前版本: %s (Build %s)", CommonUtil.getVersion(this), CommonUtil.getVersionCode(this)));
+        tvVersion.setText(String.format("当前版本: %s (Build %s)", CommonUtils.getVersion(this), CommonUtils.getVersionCode(this)));
     }
 
     @Override

@@ -5,8 +5,8 @@
     <version value="1" ></version>
 
     <list>
-        <mapping class="com.longluo.ebookreader.db.BookCatalogue"></mapping>
-        <mapping class="com.longluo.ebookreader.db.BookList"></mapping>
-        <mapping class="com.longluo.ebookreader.db.BookMarks"></mapping>
+        <mapping class="com.longluo.ebookreader.db.BookMeta"></mapping>
+        <mapping class="com.longluo.ebookreader.db.BookContent"></mapping>
+        <mapping class="com.longluo.ebookreader.db.BookMark"></mapping>
     </list>
 </litepal>

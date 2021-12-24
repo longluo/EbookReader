@@ -38,11 +38,11 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.longluo.ebookreader.Config;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseActivity;
-import com.longluo.ebookreader.db.BookList;
-import com.longluo.ebookreader.db.BookMarks;
+import com.longluo.ebookreader.db.BookMeta;
+import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.ui.dialog.PageModeDialog;
 import com.longluo.ebookreader.ui.dialog.SettingDialog;
-import com.longluo.ebookreader.util.BrightnessUtil;
+import com.longluo.ebookreader.util.BrightnessUtils;
 import com.longluo.ebookreader.util.PageFactory;
 import com.longluo.ebookreader.view.PageWidget;
 
@@ -102,7 +102,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
 
     private Config config;
     private WindowManager.LayoutParams lp;
-    private BookList bookList;
+    private BookMeta bookMeta;
     private PageFactory pageFactory;
     private int screenWidth, screenHeight;
 
@@ -180,17 +180,17 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         hideSystemUI();
         //改变屏幕亮度
         if (!config.isSystemLight()) {
-            BrightnessUtil.setBrightness(this, config.getLight());
+            BrightnessUtils.setBrightness(this, config.getLight());
         }
         //获取intent中的携带的信息
         Intent intent = getIntent();
-        bookList = (BookList) intent.getSerializableExtra(EXTRA_BOOK);
+        bookMeta = (BookMeta) intent.getSerializableExtra(EXTRA_BOOK);
 
         bookpage.setPageMode(config.getPageMode());
         pageFactory.setPageWidget(bookpage);
 
         try {
-            pageFactory.openBook(bookList);
+            pageFactory.openBook(bookMeta);
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "打开电子书失败", Toast.LENGTH_SHORT).show();
@@ -267,10 +267,10 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             @Override
             public void changeSystemBright(Boolean isSystem, float brightness) {
                 if (!isSystem) {
-                    BrightnessUtil.setBrightness(ReadActivity.this, brightness);
+                    BrightnessUtils.setBrightness(ReadActivity.this, brightness);
                 } else {
-                    int bh = BrightnessUtil.getScreenBrightness(ReadActivity.this);
-                    BrightnessUtil.setBrightness(ReadActivity.this, bh);
+                    int bh = BrightnessUtils.getScreenBrightness(ReadActivity.this);
+                    BrightnessUtils.setBrightness(ReadActivity.this, bh);
                 }
             }
 
@@ -427,12 +427,12 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
 
         if (id == R.id.action_add_bookmark) {
             if (pageFactory.getCurrentPage() != null) {
-                List<BookMarks> bookMarksList = DataSupport.where("bookpath = ? and begin = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getBegin() + "").find(BookMarks.class);
+                List<BookMark> bookMarkList = DataSupport.where("bookpath = ? and begin = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getBegin() + "").find(BookMark.class);
 
-                if (!bookMarksList.isEmpty()) {
+                if (!bookMarkList.isEmpty()) {
                     Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();
                 } else {
-                    BookMarks bookMarks = new BookMarks();
+                    BookMark bookMark = new BookMark();
                     String word = "";
                     for (String line : pageFactory.getCurrentPage().getLines()) {
                         word += line;
@@ -441,11 +441,11 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
                         SimpleDateFormat sf = new SimpleDateFormat(
                                 "yyyy-MM-dd HH:mm ss");
                         String time = sf.format(new Date());
-                        bookMarks.setTime(time);
-                        bookMarks.setBegin(pageFactory.getCurrentPage().getBegin());
-                        bookMarks.setText(word);
-                        bookMarks.setBookpath(pageFactory.getBookPath());
-                        bookMarks.save();
+                        bookMark.setTime(time);
+                        bookMark.setBegin(pageFactory.getCurrentPage().getBegin());
+                        bookMark.setText(word);
+                        bookMark.setBookpath(pageFactory.getBookPath());
+                        bookMark.save();
 
                         Toast.makeText(ReadActivity.this, "书签添加成功", Toast.LENGTH_SHORT).show();
                     } catch (SQLException e) {
@@ -481,13 +481,13 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         return super.onOptionsItemSelected(item);
     }
 
-    public static boolean openBook(Activity context, final BookList bookList) {
-        if (bookList == null) {
+    public static boolean openBook(Activity context, final BookMeta bookMeta) {
+        if (bookMeta == null) {
             throw new NullPointerException("BookList can not be null");
         }
 
         Intent intent = new Intent(context, ReadActivity.class);
-        intent.putExtra(EXTRA_BOOK, bookList);
+        intent.putExtra(EXTRA_BOOK, bookMeta);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
         context.startActivity(intent);
@@ -670,7 +670,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
                 break;
 
             case R.id.tv_directory:
-                Intent intent = new Intent(ReadActivity.this, MarkActivity.class);
+                Intent intent = new Intent(ReadActivity.this, BookMarkActivity.class);
                 startActivity(intent);
                 break;
 

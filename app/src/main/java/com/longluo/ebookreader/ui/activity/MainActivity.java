@@ -31,7 +31,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.longluo.ebookreader.Config;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseActivity;
-import com.longluo.ebookreader.db.BookList;
+import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.ui.adapter.ShelfAdapter;
 import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.util.DisplayUtils;
@@ -72,8 +72,9 @@ public class MainActivity extends BaseActivity
     private View rootView;
     private Typeface typeface;
 
-    private List<BookList> bookLists;
-    private ShelfAdapter adapter;
+    private List<BookMeta> bookMetas;
+    private ShelfAdapter shelfAdapter;
+
     //点击书本的位置
     private int itemPosition;
     private TextView itemTextView;
@@ -116,9 +117,9 @@ public class MainActivity extends BaseActivity
         rootView = getWindow().getDecorView();
 //        SQLiteDatabase db = Connector.getDatabase();  //初始化数据库
         typeface = config.getTypeface();
-        bookLists = DataSupport.findAll(BookList.class);
-        adapter = new ShelfAdapter(MainActivity.this, bookLists);
-        bookShelf.setAdapter(adapter);
+        bookMetas = DataSupport.findAll(BookMeta.class);
+        shelfAdapter = new ShelfAdapter(MainActivity.this, bookMetas);
+        bookShelf.setAdapter(shelfAdapter);
     }
 
     @Override
@@ -143,32 +144,30 @@ public class MainActivity extends BaseActivity
         bookShelf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (bookLists.size() > position) {
+                if (bookMetas.size() > position) {
                     itemPosition = position;
-                    String bookname = bookLists.get(itemPosition).getBookname();
-
-                    adapter.setItemToFirst(itemPosition);
-//                bookLists = DataSupport.findAll(BookList.class);
-                    final BookList bookList = bookLists.get(itemPosition);
-                    bookList.setId(bookLists.get(0).getId());
-                    final String path = bookList.getBookpath();
+                    String bookname = bookMetas.get(itemPosition).getBookName();
+                    shelfAdapter.setItemToFirst(itemPosition);
+                    final BookMeta bookMeta = bookMetas.get(itemPosition);
+                    bookMeta.setId(bookMetas.get(0).getId());
+                    final String path = bookMeta.getBookPath();
                     File file = new File(path);
                     if (!file.exists()) {
                         new AlertDialog.Builder(MainActivity.this)
                                 .setTitle(MainActivity.this.getString(R.string.app_name))
                                 .setMessage(path + "文件不存在,是否删除该书本？")
-                                .setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        DataSupport.deleteAll(BookList.class, "bookpath = ?", path);
-                                        bookLists = DataSupport.findAll(BookList.class);
-                                        adapter.setBookList(bookLists);
+                                        DataSupport.deleteAll(BookMeta.class, "bookpath = ?", path);
+                                        bookMetas = DataSupport.findAll(BookMeta.class);
+                                        shelfAdapter.setBookList(bookMetas);
                                     }
                                 }).setCancelable(true).show();
                         return;
                     }
 
-                    BookUtils.openBook(MainActivity.this, bookList);
+                    BookUtils.openBook(MainActivity.this, bookMeta);
 
 //                    if (!isOpen){
 //                        bookLists = DataSupport.findAll(BookList.class);
@@ -222,8 +221,8 @@ public class MainActivity extends BaseActivity
     protected void onRestart() {
         super.onRestart();
         DragGridView.setIsShowDeleteButton(false);
-        bookLists = DataSupport.findAll(BookList.class);
-        adapter.setBookList(bookLists);
+        bookMetas = DataSupport.findAll(BookMeta.class);
+        shelfAdapter.setBookList(bookMetas);
         closeBookAnimation();
     }
 
@@ -269,7 +268,7 @@ public class MainActivity extends BaseActivity
             if (DragGridView.getShowDeleteButton()) {
                 DragGridView.setIsShowDeleteButton(false);
                 //要保证是同一个adapter对象,否则在Restart后无法notifyDataSetChanged
-                adapter.notifyDataSetChanged();
+                shelfAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(this, this.getResources().getString(R.string.press_twice_to_exit), Toast.LENGTH_SHORT).show();
             }
@@ -350,12 +349,12 @@ public class MainActivity extends BaseActivity
             animationCount++;
             if (animationCount >= 2) {
                 mIsOpen = true;
-                adapter.setItemToFirst(itemPosition);
+                shelfAdapter.setItemToFirst(itemPosition);
 //                bookLists = DataSupport.findAll(BookList.class);
-                BookList bookList = bookLists.get(itemPosition);
-                bookList.setId(bookLists.get(0).getId());
+                BookMeta bookMeta = bookMetas.get(itemPosition);
+                bookMeta.setId(bookMetas.get(0).getId());
 
-                BookUtils.openBook(MainActivity.this, bookList);
+                BookUtils.openBook(MainActivity.this, bookMeta);
             }
 
         } else {

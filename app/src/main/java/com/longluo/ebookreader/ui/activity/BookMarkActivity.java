@@ -15,7 +15,7 @@ import com.longluo.ebookreader.Config;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.ui.adapter.MyPagerAdapter;
 import com.longluo.ebookreader.base.BaseActivity;
-import com.longluo.ebookreader.db.BookCatalogue;
+import com.longluo.ebookreader.db.BookContent;
 import com.longluo.ebookreader.util.FileUtils;
 import com.longluo.ebookreader.util.PageFactory;
 
@@ -24,26 +24,30 @@ import java.util.ArrayList;
 import butterknife.BindView;
 
 
-public class MarkActivity extends BaseActivity {
+public class BookMarkActivity extends BaseActivity {
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar toolBar;
+
     @BindView(R.id.appbar)
-    AppBarLayout appbar;
+    AppBarLayout appBar;
+
     @BindView(R.id.tabs)
     PagerSlidingTabStrip tabs;
+
     @BindView(R.id.pager)
     ViewPager pager;
 
     private PageFactory pageFactory;
     private Config config;
     private Typeface typeface;
-    private ArrayList<BookCatalogue> catalogueList = new ArrayList<>();
+    private ArrayList<BookContent> catalogueList = new ArrayList<>();
     private DisplayMetrics dm;
 
     @Override
     public int getLayoutRes() {
-        return R.layout.activity_mark;
+        return R.layout.activity_bookmark;
     }
 
     @Override
@@ -53,10 +57,10 @@ public class MarkActivity extends BaseActivity {
         dm = getResources().getDisplayMetrics();
         typeface = config.getTypeface();
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(toolBar);
         //设置导航图标
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

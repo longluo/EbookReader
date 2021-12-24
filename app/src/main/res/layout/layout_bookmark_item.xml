@@ -6,7 +6,7 @@
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/text_mark"
+        android:id="@+id/tv_mark_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -21,7 +21,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/progress1"
+            android:id="@+id/tv_mark_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -29,11 +29,10 @@
             android:textSize="8sp" />
 
         <TextView
-            android:id="@+id/mark_time"
+            android:id="@+id/tv_mark_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/dark_gray"
             android:textSize="8sp" />
     </LinearLayout>
-
 </LinearLayout>

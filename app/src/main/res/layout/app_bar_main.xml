@@ -18,7 +18,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@mipmap/bookshelf_header_bg"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.longluo.ebookreader.view.DragGridView
@@ -50,5 +49,4 @@
         app:elevation="0dp"
         app:pressedTranslationZ="0dp"
         app:rippleColor="?attr/colorPrimary" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

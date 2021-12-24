@@ -132,7 +132,7 @@ public class FileAdapter extends BaseAdapter {
         final File file = files.get(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(
-                    R.layout.adapter_file_item, null);
+                    R.layout.layout_file_item, null);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {

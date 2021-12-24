@@ -5,7 +5,7 @@ import org.litepal.crud.DataSupport;
 /**
  * Created by Administrator on 2015/12/27.
  */
-public class BookMarks extends DataSupport {
+public class BookMark extends DataSupport {
     private int id ;
   //  private int page;
     private long begin; // 书签记录页面的结束点位置

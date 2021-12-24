@@ -30,7 +30,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.db.BookList;
+import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.filechooser.BaseFragmentAdapter;
 import com.longluo.ebookreader.filechooser.TextDetailDocumentsCell;
 import com.longluo.ebookreader.util.BookUtils;
@@ -71,7 +71,7 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
     private ArrayList<ListItem> checkItems = new ArrayList<ListItem>();
     private ArrayList<HistoryEntry> history = new ArrayList<HistoryEntry>();
     private HashMap<String, ListItem> selectedFiles = new HashMap<String, ListItem>();
-    private List<BookList> bookLists;
+    private List<BookMeta> bookMetas;
     private long sizeLimit = 1024 * 1024 * 1024;
 
     private String[] chhosefileType = {".txt", ".epub", ".mobi", ".azw", ".azw3"};
@@ -288,7 +288,7 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onResume() {
         super.onResume();
-        bookLists = DataSupport.findAll(BookList.class);
+        bookMetas = DataSupport.findAll(BookMeta.class);
         listAdapter.notifyDataSetChanged();
     }
 
@@ -321,16 +321,16 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
 
     private void addCheckBook() {
         if (checkItems.size() > 0) {
-            List<BookList> bookLists = new ArrayList<BookList>();
+            List<BookMeta> bookMetas = new ArrayList<BookMeta>();
             for (ListItem item : checkItems) {
-                BookList bookList = new BookList();
+                BookMeta bookMeta = new BookMeta();
                 String bookName = FileUtils.getFileName(item.thumb);
-                bookList.setBookname(bookName);
-                bookList.setBookpath(item.thumb);
-                bookLists.add(bookList);
+                bookMeta.setBookName(bookName);
+                bookMeta.setBookPath(item.thumb);
+                bookMetas.add(bookMeta);
             }
             SaveBookToSqlLiteTask mSaveBookToSqlLiteTask = new SaveBookToSqlLiteTask();
-            mSaveBookToSqlLiteTask.execute(bookLists);
+            mSaveBookToSqlLiteTask.execute(bookMetas);
         }
     }
 
@@ -344,8 +344,8 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
                         break;
                     }
                 }
-                for (BookList list : bookLists) {
-                    if (list.getBookpath().equals(listItem.thumb)) {
+                for (BookMeta list : bookMetas) {
+                    if (list.getBookPath().equals(listItem.thumb)) {
                         isCheck = true;
                         break;
                     }
@@ -357,25 +357,25 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    private class SaveBookToSqlLiteTask extends AsyncTask<List<BookList>, Void, Integer> {
+    private class SaveBookToSqlLiteTask extends AsyncTask<List<BookMeta>, Void, Integer> {
         private static final int FAIL = 0;
         private static final int SUCCESS = 1;
         private static final int REPEAT = 2;
-        private BookList repeatBookList;
+        private BookMeta repeatBookMeta;
 
         @Override
-        protected Integer doInBackground(List<BookList>... params) {
-            List<BookList> bookLists = params[0];
-            for (BookList bookList : bookLists) {
-                List<BookList> books = DataSupport.where("bookpath = ?", bookList.getBookpath()).find(BookList.class);
+        protected Integer doInBackground(List<BookMeta>... params) {
+            List<BookMeta> bookMetas = params[0];
+            for (BookMeta bookMeta : bookMetas) {
+                List<BookMeta> books = DataSupport.where("bookpath = ?", bookMeta.getBookPath()).find(BookMeta.class);
                 if (books.size() > 0) {
-                    repeatBookList = bookList;
+                    repeatBookMeta = bookMeta;
                     return REPEAT;
                 }
             }
 
             try {
-                DataSupport.saveAll(bookLists);
+                DataSupport.saveAll(bookMetas);
             } catch (Exception e) {
                 e.printStackTrace();
                 return FAIL;
@@ -395,13 +395,13 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
                 case SUCCESS:
                     msg = "导入书本成功";
                     checkItems.clear();
-                    bookLists = DataSupport.findAll(BookList.class);
+                    bookMetas = DataSupport.findAll(BookMeta.class);
                     listAdapter.notifyDataSetChanged();
                     changgeCheckBookNum();
                     break;
 
                 case REPEAT:
-                    msg = "书本" + repeatBookList.getBookname() + "重复了";
+                    msg = "书本" + repeatBookMeta.getBookName() + "重复了";
                     break;
             }
 
@@ -655,22 +655,24 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
                 .setMessage(path).setPositiveButton("阅读", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                BookList bookList = new BookList();
+                BookMeta bookMeta = new BookMeta();
                 String bookName = FileUtils.getFileName(path);
-                bookList.setBookname(bookName);
-                bookList.setBookpath(path);
+                String suffix = FileUtils.getSuffix(path);
+                bookMeta.setBookName(bookName);
+                bookMeta.setBookPath(path);
+                bookMeta.setFormat(suffix);
                 boolean isSave = false;
-                for (BookList book : bookLists) {
-                    if (book.getBookpath().equals(bookList.getBookpath())) {
+                for (BookMeta book : bookMetas) {
+                    if (book.getBookPath().equals(bookMeta.getBookPath())) {
                         isSave = true;
                     }
                 }
 
                 if (!isSave) {
-                    bookList.save();
+                    bookMeta.save();
                 }
 
-                BookUtils.openBook(getActivity(), bookList);
+                BookUtils.openBook(getActivity(), bookMeta);
             }
         }).show();
     }
@@ -783,8 +785,8 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
 
         private boolean isStorage(String path) {
             boolean isStore = false;
-            for (BookList bookList : bookLists) {
-                if (bookList.getBookpath().equals(path)) {
+            for (BookMeta bookMeta : bookMetas) {
+                if (bookMeta.getBookPath().equals(path)) {
                     return true;
                 }
             }

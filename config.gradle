@@ -9,7 +9,7 @@ ext {
             minSdkVersion           : 23,
             targetSdkVersion        : 28,
             ndkVersion              : "21.4.7075529",
-            versionCode             : 20,
+            versionCode             : 21,
             versionName             : "6.8.2.1",
     ]
 

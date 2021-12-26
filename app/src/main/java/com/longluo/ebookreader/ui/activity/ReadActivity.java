@@ -145,7 +145,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
     }
 
     @Override
-    protected void initData() {
+    protected void initData(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT >= 14 && Build.VERSION.SDK_INT < 19) {
             bookpage.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
@@ -183,7 +183,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         hideSystemUI();
         //改变屏幕亮度
         if (!config.isSystemLight()) {
-            BrightnessUtils.setBrightness(this, config.getLight());
+            BrightnessUtils.setBrightness(this, (int)config.getLight());
         }
         //获取intent中的携带的信息
         Intent intent = getIntent();
@@ -270,7 +270,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             @Override
             public void changeSystemBright(Boolean isSystem, float brightness) {
                 if (!isSystem) {
-                    BrightnessUtils.setBrightness(ReadActivity.this, brightness);
+                    BrightnessUtils.setBrightness(ReadActivity.this, (int)brightness);
                 } else {
                     int bh = BrightnessUtils.getScreenBrightness(ReadActivity.this);
                     BrightnessUtils.setBrightness(ReadActivity.this, bh);

@@ -2,6 +2,7 @@ package com.longluo.ebookreader.ui.activity;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
@@ -51,7 +52,7 @@ public class BookMarkActivity extends BaseActivity {
     }
 
     @Override
-    protected void initData() {
+    protected void initData(Bundle savedInstanceState) {
         pageFactory = PageFactory.getInstance();
         config = Config.getInstance();
         dm = getResources().getDisplayMetrics();

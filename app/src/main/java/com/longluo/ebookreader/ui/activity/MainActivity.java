@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -105,7 +106,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    protected void initData() {
+    protected void initData(Bundle savedInstanceState) {
         setSupportActionBar(toolbar);
 //        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);//设置导航图标
 

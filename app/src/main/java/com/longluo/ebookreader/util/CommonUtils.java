@@ -14,7 +14,6 @@ import com.longluo.ebookreader.R;
 
 import java.lang.reflect.Method;
 
-
 public class CommonUtils {
 
     /**

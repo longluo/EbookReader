@@ -19,9 +19,6 @@ import com.longluo.ebookreader.view.BookPageWidget;
 
 import java.text.DecimalFormat;
 
-/**
- * Created by Administrator on 2016/7/19 0019.
- */
 public class ReadSettingDialog implements BaseDialog, View.OnClickListener {
 
     ImageButton btn_return;

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,7 +28,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class BookUtils {
     private static final String LOG_TAG = "BookUtils";
 
@@ -40,7 +40,7 @@ public class BookUtils {
     //目录
     private List<BookContent> directoryList = new ArrayList<>();
 
-    private String m_strCharsetName;
+    private String strCharsetName;
     private String bookName;
     private String bookPath;
     private long bookLen;
@@ -239,19 +239,19 @@ public class BookUtils {
     //缓存书本
     private void cacheBook() throws IOException {
         if (TextUtils.isEmpty(bookMeta.getCharset())) {
-            m_strCharsetName = FileUtils.getCharset(bookPath);
-            if (m_strCharsetName == null) {
-                m_strCharsetName = "utf-8";
+            strCharsetName = FileUtils.getCharset(bookPath);
+            if (strCharsetName == null) {
+                strCharsetName = "utf-8";
             }
             ContentValues values = new ContentValues();
-            values.put("charset", m_strCharsetName);
+            values.put("charset", strCharsetName);
             DataSupport.update(BookMeta.class, values, bookMeta.getId());
         } else {
-            m_strCharsetName = bookMeta.getCharset();
+            strCharsetName = bookMeta.getCharset();
         }
 
         File file = new File(bookPath);
-        InputStreamReader reader = new InputStreamReader(new FileInputStream(file), m_strCharsetName);
+        InputStreamReader reader = new InputStreamReader(new FileInputStream(file), strCharsetName);
         int index = 0;
         bookLen = 0;
         directoryList.clear();

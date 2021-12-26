@@ -55,6 +55,4 @@ public class DisplayUtils {
 		context.getWindowManager().getDefaultDisplay().getMetrics(metric);
 		return metric.heightPixels;
 	}
-
-
 }

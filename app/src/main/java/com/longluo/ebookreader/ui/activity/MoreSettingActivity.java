@@ -7,19 +7,19 @@ import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.appcompat.widget.Toolbar;
 
 import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.manager.ReadSettingManager;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * 阅读界面的更多设置
  */
-public class MoreSettingActivity extends AppCompatActivity {
+public class MoreSettingActivity extends BaseActivity {
     @BindView(R.id.more_setting_rl_volume)
     RelativeLayout mRlVolume;
 
@@ -44,40 +44,11 @@ public class MoreSettingActivity extends AppCompatActivity {
     private int convertType;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(getLayoutRes());
-        ButterKnife.bind(this);
-        initData(savedInstanceState);
-//        getSupportActionBar().setTitle("阅读设置");
-        initSwitchStatus();
-        initListener();
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.conversion_type_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mScConvertType.setAdapter(adapter);
-
-        // initSwitchStatus() be called earlier than onCreate(), so setSelection() won't work
-        mScConvertType.setSelection(convertType);
-
-        mScConvertType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSettingManager.setConvertType(position);
-                convertType = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-    }
-
     public int getLayoutRes() {
         return R.layout.activity_more_setting;
     }
 
+    @Override
     protected void initData(Bundle savedInstanceState) {
         mSettingManager = ReadSettingManager.getInstance();
         isVolumeTurnPage = mSettingManager.isVolumeTurnPage();
@@ -85,11 +56,24 @@ public class MoreSettingActivity extends AppCompatActivity {
         convertType = mSettingManager.getConvertType();
     }
 
+    @Override
+    protected void setUpToolbar(Toolbar toolbar) {
+        super.setUpToolbar(toolbar);
+        getSupportActionBar().setTitle("阅读设置");
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
+        initSwitchStatus();
+    }
+
     private void initSwitchStatus() {
         mScVolume.setChecked(isVolumeTurnPage);
         mScFullScreen.setChecked(isFullScreen);
     }
 
+    @Override
     protected void initListener() {
         mRlVolume.setOnClickListener(
                 (v) -> {
@@ -114,5 +98,30 @@ public class MoreSettingActivity extends AppCompatActivity {
                     mSettingManager.setFullScreen(isFullScreen);
                 }
         );
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.conversion_type_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mScConvertType.setAdapter(adapter);
+
+        // initSwitchStatus() be called earlier than onCreate(), so setSelection() won't work
+        mScConvertType.setSelection(convertType);
+
+        mScConvertType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mSettingManager.setConvertType(position);
+                convertType = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 }

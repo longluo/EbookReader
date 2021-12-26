@@ -68,6 +68,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
+            android:name=".ui.activity.MoreSettingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
             android:name=".ui.activity.HtmlViewActivity"
             android:launchMode="singleInstance"
             android:theme="@style/Theme.EbookReader" />

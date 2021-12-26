@@ -10,6 +10,7 @@ import android.database.SQLException;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -61,7 +62,9 @@ import butterknife.OnClick;
 
 
 public class ReadActivity extends BaseActivity implements SpeechSynthesizerListener {
-    private static final String TAG = "ReadActivity";
+    private static final String LOG_TAG = ReadActivity.class.getSimpleName();
+
+    public static final int REQUEST_MORE_SETTING = 101;
 
     private final static String EXTRA_BOOK = "bookList";
     private final static int MESSAGE_CHANGEPROGRESS = 1;
@@ -126,11 +129,11 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(Intent.ACTION_BATTERY_CHANGED)) {
-                Log.e(TAG, Intent.ACTION_BATTERY_CHANGED);
+                Log.e(LOG_TAG, Intent.ACTION_BATTERY_CHANGED);
                 int level = intent.getIntExtra("level", 0);
                 pageFactory.updateBattery(level);
             } else if (intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
-                Log.e(TAG, Intent.ACTION_TIME_TICK);
+                Log.e(LOG_TAG, Intent.ACTION_TIME_TICK);
                 pageFactory.updateTime();
             }
         }
@@ -459,7 +462,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             if (mSpeechSynthesizer != null) {
                 wholePageStr = pageFactory.getCurrentPage().getWholePageStr();
                 int len = wholePageStr.length();
-                Log.d(TAG, "len = " + len + ", str=" + wholePageStr);
+                Log.d(LOG_TAG, "len = " + len + ", str=" + wholePageStr);
                 if (len < 60) {
                     pageSegmentStr = wholePageStr.substring(0, len);
                     wholePageStr = "";
@@ -467,10 +470,10 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
                     pageSegmentStr = wholePageStr.substring(0, 60);
                     wholePageStr = wholePageStr.substring(60);
                 }
-                Log.d(TAG, "After len = " + wholePageStr.length() + ", str=" + wholePageStr);
+                Log.d(LOG_TAG, "After len = " + wholePageStr.length() + ", str=" + wholePageStr);
                 int result = mSpeechSynthesizer.speak(pageSegmentStr);
                 if (result < 0) {
-                    Log.e(TAG, "error result = " + result);
+                    Log.e(LOG_TAG, "error result = " + result);
                 } else {
                     hideReadSetting();
                     isSpeaking = true;
@@ -706,7 +709,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
 
     @Override
     public void onSynthesizeStart(String s) {
-        Log.d(TAG, "onSynthesizeStart, s=" + s);
+        Log.d(LOG_TAG, "onSynthesizeStart, s=" + s);
 
     }
 
@@ -719,7 +722,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
      */
     @Override
     public void onSynthesizeDataArrived(String utteranceId, byte[] data, int progress, int engineType) {
-        Log.d(TAG, "onSynthesizeDataArrived, progress=" + progress);
+        Log.d(LOG_TAG, "onSynthesizeDataArrived, progress=" + progress);
 
     }
 
@@ -730,7 +733,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
      */
     @Override
     public void onSynthesizeFinish(String utteranceId) {
-        Log.d(TAG, "onSynthesizeFinish, utteranceId=" + utteranceId);
+        Log.d(LOG_TAG, "onSynthesizeFinish, utteranceId=" + utteranceId);
 
     }
 
@@ -741,7 +744,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
      */
     @Override
     public void onSpeechStart(String utteranceId) {
-        Log.d(TAG, "onSpeechStart, utteranceId=" + utteranceId);
+        Log.d(LOG_TAG, "onSpeechStart, utteranceId=" + utteranceId);
 
     }
 
@@ -753,7 +756,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
      */
     @Override
     public void onSpeechProgressChanged(String utteranceId, int progress) {
-        Log.d(TAG, "onSpeechProgressChanged, utteranceId=" + utteranceId);
+        Log.d(LOG_TAG, "onSpeechProgressChanged, utteranceId=" + utteranceId);
 
     }
 
@@ -764,11 +767,11 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
      */
     @Override
     public void onSpeechFinish(String utteranceId) {
-        Log.d(TAG, "onSpeechFinish, utteranceId=" + utteranceId);
+        Log.d(LOG_TAG, "onSpeechFinish, utteranceId=" + utteranceId);
 
         if (wholePageStr.length() > 0) {
             int len = wholePageStr.length();
-            Log.d(TAG, "len = " + len + ", str=" + wholePageStr);
+            Log.d(LOG_TAG, "len = " + len + ", str=" + wholePageStr);
             if (len < 60) {
                 pageSegmentStr = wholePageStr.substring(0, len);
                 wholePageStr = "";
@@ -776,11 +779,11 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
                 pageSegmentStr = wholePageStr.substring(0, 60);
                 wholePageStr = wholePageStr.substring(60);
             }
-//            Log.d(TAG, "After len = " + wholePageStr.length() + ", str=" + wholePageStr);
+//            Log.d(LOG_TAG, "After len = " + wholePageStr.length() + ", str=" + wholePageStr);
 
             int result = mSpeechSynthesizer.speak(pageSegmentStr);
             if (result < 0) {
-                Log.e(TAG, "error result = " + result);
+                Log.e(LOG_TAG, "error result = " + result);
             } else {
                 hideReadSetting();
                 isSpeaking = true;
@@ -809,7 +812,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
      */
     @Override
     public void onError(String utteranceId, SpeechError error) {
-        Log.e(TAG, "onError, utteranceId=" + utteranceId + ", error=" + error.code + "," + error.description);
+        Log.e(LOG_TAG, "onError, utteranceId=" + utteranceId + ", error=" + error.code + "," + error.description);
 
         mSpeechSynthesizer.stop();
         isSpeaking = false;

@@ -1,0 +1,118 @@
+package com.longluo.ebookreader.ui.activity;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+
+import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.manager.ReadSettingManager;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * 阅读界面的更多设置
+ */
+public class MoreSettingActivity extends AppCompatActivity {
+    @BindView(R.id.more_setting_rl_volume)
+    RelativeLayout mRlVolume;
+
+    @BindView(R.id.more_setting_sc_volume)
+    SwitchCompat mScVolume;
+
+    @BindView(R.id.more_setting_rl_full_screen)
+    RelativeLayout mRlFullScreen;
+
+    @BindView(R.id.more_setting_sc_full_screen)
+    SwitchCompat mScFullScreen;
+
+    @BindView(R.id.more_setting_rl_convert_type)
+    RelativeLayout mRlConvertType;
+
+    @BindView(R.id.more_setting_sc_convert_type)
+    Spinner mScConvertType;
+
+    private ReadSettingManager mSettingManager;
+    private boolean isVolumeTurnPage;
+    private boolean isFullScreen;
+    private int convertType;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutRes());
+        ButterKnife.bind(this);
+        initData(savedInstanceState);
+//        getSupportActionBar().setTitle("阅读设置");
+        initSwitchStatus();
+        initListener();
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.conversion_type_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mScConvertType.setAdapter(adapter);
+
+        // initSwitchStatus() be called earlier than onCreate(), so setSelection() won't work
+        mScConvertType.setSelection(convertType);
+
+        mScConvertType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mSettingManager.setConvertType(position);
+                convertType = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    public int getLayoutRes() {
+        return R.layout.activity_more_setting;
+    }
+
+    protected void initData(Bundle savedInstanceState) {
+        mSettingManager = ReadSettingManager.getInstance();
+        isVolumeTurnPage = mSettingManager.isVolumeTurnPage();
+        isFullScreen = mSettingManager.isFullScreen();
+        convertType = mSettingManager.getConvertType();
+    }
+
+    private void initSwitchStatus() {
+        mScVolume.setChecked(isVolumeTurnPage);
+        mScFullScreen.setChecked(isFullScreen);
+    }
+
+    protected void initListener() {
+        mRlVolume.setOnClickListener(
+                (v) -> {
+                    if (isVolumeTurnPage) {
+                        isVolumeTurnPage = false;
+                    } else {
+                        isVolumeTurnPage = true;
+                    }
+                    mScVolume.setChecked(isVolumeTurnPage);
+                    mSettingManager.setVolumeTurnPage(isVolumeTurnPage);
+                }
+        );
+
+        mRlFullScreen.setOnClickListener(
+                (v) -> {
+                    if (isFullScreen) {
+                        isFullScreen = false;
+                    } else {
+                        isFullScreen = true;
+                    }
+                    mScFullScreen.setChecked(isFullScreen);
+                    mSettingManager.setFullScreen(isFullScreen);
+                }
+        );
+    }
+}

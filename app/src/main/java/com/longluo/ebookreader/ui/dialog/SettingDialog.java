@@ -1,7 +1,9 @@
 package com.longluo.ebookreader.ui.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,11 +11,14 @@ import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Adapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.longluo.ebookreader.Config;
 import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.ui.activity.MoreSettingActivity;
+import com.longluo.ebookreader.ui.activity.ReadActivity;
 import com.longluo.ebookreader.util.DisplayUtils;
 import com.longluo.ebookreader.view.CircleImageView;
 
@@ -60,6 +65,10 @@ public class SettingDialog extends Dialog {
     @BindView(R.id.tv_bysong)
     TextView tv_bysong;
 
+    @BindView(R.id.tv_read_setting_more)
+    TextView mTvMore;
+
+    private Context context;
     private Config config;
     private Boolean isSystem;
     private SettingListener mSettingListener;
@@ -77,7 +86,7 @@ public class SettingDialog extends Dialog {
 
     public SettingDialog(Context context, int themeResId) {
         super(context, themeResId);
-
+        this.context = context;
     }
 
     @Override
@@ -272,8 +281,8 @@ public class SettingDialog extends Dialog {
     }
 
 
-    @OnClick({R.id.tv_dark, R.id.tv_bright, R.id.tv_xitong, R.id.tv_subtract, R.id.tv_add, R.id.tv_size_default, R.id.tv_qihei, R.id.tv_fzxinghei, R.id.tv_fzkatong,R.id.tv_bysong,
-            R.id.tv_default, R.id.iv_bg_default, R.id.iv_bg_1, R.id.iv_bg_2, R.id.iv_bg_3, R.id.iv_bg_4})
+    @OnClick({R.id.tv_dark, R.id.tv_bright, R.id.tv_xitong, R.id.tv_subtract, R.id.tv_add, R.id.tv_size_default, R.id.tv_qihei, R.id.tv_fzxinghei, R.id.tv_fzkatong, R.id.tv_bysong,
+            R.id.tv_default, R.id.iv_bg_default, R.id.iv_bg_1, R.id.iv_bg_2, R.id.iv_bg_3, R.id.iv_bg_4, R.id.tv_read_setting_more})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_dark:
@@ -341,6 +350,13 @@ public class SettingDialog extends Dialog {
                 setBookBg(Config.BOOK_BG_4);
                 selectBg(Config.BOOK_BG_4);
                 break;
+
+            case R.id.tv_read_setting_more:
+                startMoreSettingActivity();
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -386,6 +402,12 @@ public class SettingDialog extends Dialog {
         if (mSettingListener != null) {
             mSettingListener.changeSystemBright(isSystem, light);
         }
+    }
+
+    private void startMoreSettingActivity() {
+        Intent intent = new Intent(context, MoreSettingActivity.class);
+        ((Activity)context).startActivityForResult(intent, ReadActivity.REQUEST_MORE_SETTING);
+        dismiss();
     }
 
     public void setSettingListener(SettingListener settingListener) {

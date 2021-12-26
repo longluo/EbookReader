@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/read_setting_ll_menu"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
     android:layout_gravity="bottom"
     android:background="@color/read_dialog_bg"
+    android:clickable="true"
     android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/setting_height"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/nb.read_setting.divider"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -176,4 +181,13 @@
             android:layout_weight="1"
             android:src="@color/read_bg_4" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_read_setting_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:text="更多设置 >>"
+        android:textColor="@color/nb.read.menu.text" />
 </LinearLayout>

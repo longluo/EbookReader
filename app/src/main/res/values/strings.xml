@@ -59,6 +59,7 @@
     <string name="page_mode_none">无</string>
 
     <string name="readseting">设置</string>
+    <string name="read_setting_more">更多设置 >></string>
 
     <string name="aboutContent">EbookReader是专注于提供更舒适的阅读体验，主打本地阅读，操作方式简单易上手，目前支持txt/mobi/azw/azw3格式等。</string>
 

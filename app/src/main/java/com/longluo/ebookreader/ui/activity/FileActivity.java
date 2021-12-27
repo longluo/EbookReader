@@ -181,7 +181,7 @@ public class FileActivity extends BaseActivity {
         protected Integer doInBackground(List<BookMeta>... params) {
             List<BookMeta> bookMetas = params[0];
             for (BookMeta bookMeta : bookMetas) {
-                List<BookMeta> books = DataSupport.where("bookpath = ?", bookMeta.getBookPath()).find(BookMeta.class);
+                List<BookMeta> books = DataSupport.where("bookPath = ?", bookMeta.getBookPath()).find(BookMeta.class);
                 if (books.size() > 0) {
                     repeatBookMeta = bookMeta;
                     return REPEAT;

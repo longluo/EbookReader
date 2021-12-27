@@ -3,7 +3,7 @@ package com.longluo.ebookreader.db;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
-
+import java.util.List;
 
 public class BookMeta extends DataSupport implements Serializable{
     private int id;
@@ -19,6 +19,14 @@ public class BookMeta extends DataSupport implements Serializable{
 
     private long begin;
     private String charset;
+
+    private String lastRead;
+
+    private String lastChapter;
+
+    private List<BookChapter> bookChapters;
+
+    private String updated;
 
     public int getId() {
         return this.id;
@@ -84,4 +92,55 @@ public class BookMeta extends DataSupport implements Serializable{
         this.charset = charset;
     }
 
+    public String getLastRead() {
+        return lastRead;
+    }
+
+    public void setLastRead(String lastRead) {
+        this.lastRead = lastRead;
+    }
+
+    public String getLastChapter() {
+        return lastChapter;
+    }
+
+    public void setLastChapter(String lastChapter) {
+        this.lastChapter = lastChapter;
+    }
+
+    public void setBookChapters(List<BookChapter> chapters) {
+        bookChapters = chapters;
+        for (BookChapter chapter : bookChapters) {
+            chapter.setBookId(String.valueOf(getId()));
+        }
+    }
+
+    public List<BookChapter> getBookChapters() {
+        return getBookChapterList();
+    }
+
+    public List<BookChapter> getBookChapterList() {
+        if (bookChapters == null) {
+            List<BookChapter> chapterList = DataSupport.where("bookPath = ?", getBookPath()).find(BookChapter.class);
+            synchronized (this) {
+                if (bookChapters == null) {
+                    bookChapters = chapterList;
+                }
+            }
+        }
+
+        return bookChapters;
+    }
+
+    public synchronized void resetBookChapterList() {
+        bookChapters = null;
+    }
+
+    public String getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(String updated) {
+        this.updated = updated;
+    }
 }

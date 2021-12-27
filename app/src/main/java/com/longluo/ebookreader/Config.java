@@ -6,17 +6,20 @@ import android.graphics.Typeface;
 
 public class Config {
     private final static String SP_NAME = "config";
+
     private final static String BOOK_BG_KEY = "bookbg";
+
     private final static String FONT_TYPE_KEY = "fonttype";
     private final static String FONT_SIZE_KEY = "fontsize";
+
     private final static String NIGHT_KEY = "night";
     private final static String LIGHT_KEY = "light";
+
     private final static String SYSTEM_LIGHT_KEY = "systemlight";
     private final static String PAGE_MODE_KEY = "pagemode";
 
     public final static String FONTTYPE_DEFAULT = "";
     public final static String FONTTYPE_QIHEI = "font/qihei.ttf";
-
     public final static String FONTTYPE_FZXINGHEI = "font/fzxinghei.ttf";
     public final static String FONTTYPE_FZKATONG = "font/fzkatong.ttf";
     public final static String FONTTYPE_BYSONG = "font/bysong.ttf";
@@ -81,6 +84,7 @@ public class Config {
             String typePath = sp.getString(FONT_TYPE_KEY, FONTTYPE_QIHEI);
             typeface = getTypeface(typePath);
         }
+
         return typeface;
     }
 

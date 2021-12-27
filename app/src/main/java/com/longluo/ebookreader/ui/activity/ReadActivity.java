@@ -42,7 +42,7 @@ import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.ui.dialog.PageModeDialog;
-import com.longluo.ebookreader.ui.dialog.SettingDialog;
+import com.longluo.ebookreader.ui.dialog.ReadSettingDialog;
 import com.longluo.ebookreader.util.BrightnessUtils;
 import com.longluo.ebookreader.util.PageFactory;
 import com.longluo.ebookreader.view.PageWidget;
@@ -111,7 +111,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
 
     // popwindow是否显示
     private Boolean isShow = false;
-    private SettingDialog mSettingDialog;
+    private ReadSettingDialog mSettingDialog;
     private PageModeDialog mPageModeDialog;
     private Boolean mDayOrNight;
 
@@ -168,7 +168,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         mfilter.addAction(Intent.ACTION_TIME_TICK);
         registerReceiver(myReceiver, mfilter);
 
-        mSettingDialog = new SettingDialog(this);
+        mSettingDialog = new ReadSettingDialog(this);
         mPageModeDialog = new PageModeDialog(this);
         //获取屏幕宽高
         WindowManager manage = getWindowManager();
@@ -266,7 +266,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             }
         });
 
-        mSettingDialog.setSettingListener(new SettingDialog.SettingListener() {
+        mSettingDialog.setSettingListener(new ReadSettingDialog.SettingListener() {
             @Override
             public void changeSystemBright(Boolean isSystem, float brightness) {
                 if (!isSystem) {
@@ -416,16 +416,12 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.read, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.action_add_bookmark) {
@@ -447,7 +443,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
                         bookMark.setTime(time);
                         bookMark.setBegin(pageFactory.getCurrentPage().getBegin());
                         bookMark.setText(word);
-                        bookMark.setBookpath(pageFactory.getBookPath());
+                        bookMark.setBookPath(pageFactory.getBookPath());
                         bookMark.save();
 
                         Toast.makeText(ReadActivity.this, "书签添加成功", Toast.LENGTH_SHORT).show();

@@ -1,240 +1,519 @@
 package com.longluo.ebookreader.ui.dialog;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
+import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.longluo.ebookreader.Config;
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.view.BookPageWidget;
+import com.longluo.ebookreader.manager.ReadSettingManager;
+import com.longluo.ebookreader.ui.activity.MoreSettingActivity;
+import com.longluo.ebookreader.ui.activity.ReadActivity;
+import com.longluo.ebookreader.ui.adapter.ReadPageBgAdapter;
+import com.longluo.ebookreader.ui.base.adapter.BaseListAdapter;
+import com.longluo.ebookreader.util.BrightnessUtils;
+import com.longluo.ebookreader.util.DisplayUtils;
+import com.longluo.ebookreader.view.CircleImageView;
+import com.longluo.ebookreader.widget.page.PageStyle;
 
-import java.text.DecimalFormat;
+import java.util.Arrays;
 
-public class ReadSettingDialog implements BaseDialog, View.OnClickListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    ImageButton btn_return;
-    ImageButton btn_ight;
-    ImageButton btn_listener_book;
-    TextView tv_pre;
-    SeekBar sb_progress;
-    TextView tv_next;
-    TextView tv_directory;
-    TextView tv_dayornight;
-    TextView tv_setting;
-    TextView tv_Progress;
-    RelativeLayout rl_Progress;
 
-    private PopupWindow mPopupWindow, mPopupWindowTop;
-    private BookPageWidget mBookPageWidget;
-    private View view, viewTop;
-    private SettingListener mSettingListener;
-    private Context mContext;
+public class ReadSettingDialog extends Dialog {
+    private static final String LOG_TAG = ReadSettingDialog.class.getSimpleName();
+
+    @BindView(R.id.iv_read_setting_brightness_minus)
+    ImageView ivBrightMinus;
+    @BindView(R.id.sb_brightness)
+    SeekBar sbBrightness;
+    @BindView(R.id.iv_read_setting_brightness_plus)
+    ImageView ivBrightPlus;
+    @BindView(R.id.cb_read_setting_brightness_auto)
+    CheckBox cbBrightAuto;
+
+    @BindView(R.id.tv_subtract)
+    TextView tv_subtract;
+    @BindView(R.id.tv_size)
+    TextView tv_size;
+    @BindView(R.id.tv_add)
+    TextView tv_add;
+    @BindView(R.id.tv_qihei)
+    TextView tv_qihei;
+    @BindView(R.id.tv_default)
+    TextView tv_default;
+    @BindView(R.id.iv_bg_default)
+    CircleImageView iv_bg_default;
+    @BindView(R.id.iv_bg_1)
+    CircleImageView iv_bg1;
+    @BindView(R.id.iv_bg_2)
+    CircleImageView iv_bg2;
+    @BindView(R.id.iv_bg_3)
+    CircleImageView iv_bg3;
+    @BindView(R.id.iv_bg_4)
+    CircleImageView iv_bg4;
+    @BindView(R.id.tv_size_default)
+    TextView tv_size_default;
+    @BindView(R.id.tv_fzxinghei)
+    TextView tv_fzxinghei;
+    @BindView(R.id.tv_fzkatong)
+    TextView tv_fzkatong;
+    @BindView(R.id.tv_bysong)
+    TextView tv_bysong;
+
+    @BindView(R.id.read_setting_rv_bg)
+    RecyclerView mRvBg;
+
+    @BindView(R.id.tv_read_setting_more)
+    TextView mTvMore;
+
+    private Context context;
     private Config config;
-    private Boolean mDayOrNight;
+    private boolean isSystem;
+    private SettingListener mSettingListener;
+    private int FONT_SIZE_MIN;
+    private int FONT_SIZE_MAX;
+    private int currentFontSize;
 
-    public ReadSettingDialog(BookPageWidget bookPageWidget) {
-        this.mBookPageWidget = bookPageWidget;
-        mContext = bookPageWidget.getContext();
-        LayoutInflater layoutInflater = (LayoutInflater) bookPageWidget.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = layoutInflater.inflate(R.layout.dialog_read_setting, null);
-        viewTop = layoutInflater.inflate(R.layout.dialog_read_setting_top, null);
+    private ReadSettingManager mSettingManager;
 
-        btn_return = (ImageButton) viewTop.findViewById(R.id.btn_return);
-        btn_ight = (ImageButton) viewTop.findViewById(R.id.btn_light);
-        btn_listener_book = (ImageButton) viewTop.findViewById(R.id.btn_listener_book);
-        tv_pre = (TextView) view.findViewById(R.id.tv_pre);
-        sb_progress = (SeekBar) view.findViewById(R.id.sb_progress);
-        tv_next = (TextView) view.findViewById(R.id.tv_next);
-        tv_directory = (TextView) view.findViewById(R.id.tv_directory);
-        tv_dayornight = (TextView) view.findViewById(R.id.tv_dayornight);
-        tv_setting = (TextView) view.findViewById(R.id.tv_setting);
-        tv_Progress = (TextView) view.findViewById(R.id.tv_progress);
-        rl_Progress = (RelativeLayout) view.findViewById(R.id.rl_progress);
-
-        btn_return.setOnClickListener(this);
-        btn_ight.setOnClickListener(this);
-        btn_listener_book.setOnClickListener(this);
-        tv_pre.setOnClickListener(this);
-        sb_progress.setOnClickListener(this);
-        tv_next.setOnClickListener(this);
-        tv_directory.setOnClickListener(this);
-        tv_dayornight.setOnClickListener(this);
-        tv_setting.setOnClickListener(this);
-        tv_Progress.setOnClickListener(this);
-        rl_Progress.setOnClickListener(this);
+    private ReadPageBgAdapter mPageStyleAdapter;
+    private PageStyle mPageStyle;
 
 
-        mPopupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        mPopupWindowTop = new PopupWindow(viewTop, ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+    public ReadSettingDialog(Context context) {
+        this(context, R.style.setting_dialog);
+    }
 
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);// menu菜单获得焦点 如果没有获得焦点menu菜单中的控件事件无法响应
-        mPopupWindow.update();
+    public ReadSettingDialog(Context context, int themeResId) {
+        super(context, themeResId);
+        this.context = context;
+    }
 
-        mPopupWindowTop.setOutsideTouchable(true);
-        mPopupWindowTop.setBackgroundDrawable(new BitmapDrawable());
-        mPopupWindowTop.setOutsideTouchable(true);
-        mPopupWindowTop.setFocusable(true);// menu菜单获得焦点 如果没有获得焦点menu菜单中的控件事件无法响应
-        mPopupWindowTop.update();
+    private ReadSettingDialog(Context context, boolean flag, OnCancelListener listener) {
+        super(context, flag, listener);
+    }
 
-        view.setOnTouchListener(new View.OnTouchListener()// 需要设置，点击之后取消popupview，即使点击外面，也可以捕获事件
-        {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (isShow()) {
-                    dismiss();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setGravity(Gravity.BOTTOM);
+        setContentView(R.layout.dialog_read_setting);
+        setUpWindow();
+        ButterKnife.bind(this);
+        initData();
+        initWidget();
+        FONT_SIZE_MIN = (int) getContext().getResources().getDimension(R.dimen.reading_min_text_size);
+        FONT_SIZE_MAX = (int) getContext().getResources().getDimension(R.dimen.reading_max_text_size);
+        mPageStyle = mSettingManager.getPageStyle();
+        initReadBgAdapter();
+        selectBg(config.getBookBgType());
+        initListener();
+    }
+
+    private void setUpWindow() {
+        WindowManager m = getWindow().getWindowManager();
+        Display d = m.getDefaultDisplay();
+        WindowManager.LayoutParams p = getWindow().getAttributes();
+        p.width = d.getWidth();
+        getWindow().setAttributes(p);
+    }
+
+    private void initData() {
+        config = Config.getInstance();
+        mSettingManager = ReadSettingManager.getInstance();
+        initFont();
+    }
+
+    private void initFont() {
+        //初始化字体大小
+        currentFontSize = (int) config.getFontSize();
+        tv_size.setText(currentFontSize + "");
+
+        //初始化字体
+        tv_default.setTypeface(config.getTypeface(Config.FONTTYPE_DEFAULT));
+        tv_qihei.setTypeface(config.getTypeface(Config.FONTTYPE_QIHEI));
+        tv_fzkatong.setTypeface(config.getTypeface(Config.FONTTYPE_FZKATONG));
+        tv_bysong.setTypeface(config.getTypeface(Config.FONTTYPE_BYSONG));
+        selectTypeface(config.getTypefacePath());
+    }
+
+    private void initReadBgAdapter() {
+        Drawable[] drawables = {
+                getDrawable(R.color.read_bg_default)
+                , getDrawable(R.color.read_bg_1)
+                , getDrawable(R.color.read_bg_2)
+                , getDrawable(R.color.read_bg_3)
+                , getDrawable(R.color.read_bg_4)};
+
+        mPageStyleAdapter = new ReadPageBgAdapter();
+        mRvBg.setLayoutManager(new GridLayoutManager(getContext(), 5));
+        mRvBg.setAdapter(mPageStyleAdapter);
+        mPageStyleAdapter.refreshItems(Arrays.asList(drawables));
+        mPageStyleAdapter.setPageStyleChecked(mPageStyle);
+    }
+
+    private Drawable getDrawable(int drawRes) {
+        return ContextCompat.getDrawable(getContext(), drawRes);
+    }
+
+    private void initWidget() {
+        cbBrightAuto.setChecked(isSystem);
+    }
+
+    private void initListener() {
+        ivBrightMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cbBrightAuto.isChecked()) {
+                    cbBrightAuto.setChecked(false);
                 }
-                return false;
+                int progress = sbBrightness.getProgress() - 1;
+                if (progress < 0) {
+                    return;
+                }
+                sbBrightness.setProgress(progress);
+                BrightnessUtils.setBrightness((Activity) context, progress);
             }
         });
 
+        ivBrightPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cbBrightAuto.isChecked()) {
+                    cbBrightAuto.setChecked(false);
+                }
+                int progress = sbBrightness.getProgress() + 1;
+                if (progress > sbBrightness.getMax()) return;
+                sbBrightness.setProgress(progress);
+                BrightnessUtils.setBrightness((Activity) context, progress);
+                ReadSettingManager.getInstance().setBrightness(progress);
+            }
+        });
 
-        config = Config.getInstance();
-
-        sb_progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            float pro;
-
-            // 触发操作，拖动
+        sbBrightness.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                pro = (float) (progress / 10000.0);
-                showProgress(pro);
+                if (progress > 10) {
+                    changeBright(false, progress);
+                }
             }
 
-            // 表示进度条刚开始拖动，开始拖动时候触发的操作
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
 
-            // 停止拖动时候
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (mSettingListener != null) {
-                    mSettingListener.changeProgress(pro);
-                }
+
             }
         });
 
-        initDayOrNight();
+        cbBrightAuto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+//                    if (isChecked) {
+//                        BrightnessUtils.setBrightness((Activity) context, BrightnessUtils.getScreenBrightness((Activity) context));
+//                    } else {
+//                        //获取进度条的亮度
+//                        BrightnessUtils.setBrightness((Activity) context, sbBrightness.getProgress());
+//                    }
+
+                isSystem = !isSystem;
+                changeBright(isSystem, sbBrightness.getProgress());
+
+                ReadSettingManager.getInstance().setAutoBrightness(isChecked);
+            }
+        });
+
+        mPageStyleAdapter.setOnItemClickListener(new BaseListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int pos) {
+                Log.d(LOG_TAG, "pos =" + pos);
+                setBookBg(PageStyle.values()[pos].getBgColor());
+            }
+        });
     }
 
-    public void initDayOrNight() {
-        mDayOrNight = config.getDayOrNight();
-        if (mDayOrNight) {
-            tv_dayornight.setText(mContext.getResources().getString(R.string.read_setting_day));
-        } else {
-            tv_dayornight.setText(mContext.getResources().getString(R.string.read_setting_night));
+    //选择背景
+    private void selectBg(int type) {
+        switch (type) {
+            case Config.BOOK_BG_DEFAULT:
+                iv_bg_default.setBorderWidth(DisplayUtils.dp2px(getContext(), 2));
+                iv_bg1.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg2.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg3.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg4.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                break;
+
+            case Config.BOOK_BG_1:
+                iv_bg_default.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg1.setBorderWidth(DisplayUtils.dp2px(getContext(), 2));
+                iv_bg2.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg3.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg4.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                break;
+            case Config.BOOK_BG_2:
+                iv_bg_default.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg1.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg2.setBorderWidth(DisplayUtils.dp2px(getContext(), 2));
+                iv_bg3.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg4.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                break;
+            case Config.BOOK_BG_3:
+                iv_bg_default.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg1.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg2.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg3.setBorderWidth(DisplayUtils.dp2px(getContext(), 2));
+                iv_bg4.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                break;
+            case Config.BOOK_BG_4:
+                iv_bg_default.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg1.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg2.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg3.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
+                iv_bg4.setBorderWidth(DisplayUtils.dp2px(getContext(), 2));
+                break;
         }
     }
 
-    //改变显示模式
-    public void changeDayOrNight() {
-        if (mDayOrNight) {
-            mDayOrNight = false;
-            tv_dayornight.setText(mContext.getResources().getString(R.string.read_setting_night));
-        } else {
-            mDayOrNight = true;
-            tv_dayornight.setText(mContext.getResources().getString(R.string.read_setting_day));
-        }
-        config.setDayOrNight(mDayOrNight);
+    //设置字体
+    public void setBookBg(int type) {
+        config.setBookBg(type);
         if (mSettingListener != null) {
-            mSettingListener.dayorNight(mDayOrNight);
+            mSettingListener.changeBookBg(type);
         }
     }
 
-    //显示书本进度
-    public void showProgress(float progress) {
-        if (rl_Progress.getVisibility() != View.VISIBLE) {
-            rl_Progress.setVisibility(View.VISIBLE);
+    //选择字体
+    private void selectTypeface(String typeface) {
+        if (typeface.equals(Config.FONTTYPE_DEFAULT)) {
+            setTextViewSelect(tv_default, true);
+            setTextViewSelect(tv_qihei, false);
+            setTextViewSelect(tv_fzxinghei, false);
+            setTextViewSelect(tv_fzkatong, false);
+            setTextViewSelect(tv_bysong, false);
+//            setTextViewSelect(tv_xinshou, false);
+//            setTextViewSelect(tv_wawa, false);
+        } else if (typeface.equals(Config.FONTTYPE_QIHEI)) {
+            setTextViewSelect(tv_default, false);
+            setTextViewSelect(tv_qihei, true);
+            setTextViewSelect(tv_fzxinghei, false);
+            setTextViewSelect(tv_fzkatong, false);
+            setTextViewSelect(tv_bysong, false);
+//            setTextViewSelect(tv_xinshou, false);
+//            setTextViewSelect(tv_wawa, false);
+        } else if (typeface.equals(Config.FONTTYPE_FZXINGHEI)) {
+            setTextViewSelect(tv_default, false);
+            setTextViewSelect(tv_qihei, false);
+            setTextViewSelect(tv_fzxinghei, true);
+            setTextViewSelect(tv_fzkatong, false);
+            setTextViewSelect(tv_bysong, false);
+//            setTextViewSelect(tv_xinshou, true);
+//            setTextViewSelect(tv_wawa, false);
+        } else if (typeface.equals(Config.FONTTYPE_FZKATONG)) {
+            setTextViewSelect(tv_default, false);
+            setTextViewSelect(tv_qihei, false);
+            setTextViewSelect(tv_fzxinghei, false);
+            setTextViewSelect(tv_fzkatong, true);
+            setTextViewSelect(tv_bysong, false);
+//            setTextViewSelect(tv_xinshou, false);
+//            setTextViewSelect(tv_wawa, true);
+        } else if (typeface.equals(Config.FONTTYPE_BYSONG)) {
+            setTextViewSelect(tv_default, false);
+            setTextViewSelect(tv_qihei, false);
+            setTextViewSelect(tv_fzxinghei, false);
+            setTextViewSelect(tv_fzkatong, false);
+            setTextViewSelect(tv_bysong, true);
+//            setTextViewSelect(tv_xinshou, false);
+//            setTextViewSelect(tv_wawa, true);
         }
-        setProgress(progress);
     }
 
-    //隐藏书本进度
-    public void hideProgress() {
-        rl_Progress.setVisibility(View.GONE);
+    //设置字体
+    public void setTypeface(String typeface) {
+        config.setTypeface(typeface);
+        Typeface tface = config.getTypeface(typeface);
+        if (mSettingListener != null) {
+            mSettingListener.changeTypeFace(tface);
+        }
     }
 
-    @Override
-    public void show() {
-        hideProgress();
-        mPopupWindowTop.showAtLocation(mBookPageWidget, Gravity.TOP, 0, 0);
-        mPopupWindow.showAtLocation(mBookPageWidget, Gravity.BOTTOM, 0, 0);
+    //设置亮度
+    public void setBrightness(float brightness) {
+        sbBrightness.setProgress((int) (brightness * 255));
     }
 
-    private void setProgress(float progress) {
-        DecimalFormat decimalFormat = new DecimalFormat("00.00");//构造方法的字符格式这里如果小数不足2位,会以0补足.
-        String p = decimalFormat.format(progress * 100.0);//format 返回的是字符串
-        tv_Progress.setText(p + "%");
+    //设置按钮选择的背景
+    private void setTextViewSelect(TextView textView, Boolean isSelect) {
+        if (isSelect) {
+            textView.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.button_select_bg));
+            textView.setTextColor(getContext().getResources().getColor(R.color.read_dialog_button_select));
+        } else {
+            textView.setBackgroundDrawable(getContext().getResources().getDrawable(R.drawable.button_bg));
+            textView.setTextColor(getContext().getResources().getColor(R.color.white));
+        }
     }
 
-    public void setSeekBarProgress(float progress) {
-        sb_progress.setProgress((int) (progress * 10000));
+    private void applyCompat() {
+        if (Build.VERSION.SDK_INT < 19) {
+            return;
+        }
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
     }
 
-    @Override
-    public void dismiss() {
-        mPopupWindowTop.dismiss();
-        mPopupWindow.dismiss();
-    }
-
-    @Override
     public Boolean isShow() {
-        return mPopupWindow.isShowing() || mPopupWindowTop.isShowing();
+        return isShowing();
     }
 
-    @Override
+
+    @OnClick({R.id.tv_subtract, R.id.tv_add, R.id.tv_size_default, R.id.tv_qihei, R.id.tv_fzxinghei, R.id.tv_fzkatong, R.id.tv_bysong,
+            R.id.tv_default, R.id.iv_bg_default, R.id.iv_bg_1, R.id.iv_bg_2, R.id.iv_bg_3, R.id.iv_bg_4, R.id.tv_read_setting_more})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_return:
-                if (mSettingListener != null) {
-                    mSettingListener.back();
-                }
+            case R.id.tv_subtract:
+                subtractFontSize();
                 break;
-            case R.id.btn_light:
-                break;
-            case R.id.btn_listener_book:
-                break;
-            case R.id.tv_pre:
-                if (mSettingListener != null) {
-                    mSettingListener.pre();
-                }
-                break;
-            case R.id.sb_progress:
 
+            case R.id.tv_add:
+                addFontSize();
                 break;
-            case R.id.tv_next:
-                if (mSettingListener != null) {
-                    mSettingListener.next();
-                }
+
+            case R.id.tv_size_default:
+                defaultFontSize();
                 break;
-            case R.id.tv_directory:
-                if (mSettingListener != null) {
-                    mSettingListener.directory();
-                }
+
+            case R.id.tv_qihei:
+                selectTypeface(Config.FONTTYPE_QIHEI);
+                setTypeface(Config.FONTTYPE_QIHEI);
                 break;
-            case R.id.tv_dayornight:
-                changeDayOrNight();
+
+            case R.id.tv_fzxinghei:
+                selectTypeface(Config.FONTTYPE_FZXINGHEI);
+                setTypeface(Config.FONTTYPE_FZXINGHEI);
                 break;
-            case R.id.tv_setting:
-                if (mSettingListener != null) {
-                    mSettingListener.setting();
-                }
+
+            case R.id.tv_fzkatong:
+                selectTypeface(Config.FONTTYPE_FZKATONG);
+                setTypeface(Config.FONTTYPE_FZKATONG);
+                break;
+
+            case R.id.tv_bysong:
+                selectTypeface(Config.FONTTYPE_BYSONG);
+                setTypeface(Config.FONTTYPE_BYSONG);
+                break;
+
+            case R.id.tv_default:
+                selectTypeface(Config.FONTTYPE_DEFAULT);
+                setTypeface(Config.FONTTYPE_DEFAULT);
+                break;
+
+            case R.id.iv_bg_default:
+                setBookBg(Config.BOOK_BG_DEFAULT);
+                selectBg(Config.BOOK_BG_DEFAULT);
+                break;
+
+            case R.id.iv_bg_1:
+                setBookBg(Config.BOOK_BG_1);
+                selectBg(Config.BOOK_BG_1);
+                break;
+
+            case R.id.iv_bg_2:
+                setBookBg(Config.BOOK_BG_2);
+                selectBg(Config.BOOK_BG_2);
+                break;
+
+            case R.id.iv_bg_3:
+                setBookBg(Config.BOOK_BG_3);
+                selectBg(Config.BOOK_BG_3);
+                break;
+
+            case R.id.iv_bg_4:
+                setBookBg(Config.BOOK_BG_4);
+                selectBg(Config.BOOK_BG_4);
+                break;
+
+            case R.id.tv_read_setting_more:
+                startMoreSettingActivity();
+                break;
+
+            default:
                 break;
         }
+    }
+
+    //变大书本字体
+    private void addFontSize() {
+        if (currentFontSize < FONT_SIZE_MAX) {
+            currentFontSize += 1;
+            tv_size.setText(currentFontSize + "");
+            config.setFontSize(currentFontSize);
+            if (mSettingListener != null) {
+                mSettingListener.changeFontSize(currentFontSize);
+            }
+        }
+    }
+
+    private void defaultFontSize() {
+        currentFontSize = (int) getContext().getResources().getDimension(R.dimen.reading_default_text_size);
+        tv_size.setText(currentFontSize + "");
+        config.setFontSize(currentFontSize);
+        if (mSettingListener != null) {
+            mSettingListener.changeFontSize(currentFontSize);
+        }
+    }
+
+    //变小书本字体
+    private void subtractFontSize() {
+        if (currentFontSize > FONT_SIZE_MIN) {
+            currentFontSize -= 1;
+            tv_size.setText(currentFontSize + "");
+            config.setFontSize(currentFontSize);
+            if (mSettingListener != null) {
+                mSettingListener.changeFontSize(currentFontSize);
+            }
+        }
+    }
+
+    //改变亮度
+    public void changeBright(Boolean isSystem, int brightness) {
+        float light = (float) (brightness / 255.0);
+//        setTextViewSelect(tv_xitong, isSystem);
+        config.setSystemLight(isSystem);
+        config.setLight(light);
+        if (mSettingListener != null) {
+            mSettingListener.changeSystemBright(isSystem, light);
+        }
+    }
+
+    private void startMoreSettingActivity() {
+        Intent intent = new Intent(context, MoreSettingActivity.class);
+        ((Activity) context).startActivityForResult(intent, ReadActivity.REQUEST_MORE_SETTING);
+        dismiss();
     }
 
     public void setSettingListener(SettingListener settingListener) {
@@ -242,20 +521,13 @@ public class ReadSettingDialog implements BaseDialog, View.OnClickListener {
     }
 
     public interface SettingListener {
-        void back();
+        void changeSystemBright(Boolean isSystem, float brightness);
 
-        void pre();
+        void changeFontSize(int fontSize);
 
-        void dismiss();
+        void changeTypeFace(Typeface typeface);
 
-        void next();
-
-        void directory();
-
-        void dayorNight(Boolean isNight);
-
-        void setting();
-
-        void changeProgress(float progress);
+        void changeBookBg(int type);
     }
+
 }

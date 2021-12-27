@@ -3,13 +3,16 @@ package com.longluo.ebookreader.db;
 import org.litepal.crud.DataSupport;
 
 public class BookMark extends DataSupport {
-    private int id ;
-  //  private int page;
+    private int id;
+
     private long begin; // 书签记录页面的结束点位置
-  //  private int count;
+
     private String text;
+
     private String time;
-    private String bookpath;
+    
+    private String bookPath;
+
     public int getId() {
         return this.id;
     }
@@ -42,12 +45,12 @@ public class BookMark extends DataSupport {
         this.begin = begin;
     }
 
-    public String getBookpath() {
-        return this.bookpath;
+    public String getBookPath() {
+        return bookPath;
     }
 
-    public void setBookpath(String bookpath) {
-        this.bookpath = bookpath;
+    public void setBookPath(String bookPath) {
+        this.bookPath = bookPath;
     }
 
 }

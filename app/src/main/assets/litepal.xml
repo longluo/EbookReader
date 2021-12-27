@@ -7,6 +7,8 @@
     <list>
         <mapping class="com.longluo.ebookreader.db.BookMeta" />
         <mapping class="com.longluo.ebookreader.db.BookContent" />
+        <mapping class="com.longluo.ebookreader.db.BookChapter" />
+        <mapping class="com.longluo.ebookreader.db.BookRecord" />
         <mapping class="com.longluo.ebookreader.db.BookMark" />
     </list>
 </litepal>

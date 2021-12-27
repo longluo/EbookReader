@@ -21,9 +21,14 @@ App Screen Shots:
 
 阅读界面：
 
-<a href="./screenshots/EbookReader_Reader_Page.png"><img src="./screenshots/EbookReader_Reader_Page.png" width="40%" /></a><a href="./screenshots/EbookReader_Read_Contents.png"><img src="./screenshots/EbookReader_Read_Contents.png" width="40%" /></a>
+<a href="./screenshots/EbookReader_Reader_Page.png"><img src="./screenshots/EbookReader_Reader_Page.png" width="30%" /></a><a href="./screenshots/EbookReader_Read_Contents.png"><img src="./screenshots/EbookReader_Read_Contents.png" width="30%" /></a><a href="./screenshots/EbookReader_Read_NightMode.png"><img src="./screenshots/EbookReader_Read_NightMode.png" width="30%" /></a>
 
 阅读设置：
 
-<a href="./screenshots/EbookReader_Read_Setting.png"><img src="./screenshots/EbookReader_Read_Setting.png" width="40%" /></a>
+<a href="./screenshots/EbookReader_Read_Setting.png"><img src="./screenshots/EbookReader_Read_Setting.png" width="30%" /></a><a href="./screenshots/EbookReader_Read_ReadSetting.png"><img src="./screenshots/EbookReader_Read_ReadSetting.png" width="30%" /></a><a href="./screenshots/EbookReader_Read_Progress.png"><img src="./screenshots/EbookReader_Read_Progress.png" width="30%" /></a>
+
+TTS阅读：
+
+<a href="./screenshots/EbookReader_Read_TTS.png"><img src="./screenshots/EbookReader_Read_TTS.png" width="30%" /></a>
+
 

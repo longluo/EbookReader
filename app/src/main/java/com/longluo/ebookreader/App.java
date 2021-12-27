@@ -20,7 +20,6 @@ public class App extends Application {
         sInstance = getApplicationContext();
 
         LitePal.initialize(this);
-        Config.createConfig(this);
         PageFactory.createPageFactory(this);
 
         // 初始化内存分析工具

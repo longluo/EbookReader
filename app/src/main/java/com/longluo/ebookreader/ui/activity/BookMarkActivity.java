@@ -12,7 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.google.android.material.appbar.AppBarLayout;
-import com.longluo.ebookreader.Config;
+import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.ui.adapter.MyPagerAdapter;
 import com.longluo.ebookreader.base.BaseActivity;
@@ -41,7 +41,7 @@ public class BookMarkActivity extends BaseActivity {
     ViewPager pager;
 
     private PageFactory pageFactory;
-    private Config config;
+    private ReadSettingManager readSettingManager;
     private Typeface typeface;
     private ArrayList<BookContent> catalogueList = new ArrayList<>();
     private DisplayMetrics dm;
@@ -54,9 +54,9 @@ public class BookMarkActivity extends BaseActivity {
     @Override
     protected void initData(Bundle savedInstanceState) {
         pageFactory = PageFactory.getInstance();
-        config = Config.getInstance();
+        readSettingManager = ReadSettingManager.getInstance();
         dm = getResources().getDisplayMetrics();
-        typeface = config.getTypeface();
+        typeface = readSettingManager.getTypeface();
 
         setSupportActionBar(toolBar);
         //设置导航图标

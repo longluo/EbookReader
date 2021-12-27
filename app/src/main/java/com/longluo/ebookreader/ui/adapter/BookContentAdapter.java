@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.longluo.ebookreader.Config;
+import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.db.BookContent;
 import com.longluo.ebookreader.ui.adapter.view.BookContentViewHolder;
@@ -20,7 +20,7 @@ public class BookContentAdapter extends RecyclerView.Adapter<BookContentViewHold
     private Context mContext;
     private List<BookContent> mDatas;
     private Typeface typeface;
-    private Config config;
+    private ReadSettingManager readSettingManager;
     private int currentCharter = 0;
 
     private OnItemClickListener listener;
@@ -45,8 +45,8 @@ public class BookContentAdapter extends RecyclerView.Adapter<BookContentViewHold
     public BookContentAdapter(Context context, List<BookContent> bookContentList) {
         mContext = context;
         mDatas = bookContentList;
-        config = config.getInstance();
-        typeface = config.getTypeface();
+        readSettingManager = readSettingManager.getInstance();
+        typeface = readSettingManager.getTypeface();
     }
 
     @Override

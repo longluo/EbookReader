@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.longluo.ebookreader.Config;
+import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.ui.adapter.view.BookMarkViewHolder;
@@ -21,7 +21,7 @@ import java.util.List;
 public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkViewHolder> {
     private Context mContext;
     private List<BookMark> mMarkDatas;
-    private Config config;
+    private ReadSettingManager readSettingManager;
     private Typeface typeface;
     private PageFactory pageFactory;
 
@@ -48,8 +48,8 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkViewHolder> {
         mContext = context;
         mMarkDatas = markLists;
         pageFactory = PageFactory.getInstance();
-        config = config.getInstance();
-        typeface = config.getTypeface();
+        readSettingManager = readSettingManager.getInstance();
+        typeface = readSettingManager.getTypeface();
     }
 
     @Override

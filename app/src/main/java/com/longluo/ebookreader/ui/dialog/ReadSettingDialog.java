@@ -8,7 +8,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -16,6 +15,8 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -23,16 +24,15 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.longluo.ebookreader.Config;
-import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.constant.Constants;
 import com.longluo.ebookreader.manager.ReadSettingManager;
+import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.ui.activity.MoreSettingActivity;
 import com.longluo.ebookreader.ui.activity.ReadActivity;
 import com.longluo.ebookreader.ui.adapter.ReadPageBgAdapter;
 import com.longluo.ebookreader.ui.base.adapter.BaseListAdapter;
 import com.longluo.ebookreader.util.BrightnessUtils;
-import com.longluo.ebookreader.util.DisplayUtils;
-import com.longluo.ebookreader.view.CircleImageView;
+import com.longluo.ebookreader.widget.page.PageMode;
 import com.longluo.ebookreader.widget.page.PageStyle;
 
 import java.util.Arrays;
@@ -47,41 +47,45 @@ public class ReadSettingDialog extends Dialog {
 
     @BindView(R.id.iv_read_setting_brightness_minus)
     ImageView ivBrightMinus;
-    @BindView(R.id.sb_brightness)
+    @BindView(R.id.sb_read_setting_brightness)
     SeekBar sbBrightness;
     @BindView(R.id.iv_read_setting_brightness_plus)
     ImageView ivBrightPlus;
     @BindView(R.id.cb_read_setting_brightness_auto)
     CheckBox cbBrightAuto;
 
-    @BindView(R.id.tv_subtract)
-    TextView tv_subtract;
-    @BindView(R.id.tv_size)
-    TextView tv_size;
-    @BindView(R.id.tv_add)
-    TextView tv_add;
+    @BindView(R.id.tv_read_setting_font_minus)
+    TextView mTvFontMinus;
+    @BindView(R.id.tv_read_setting_font_size)
+    TextView mTvFontSize;
+    @BindView(R.id.tv_read_setting_font_plus)
+    TextView mTvFontPlus;
+    @BindView(R.id.cb_read_setting_font_default)
+    CheckBox mCbFontDefault;
+
+    @BindView(R.id.tv_font_default)
+    TextView tv_default;
     @BindView(R.id.tv_qihei)
     TextView tv_qihei;
-    @BindView(R.id.tv_default)
-    TextView tv_default;
-    @BindView(R.id.iv_bg_default)
-    CircleImageView iv_bg_default;
-    @BindView(R.id.iv_bg_1)
-    CircleImageView iv_bg1;
-    @BindView(R.id.iv_bg_2)
-    CircleImageView iv_bg2;
-    @BindView(R.id.iv_bg_3)
-    CircleImageView iv_bg3;
-    @BindView(R.id.iv_bg_4)
-    CircleImageView iv_bg4;
-    @BindView(R.id.tv_size_default)
-    TextView tv_size_default;
     @BindView(R.id.tv_fzxinghei)
     TextView tv_fzxinghei;
     @BindView(R.id.tv_fzkatong)
     TextView tv_fzkatong;
     @BindView(R.id.tv_bysong)
     TextView tv_bysong;
+
+    @BindView(R.id.read_setting_rg_page_mode)
+    RadioGroup mRgPageMode;
+    @BindView(R.id.read_setting_rb_simulation)
+    RadioButton mRbSimulation;
+    @BindView(R.id.read_setting_rb_cover)
+    RadioButton mRbCover;
+    @BindView(R.id.read_setting_rb_slide)
+    RadioButton mRbSlide;
+    @BindView(R.id.read_setting_rb_scroll)
+    RadioButton mRbScroll;
+    @BindView(R.id.read_setting_rb_none)
+    RadioButton mRbNone;
 
     @BindView(R.id.read_setting_rv_bg)
     RecyclerView mRvBg;
@@ -90,18 +94,16 @@ public class ReadSettingDialog extends Dialog {
     TextView mTvMore;
 
     private Context context;
-    private Config config;
+    private ReadSettingManager readSettingManager;
     private boolean isSystem;
     private SettingListener mSettingListener;
     private int FONT_SIZE_MIN;
     private int FONT_SIZE_MAX;
     private int currentFontSize;
 
-    private ReadSettingManager mSettingManager;
-
+    private PageMode mPageMode;
     private ReadPageBgAdapter mPageStyleAdapter;
     private PageStyle mPageStyle;
-
 
     public ReadSettingDialog(Context context) {
         this(context, R.style.setting_dialog);
@@ -110,10 +112,6 @@ public class ReadSettingDialog extends Dialog {
     public ReadSettingDialog(Context context, int themeResId) {
         super(context, themeResId);
         this.context = context;
-    }
-
-    private ReadSettingDialog(Context context, boolean flag, OnCancelListener listener) {
-        super(context, flag, listener);
     }
 
     @Override
@@ -125,11 +123,6 @@ public class ReadSettingDialog extends Dialog {
         ButterKnife.bind(this);
         initData();
         initWidget();
-        FONT_SIZE_MIN = (int) getContext().getResources().getDimension(R.dimen.reading_min_text_size);
-        FONT_SIZE_MAX = (int) getContext().getResources().getDimension(R.dimen.reading_max_text_size);
-        mPageStyle = mSettingManager.getPageStyle();
-        initReadBgAdapter();
-        selectBg(config.getBookBgType());
         initListener();
     }
 
@@ -142,22 +135,29 @@ public class ReadSettingDialog extends Dialog {
     }
 
     private void initData() {
-        config = Config.getInstance();
-        mSettingManager = ReadSettingManager.getInstance();
+        readSettingManager = ReadSettingManager.getInstance();
+
+        mPageMode = readSettingManager.getPageMode();
+        mPageStyle = readSettingManager.getBookPageStyle();
+
+        FONT_SIZE_MIN = (int) getContext().getResources().getDimension(R.dimen.reading_min_text_size);
+        FONT_SIZE_MAX = (int) getContext().getResources().getDimension(R.dimen.reading_max_text_size);
+
+        initReadBgAdapter();
         initFont();
     }
 
     private void initFont() {
         //初始化字体大小
-        currentFontSize = (int) config.getFontSize();
-        tv_size.setText(currentFontSize + "");
+        currentFontSize = readSettingManager.getTextSize();
+        mTvFontSize.setText(currentFontSize + "");
 
         //初始化字体
-        tv_default.setTypeface(config.getTypeface(Config.FONTTYPE_DEFAULT));
-        tv_qihei.setTypeface(config.getTypeface(Config.FONTTYPE_QIHEI));
-        tv_fzkatong.setTypeface(config.getTypeface(Config.FONTTYPE_FZKATONG));
-        tv_bysong.setTypeface(config.getTypeface(Config.FONTTYPE_BYSONG));
-        selectTypeface(config.getTypefacePath());
+        tv_default.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_DEFAULT));
+        tv_qihei.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_QIHEI));
+        tv_fzkatong.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_FZKATONG));
+        tv_bysong.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_BYSONG));
+        selectTypeface(readSettingManager.getTypefacePath());
     }
 
     private void initReadBgAdapter() {
@@ -181,6 +181,31 @@ public class ReadSettingDialog extends Dialog {
 
     private void initWidget() {
         cbBrightAuto.setChecked(isSystem);
+
+        initPageMode(mPageMode);
+    }
+
+    private void initPageMode(PageMode pageMode) {
+        switch (pageMode) {
+            case MODE_SIMULATION:
+                mRbSimulation.setChecked(true);
+                break;
+
+            case MODE_COVER:
+                mRbCover.setChecked(true);
+                break;
+
+            case MODE_SLIDE:
+                mRbSlide.setChecked(true);
+                break;
+
+            case MODE_NONE:
+                mRbNone.setChecked(true);
+                break;
+
+            default:
+                break;
+        }
     }
 
     private void initListener() {
@@ -249,68 +274,76 @@ public class ReadSettingDialog extends Dialog {
             }
         });
 
+        mTvFontMinus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reduceFontSize();
+            }
+        });
+
+        mTvFontPlus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                raiseFontSize();
+            }
+        });
+
+        mCbFontDefault.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                defaultFontSize(isChecked);
+            }
+        });
+
+        mRgPageMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                PageMode pageMode;
+                switch (checkedId) {
+                    case R.id.read_setting_rb_simulation:
+                        pageMode = PageMode.MODE_SIMULATION;
+                        break;
+                    case R.id.read_setting_rb_cover:
+                        pageMode = PageMode.MODE_COVER;
+                        break;
+                    case R.id.read_setting_rb_slide:
+                        pageMode = PageMode.MODE_SLIDE;
+                        break;
+                    case R.id.read_setting_rb_scroll:
+                        pageMode = PageMode.MODE_SCROLL;
+                        break;
+                    case R.id.read_setting_rb_none:
+                        pageMode = PageMode.MODE_NONE;
+                        break;
+
+                    default:
+                        pageMode = PageMode.MODE_SIMULATION;
+                        break;
+                }
+
+                readSettingManager.setPageMode(pageMode);
+                mSettingListener.changePageMode(pageMode);
+            }
+        });
+
         mPageStyleAdapter.setOnItemClickListener(new BaseListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int pos) {
-                Log.d(LOG_TAG, "pos =" + pos);
-                setBookBg(PageStyle.values()[pos].getBgColor());
+                setBookPageStyle(PageStyle.values()[pos]);
             }
         });
     }
 
-    //选择背景
-    private void selectBg(int type) {
-        switch (type) {
-            case Config.BOOK_BG_DEFAULT:
-                iv_bg_default.setBorderWidth(DisplayUtils.dp2px(getContext(), 2));
-                iv_bg1.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg2.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg3.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg4.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                break;
-
-            case Config.BOOK_BG_1:
-                iv_bg_default.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg1.setBorderWidth(DisplayUtils.dp2px(getContext(), 2));
-                iv_bg2.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg3.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg4.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                break;
-            case Config.BOOK_BG_2:
-                iv_bg_default.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg1.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg2.setBorderWidth(DisplayUtils.dp2px(getContext(), 2));
-                iv_bg3.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg4.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                break;
-            case Config.BOOK_BG_3:
-                iv_bg_default.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg1.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg2.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg3.setBorderWidth(DisplayUtils.dp2px(getContext(), 2));
-                iv_bg4.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                break;
-            case Config.BOOK_BG_4:
-                iv_bg_default.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg1.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg2.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg3.setBorderWidth(DisplayUtils.dp2px(getContext(), 0));
-                iv_bg4.setBorderWidth(DisplayUtils.dp2px(getContext(), 2));
-                break;
-        }
-    }
-
-    //设置字体
-    public void setBookBg(int type) {
-        config.setBookBg(type);
+    public void setBookPageStyle(PageStyle pageStyle) {
+        readSettingManager.setBookPageStyle(pageStyle);
         if (mSettingListener != null) {
-            mSettingListener.changeBookBg(type);
+            mSettingListener.changeBookPageStyle(pageStyle);
         }
     }
 
     //选择字体
     private void selectTypeface(String typeface) {
-        if (typeface.equals(Config.FONTTYPE_DEFAULT)) {
+        if (typeface.equals(Constants.FONT_TYPE_DEFAULT)) {
             setTextViewSelect(tv_default, true);
             setTextViewSelect(tv_qihei, false);
             setTextViewSelect(tv_fzxinghei, false);
@@ -318,7 +351,7 @@ public class ReadSettingDialog extends Dialog {
             setTextViewSelect(tv_bysong, false);
 //            setTextViewSelect(tv_xinshou, false);
 //            setTextViewSelect(tv_wawa, false);
-        } else if (typeface.equals(Config.FONTTYPE_QIHEI)) {
+        } else if (typeface.equals(Constants.FONT_TYPE_QIHEI)) {
             setTextViewSelect(tv_default, false);
             setTextViewSelect(tv_qihei, true);
             setTextViewSelect(tv_fzxinghei, false);
@@ -326,15 +359,13 @@ public class ReadSettingDialog extends Dialog {
             setTextViewSelect(tv_bysong, false);
 //            setTextViewSelect(tv_xinshou, false);
 //            setTextViewSelect(tv_wawa, false);
-        } else if (typeface.equals(Config.FONTTYPE_FZXINGHEI)) {
+        } else if (typeface.equals(Constants.FONT_TYPE_FZXINGHEI)) {
             setTextViewSelect(tv_default, false);
             setTextViewSelect(tv_qihei, false);
             setTextViewSelect(tv_fzxinghei, true);
             setTextViewSelect(tv_fzkatong, false);
             setTextViewSelect(tv_bysong, false);
-//            setTextViewSelect(tv_xinshou, true);
-//            setTextViewSelect(tv_wawa, false);
-        } else if (typeface.equals(Config.FONTTYPE_FZKATONG)) {
+        } else if (typeface.equals(Constants.FONT_TYPE_FZKATONG)) {
             setTextViewSelect(tv_default, false);
             setTextViewSelect(tv_qihei, false);
             setTextViewSelect(tv_fzxinghei, false);
@@ -342,7 +373,7 @@ public class ReadSettingDialog extends Dialog {
             setTextViewSelect(tv_bysong, false);
 //            setTextViewSelect(tv_xinshou, false);
 //            setTextViewSelect(tv_wawa, true);
-        } else if (typeface.equals(Config.FONTTYPE_BYSONG)) {
+        } else if (typeface.equals(Constants.FONT_TYPE_BYSONG)) {
             setTextViewSelect(tv_default, false);
             setTextViewSelect(tv_qihei, false);
             setTextViewSelect(tv_fzxinghei, false);
@@ -355,8 +386,8 @@ public class ReadSettingDialog extends Dialog {
 
     //设置字体
     public void setTypeface(String typeface) {
-        config.setTypeface(typeface);
-        Typeface tface = config.getTypeface(typeface);
+        readSettingManager.setTypeface(typeface);
+        Typeface tface = readSettingManager.getTypeface(typeface);
         if (mSettingListener != null) {
             mSettingListener.changeTypeFace(tface);
         }
@@ -391,70 +422,33 @@ public class ReadSettingDialog extends Dialog {
     }
 
 
-    @OnClick({R.id.tv_subtract, R.id.tv_add, R.id.tv_size_default, R.id.tv_qihei, R.id.tv_fzxinghei, R.id.tv_fzkatong, R.id.tv_bysong,
-            R.id.tv_default, R.id.iv_bg_default, R.id.iv_bg_1, R.id.iv_bg_2, R.id.iv_bg_3, R.id.iv_bg_4, R.id.tv_read_setting_more})
+    @OnClick({R.id.tv_qihei, R.id.tv_fzxinghei, R.id.tv_fzkatong, R.id.tv_bysong,
+            R.id.tv_font_default, R.id.tv_read_setting_more})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_subtract:
-                subtractFontSize();
-                break;
-
-            case R.id.tv_add:
-                addFontSize();
-                break;
-
-            case R.id.tv_size_default:
-                defaultFontSize();
-                break;
-
             case R.id.tv_qihei:
-                selectTypeface(Config.FONTTYPE_QIHEI);
-                setTypeface(Config.FONTTYPE_QIHEI);
+                selectTypeface(Constants.FONT_TYPE_QIHEI);
+                setTypeface(Constants.FONT_TYPE_QIHEI);
                 break;
 
             case R.id.tv_fzxinghei:
-                selectTypeface(Config.FONTTYPE_FZXINGHEI);
-                setTypeface(Config.FONTTYPE_FZXINGHEI);
+                selectTypeface(Constants.FONT_TYPE_FZXINGHEI);
+                setTypeface(Constants.FONT_TYPE_FZXINGHEI);
                 break;
 
             case R.id.tv_fzkatong:
-                selectTypeface(Config.FONTTYPE_FZKATONG);
-                setTypeface(Config.FONTTYPE_FZKATONG);
+                selectTypeface(Constants.FONT_TYPE_FZKATONG);
+                setTypeface(Constants.FONT_TYPE_FZKATONG);
                 break;
 
             case R.id.tv_bysong:
-                selectTypeface(Config.FONTTYPE_BYSONG);
-                setTypeface(Config.FONTTYPE_BYSONG);
+                selectTypeface(Constants.FONT_TYPE_BYSONG);
+                setTypeface(Constants.FONT_TYPE_BYSONG);
                 break;
 
-            case R.id.tv_default:
-                selectTypeface(Config.FONTTYPE_DEFAULT);
-                setTypeface(Config.FONTTYPE_DEFAULT);
-                break;
-
-            case R.id.iv_bg_default:
-                setBookBg(Config.BOOK_BG_DEFAULT);
-                selectBg(Config.BOOK_BG_DEFAULT);
-                break;
-
-            case R.id.iv_bg_1:
-                setBookBg(Config.BOOK_BG_1);
-                selectBg(Config.BOOK_BG_1);
-                break;
-
-            case R.id.iv_bg_2:
-                setBookBg(Config.BOOK_BG_2);
-                selectBg(Config.BOOK_BG_2);
-                break;
-
-            case R.id.iv_bg_3:
-                setBookBg(Config.BOOK_BG_3);
-                selectBg(Config.BOOK_BG_3);
-                break;
-
-            case R.id.iv_bg_4:
-                setBookBg(Config.BOOK_BG_4);
-                selectBg(Config.BOOK_BG_4);
+            case R.id.tv_font_default:
+                selectTypeface(Constants.FONT_TYPE_DEFAULT);
+                setTypeface(Constants.FONT_TYPE_DEFAULT);
                 break;
 
             case R.id.tv_read_setting_more:
@@ -466,33 +460,39 @@ public class ReadSettingDialog extends Dialog {
         }
     }
 
-    //变大书本字体
-    private void addFontSize() {
+    private void raiseFontSize() {
+        if (mCbFontDefault.isChecked()) {
+            mCbFontDefault.setChecked(false);
+        }
         if (currentFontSize < FONT_SIZE_MAX) {
             currentFontSize += 1;
-            tv_size.setText(currentFontSize + "");
-            config.setFontSize(currentFontSize);
+            mTvFontSize.setText(currentFontSize + "");
+            readSettingManager.setTextSize(currentFontSize);
             if (mSettingListener != null) {
                 mSettingListener.changeFontSize(currentFontSize);
             }
         }
     }
 
-    private void defaultFontSize() {
-        currentFontSize = (int) getContext().getResources().getDimension(R.dimen.reading_default_text_size);
-        tv_size.setText(currentFontSize + "");
-        config.setFontSize(currentFontSize);
-        if (mSettingListener != null) {
-            mSettingListener.changeFontSize(currentFontSize);
+    private void defaultFontSize(boolean isChecked) {
+        if (isChecked) {
+            currentFontSize = (int) getContext().getResources().getDimension(R.dimen.reading_default_text_size);
+            mTvFontSize.setText(currentFontSize + "");
+            readSettingManager.setTextSize(currentFontSize);
+            if (mSettingListener != null) {
+                mSettingListener.changeFontSize(currentFontSize);
+            }
         }
     }
 
-    //变小书本字体
-    private void subtractFontSize() {
+    private void reduceFontSize() {
+        if (mCbFontDefault.isChecked()) {
+            mCbFontDefault.setChecked(false);
+        }
         if (currentFontSize > FONT_SIZE_MIN) {
             currentFontSize -= 1;
-            tv_size.setText(currentFontSize + "");
-            config.setFontSize(currentFontSize);
+            mTvFontSize.setText(currentFontSize + "");
+            readSettingManager.setTextSize(currentFontSize);
             if (mSettingListener != null) {
                 mSettingListener.changeFontSize(currentFontSize);
             }
@@ -503,8 +503,8 @@ public class ReadSettingDialog extends Dialog {
     public void changeBright(Boolean isSystem, int brightness) {
         float light = (float) (brightness / 255.0);
 //        setTextViewSelect(tv_xitong, isSystem);
-        config.setSystemLight(isSystem);
-        config.setLight(light);
+        readSettingManager.setSystemLight(isSystem);
+        readSettingManager.setLight(light);
         if (mSettingListener != null) {
             mSettingListener.changeSystemBright(isSystem, light);
         }
@@ -527,7 +527,9 @@ public class ReadSettingDialog extends Dialog {
 
         void changeTypeFace(Typeface typeface);
 
-        void changeBookBg(int type);
+        void changeBookPageStyle(PageStyle pageStyle);
+
+        void changePageMode(PageMode pageMode);
     }
 
 }

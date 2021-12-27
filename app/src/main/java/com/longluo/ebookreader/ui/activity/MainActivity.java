@@ -29,7 +29,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.longluo.ebookreader.Config;
+import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookMeta;
@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity
 
     private static Boolean isExit = false;
 
-    private Config config;
+    private ReadSettingManager readSettingManager;
 
     @Override
     public int getLayoutRes() {
@@ -111,14 +111,14 @@ public class MainActivity extends BaseActivity
         setSupportActionBar(toolbar);
 //        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);//设置导航图标
 
-        config = Config.getInstance();
+        readSettingManager = ReadSettingManager.getInstance();
         // 删除窗口背景
         getWindow().setBackgroundDrawable(null);
         mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         wmRootView = new AbsoluteLayout(this);
         rootView = getWindow().getDecorView();
 //        SQLiteDatabase db = Connector.getDatabase();  //初始化数据库
-        typeface = config.getTypeface();
+        typeface = readSettingManager.getTypeface();
         bookMetas = LitePal.findAll(BookMeta.class);
         shelfAdapter = new ShelfAdapter(MainActivity.this, bookMetas);
         bookShelf.setAdapter(shelfAdapter);

@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.longluo.ebookreader.Config;
+import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.view.DragGridListener;
@@ -37,13 +37,13 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
     private Typeface typeface;
     protected List<AsyncTask<Void, Void, Boolean>> myAsyncTasks = new ArrayList<>();
     private int[] firstLocation;
-    private Config config;
+    private ReadSettingManager readSettingManager;
 
     public ShelfAdapter(Context context, List<BookMeta> bilist) {
         this.mContex = context;
         this.bilist = bilist;
-        config = Config.getInstance();
-        typeface = config.getTypeface();
+        readSettingManager = ReadSettingManager.getInstance();
+        typeface = readSettingManager.getTypeface();
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 

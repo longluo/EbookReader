@@ -18,11 +18,13 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.longluo.ebookreader.Config;
+import com.longluo.ebookreader.constant.Constants;
+import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.db.BookContent;
 import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.view.PageWidget;
+import com.longluo.ebookreader.widget.page.PageStyle;
 
 import org.litepal.LitePal;
 
@@ -38,7 +40,7 @@ public class PageFactory {
     private static PageFactory pageFactory;
 
     private Context mContext;
-    private Config config;
+    private ReadSettingManager readSettingManager;
     //当前的书本
 //    private File book_file = null;
     // 默认背景颜色
@@ -48,7 +50,7 @@ public class PageFactory {
     //页面高
     private int mHeight;
     //文字字体大小
-    private float m_fontSize;
+    private int mTextSize;
     //时间格式
     private SimpleDateFormat sdf;
     //时间
@@ -78,7 +80,7 @@ public class PageFactory {
     //加载画笔
     private Paint waitPaint;
     //文字颜色
-    private int m_textColor = Color.rgb(50, 65, 78);
+    private int mTextColor = Color.rgb(50, 65, 78);
     // 绘制内容的宽
     private float mVisibleHeight;
     // 绘制内容的宽
@@ -167,7 +169,7 @@ public class PageFactory {
     private PageFactory(Context context) {
         mBookUtils = new BookUtils();
         mContext = context.getApplicationContext();
-        config = Config.getInstance();
+        readSettingManager = ReadSettingManager.getInstance();
         //获取屏幕宽高
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics metric = new DisplayMetrics();
@@ -187,19 +189,19 @@ public class PageFactory {
         mVisibleWidth = mWidth - marginWidth * 2;
         mVisibleHeight = mHeight - marginHeight * 2;
 
-        typeface = config.getTypeface();
-        m_fontSize = config.getFontSize();
+        typeface = readSettingManager.getTypeface();
+        mTextSize = readSettingManager.getTextSize();
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);// 画笔
         mPaint.setTextAlign(Paint.Align.LEFT);// 左对齐
-        mPaint.setTextSize(m_fontSize);// 字体大小
-        mPaint.setColor(m_textColor);// 字体颜色
+        mPaint.setTextSize(mTextSize);// 字体大小
+        mPaint.setColor(mTextColor);// 字体颜色
         mPaint.setTypeface(typeface);
         mPaint.setSubpixelText(true);// 设置该项为true，将有助于文本在LCD屏幕上的显示效果
 
         waitPaint = new Paint(Paint.ANTI_ALIAS_FLAG);// 画笔
         waitPaint.setTextAlign(Paint.Align.LEFT);// 左对齐
         waitPaint.setTextSize(mContext.getResources().getDimension(R.dimen.reading_max_text_size));// 字体大小
-        waitPaint.setColor(m_textColor);// 字体颜色
+        waitPaint.setColor(mTextColor);// 字体颜色
         waitPaint.setTypeface(typeface);
         waitPaint.setSubpixelText(true);// 设置该项为true，将有助于文本在LCD屏幕上的显示效果
         calculateLineCount();
@@ -210,11 +212,11 @@ public class PageFactory {
         mBatterryPaint.setTextSize(mBatterryFontSize);
         mBatterryPaint.setTypeface(typeface);
         mBatterryPaint.setTextAlign(Paint.Align.LEFT);
-        mBatterryPaint.setColor(m_textColor);
+        mBatterryPaint.setColor(mTextColor);
         batteryInfoIntent = context.getApplicationContext().registerReceiver(null,
                 new IntentFilter(Intent.ACTION_BATTERY_CHANGED));//注册广播,随时获取到电池电量信息
 
-        initBg(config.getDayOrNight());
+        initBg(readSettingManager.isNightMode());
         measureMarginWidth();
     }
 
@@ -236,23 +238,20 @@ public class PageFactory {
     private void initBg(Boolean isNight) {
         if (isNight) {
             //设置背景
-//            setBgBitmap(BitmapUtil.decodeSampledBitmapFromResource(
-//                    mContext.getResources(), R.drawable.main_bg, mWidth, mHeight));
             Bitmap bitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.RGB_565);
             Canvas canvas = new Canvas(bitmap);
             canvas.drawColor(Color.BLACK);
             setBgBitmap(bitmap);
             //设置字体颜色
-            setM_textColor(Color.rgb(128, 128, 128));
+            setTextColor(Color.rgb(128, 128, 128));
             setBookPageBg(Color.BLACK);
         } else {
-            //设置背景
-            setBookBg(config.getBookBgType());
+            setBookPageStyle(readSettingManager.getBookPageStyle());
         }
     }
 
     private void calculateLineCount() {
-        mLineCount = (int) (mVisibleHeight / (m_fontSize + lineSpace));// 可显示的行数
+        mLineCount = (int) (mVisibleHeight / (mTextSize + lineSpace));// 可显示的行数
     }
 
     private void drawStatus(Bitmap bitmap) {
@@ -261,6 +260,7 @@ public class PageFactory {
             case OPENING:
                 status = "正在打开书本...";
                 break;
+
             case FAIL:
                 status = "打开书本失败！";
                 break;
@@ -312,7 +312,7 @@ public class PageFactory {
         if (m_lines.size() > 0) {
             float y = marginHeight;
             for (String strLine : m_lines) {
-                y += m_fontSize + lineSpace;
+                y += mTextSize + lineSpace;
                 c.drawText(strLine, measureMarginWidth, y, mPaint);
 //                word.append(strLine);
             }
@@ -423,7 +423,7 @@ public class PageFactory {
         //清空数据
         currentCharter = 0;
 //        m_mbBufLen = 0;
-        initBg(config.getDayOrNight());
+        initBg(readSettingManager.isNightMode());
 
         this.bookMeta = bookMeta;
         bookPath = bookMeta.getBookPath();
@@ -717,8 +717,8 @@ public class PageFactory {
 
     //改变字体大小
     public void changeFontSize(int fontSize) {
-        this.m_fontSize = fontSize;
-        mPaint.setTextSize(m_fontSize);
+        this.mTextSize = fontSize;
+        mPaint.setTextSize(mTextSize);
         calculateLineCount();
         measureMarginWidth();
         currentPage = getPageForBegin(currentPage.getBegin());
@@ -742,13 +742,17 @@ public class PageFactory {
         currentPage(false);
     }
 
-    //设置页面的背景
+    public void changeBookPageStyle(PageStyle pageStyle) {
+        setBookPageStyle(pageStyle);
+        currentPage(false);
+    }
+
     public void setBookBg(int type) {
         Bitmap bitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.RGB_565);
         Canvas canvas = new Canvas(bitmap);
         int color = 0;
         switch (type) {
-            case Config.BOOK_BG_DEFAULT:
+            case Constants.READ_BG_DEFAULT:
                 canvas = null;
                 bitmap.recycle();
                 if (getBgBitmap() != null) {
@@ -760,19 +764,19 @@ public class PageFactory {
                 setBookPageBg(mContext.getResources().getColor(R.color.read_bg_default));
                 break;
 
-            case Config.BOOK_BG_1:
+            case Constants.READ_BG_1:
                 canvas.drawColor(mContext.getResources().getColor(R.color.read_bg_1));
                 color = mContext.getResources().getColor(R.color.read_font_1);
                 setBookPageBg(mContext.getResources().getColor(R.color.read_bg_1));
                 break;
 
-            case Config.BOOK_BG_2:
+            case Constants.READ_BG_2:
                 canvas.drawColor(mContext.getResources().getColor(R.color.read_bg_2));
                 color = mContext.getResources().getColor(R.color.read_font_2);
                 setBookPageBg(mContext.getResources().getColor(R.color.read_bg_2));
                 break;
 
-            case Config.BOOK_BG_3:
+            case Constants.READ_BG_3:
                 canvas.drawColor(mContext.getResources().getColor(R.color.read_bg_3));
                 color = mContext.getResources().getColor(R.color.read_font_3);
                 if (mBookPageWidget != null) {
@@ -780,7 +784,65 @@ public class PageFactory {
                 }
                 break;
 
-            case Config.BOOK_BG_4:
+            case Constants.READ_BG_4:
+                canvas.drawColor(mContext.getResources().getColor(R.color.read_bg_4));
+                color = mContext.getResources().getColor(R.color.read_font_4);
+                setBookPageBg(mContext.getResources().getColor(R.color.read_bg_4));
+                break;
+
+            default:
+                break;
+        }
+
+        setBgBitmap(bitmap);
+        //设置字体颜色
+        setTextColor(color);
+    }
+
+    public void setBookPageBg(int color) {
+        if (mBookPageWidget != null) {
+            mBookPageWidget.setBgColor(color);
+        }
+    }
+
+    public void setBookPageStyle(PageStyle pageStyle) {
+        Bitmap bitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        int color = 0;
+        switch (pageStyle.ordinal()) {
+            case Constants.READ_BG_DEFAULT:
+                canvas = null;
+                bitmap.recycle();
+                if (getBgBitmap() != null) {
+                    getBgBitmap().recycle();
+                }
+                bitmap = BitmapUtils.decodeSampledBitmapFromResource(
+                        mContext.getResources(), R.drawable.paper, mWidth, mHeight);
+                color = mContext.getResources().getColor(R.color.read_font_default);
+                setBookPageBg(mContext.getResources().getColor(R.color.read_bg_default));
+                break;
+
+            case Constants.READ_BG_1:
+                canvas.drawColor(mContext.getResources().getColor(R.color.read_bg_1));
+                color = mContext.getResources().getColor(R.color.read_font_1);
+                setBookPageBg(mContext.getResources().getColor(R.color.read_bg_1));
+                break;
+
+            case Constants.READ_BG_2:
+                canvas.drawColor(mContext.getResources().getColor(R.color.read_bg_2));
+                color = mContext.getResources().getColor(R.color.read_font_2);
+                setBookPageBg(mContext.getResources().getColor(R.color.read_bg_2));
+                break;
+
+            case Constants.READ_BG_3:
+                canvas.drawColor(mContext.getResources().getColor(R.color.read_bg_3));
+                color = mContext.getResources().getColor(R.color.read_font_3);
+                if (mBookPageWidget != null) {
+                    mBookPageWidget.setBgColor(mContext.getResources().getColor(R.color.read_bg_3));
+                }
+                break;
+
+            case Constants.READ_BG_4:
                 canvas.drawColor(mContext.getResources().getColor(R.color.read_bg_4));
                 color = mContext.getResources().getColor(R.color.read_font_4);
                 setBookPageBg(mContext.getResources().getColor(R.color.read_bg_4));
@@ -789,13 +851,7 @@ public class PageFactory {
 
         setBgBitmap(bitmap);
         //设置字体颜色
-        setM_textColor(color);
-    }
-
-    public void setBookPageBg(int color) {
-        if (mBookPageWidget != null) {
-            mBookPageWidget.setBgColor(color);
-        }
+        setTextColor(color);
     }
 
     //设置日间或者夜间模式
@@ -858,18 +914,18 @@ public class PageFactory {
     }
 
     //设置文字颜色
-    public void setM_textColor(int m_textColor) {
-        this.m_textColor = m_textColor;
+    public void setTextColor(int textColor) {
+        mTextColor = textColor;
     }
 
     //获取文字颜色
     public int getTextColor() {
-        return this.m_textColor;
+        return this.mTextColor;
     }
 
     //获取文字大小
     public float getFontSize() {
-        return this.m_fontSize;
+        return this.mTextSize;
     }
 
     public void setPageWidget(PageWidget mBookPageWidget) {

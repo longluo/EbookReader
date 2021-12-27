@@ -18,19 +18,18 @@ import java.util.ArrayList;
 import butterknife.BindView;
 
 public class BookContentsFragment extends BaseFragment {
-    public static final String ARGUMENT = "argument";
-
-    private PageFactory pageFactory;
-    private ArrayList<BookContent> catalogueList = new ArrayList<>();
+    public static final String ARGUMENT_BOOK_PATH = "bookPath";
 
     @BindView(R.id.rv_book_content)
     RecyclerView rvBookContent;
 
-    BookContentAdapter bookContentAdapter;
+    private PageFactory pageFactory;
+    private ArrayList<BookContent> catalogueList = new ArrayList<>();
+    private BookContentAdapter bookContentAdapter;
 
-    public static BookContentsFragment newInstance(String bookpath) {
+    public static BookContentsFragment newInstance(String bookPath) {
         Bundle bundle = new Bundle();
-        bundle.putString(ARGUMENT, bookpath);
+        bundle.putString(ARGUMENT_BOOK_PATH, bookPath);
         BookContentsFragment contentsFragment = new BookContentsFragment();
         contentsFragment.setArguments(bundle);
         return contentsFragment;
@@ -38,7 +37,7 @@ public class BookContentsFragment extends BaseFragment {
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_book_content;
+        return R.layout.fragment_book_contents;
     }
 
     @Override

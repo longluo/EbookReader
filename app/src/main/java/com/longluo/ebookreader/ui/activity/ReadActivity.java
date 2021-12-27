@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.database.SQLException;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,13 +23,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.baidu.tts.chainofresponsibility.logger.LoggerProxy;
 import com.baidu.tts.client.SpeechError;
@@ -36,17 +37,18 @@ import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
 import com.google.android.material.appbar.AppBarLayout;
-import com.longluo.ebookreader.Config;
+import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.db.BookMark;
-import com.longluo.ebookreader.ui.dialog.PageModeDialog;
 import com.longluo.ebookreader.ui.dialog.ReadSettingDialog;
 import com.longluo.ebookreader.util.BrightnessUtils;
 import com.longluo.ebookreader.util.PageFactory;
+import com.longluo.ebookreader.util.StringUtils;
 import com.longluo.ebookreader.view.PageWidget;
-
+import com.longluo.ebookreader.widget.page.PageMode;
+import com.longluo.ebookreader.widget.page.PageStyle;
 
 import org.litepal.LitePal;
 
@@ -77,25 +79,24 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
     TextView tv_progress;
     @BindView(R.id.rl_progress)
     RelativeLayout rl_progress;
-    @BindView(R.id.tv_pre)
-    TextView tv_pre;
-    @BindView(R.id.sb_progress)
-    SeekBar sb_progress;
-    @BindView(R.id.tv_next)
-    TextView tv_next;
-    @BindView(R.id.tv_directory)
-    TextView tv_directory;
-    @BindView(R.id.tv_dayornight)
-    TextView tv_dayornight;
-    @BindView(R.id.tv_pagemode)
-    TextView tv_pagemode;
-    @BindView(R.id.tv_setting)
-    TextView tv_setting;
-    @BindView(R.id.bookpop_bottom)
-    LinearLayout bookpop_bottom;
+
+    @BindView(R.id.read_tv_pre_chapter)
+    TextView mTvPreChapter;
+    @BindView(R.id.read_sb_chapter_progress)
+    SeekBar mSbReadProgress;
+    @BindView(R.id.read_tv_next_chapter)
+    TextView mTvNextChapter;
+
+    @BindView(R.id.read_tv_contents)
+    TextView mTvBookContents;
+    @BindView(R.id.read_tv_day_night_mode)
+    TextView mTvDayNightMode;
+    @BindView(R.id.read_tv_setting)
+    TextView mTvReadSetting;
+
     @BindView(R.id.rl_bottom)
     RelativeLayout rl_bottom;
-    @BindView(R.id.tv_stop_read)
+    @BindView(R.id.tv_stop_tts_read)
     TextView tv_stop_read;
     @BindView(R.id.rl_read_bottom)
     RelativeLayout rl_read_bottom;
@@ -104,17 +105,16 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
     @BindView(R.id.appbar)
     AppBarLayout appbar;
 
-    private Config config;
+    private ReadSettingManager readSettingManager;
     private WindowManager.LayoutParams lp;
     private BookMeta bookMeta;
     private PageFactory pageFactory;
     private int screenWidth, screenHeight;
 
     // popwindow是否显示
-    private Boolean isShow = false;
+    private boolean isShow = false;
     private ReadSettingDialog mSettingDialog;
-    private PageModeDialog mPageModeDialog;
-    private Boolean mDayOrNight;
+    private boolean isNightMode;
 
     // 语音合成客户端
     private SpeechSynthesizer mSpeechSynthesizer;
@@ -161,7 +161,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             }
         });
 
-        config = Config.getInstance();
+        readSettingManager = ReadSettingManager.getInstance();
         pageFactory = PageFactory.getInstance();
 
         IntentFilter mfilter = new IntentFilter();
@@ -170,7 +170,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         registerReceiver(myReceiver, mfilter);
 
         mSettingDialog = new ReadSettingDialog(this);
-        mPageModeDialog = new PageModeDialog(this);
+
         //获取屏幕宽高
         WindowManager manage = getWindowManager();
         Display display = manage.getDefaultDisplay();
@@ -183,14 +183,14 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         //隐藏
         hideSystemUI();
         //改变屏幕亮度
-        if (!config.isSystemLight()) {
-            BrightnessUtils.setBrightness(this, (int)config.getLight());
+        if (!readSettingManager.isSystemLight()) {
+            BrightnessUtils.setBrightness(this, (int) readSettingManager.getLight());
         }
         //获取intent中的携带的信息
         Intent intent = getIntent();
         bookMeta = (BookMeta) intent.getSerializableExtra(EXTRA_BOOK);
 
-        bookpage.setPageMode(config.getPageMode());
+        bookpage.setPageMode(readSettingManager.getPageMode());
         pageFactory.setPageWidget(bookpage);
 
         try {
@@ -200,13 +200,14 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             Toast.makeText(this, "打开电子书失败", Toast.LENGTH_SHORT).show();
         }
 
-        initDayOrNight();
+        isNightMode = readSettingManager.isNightMode();
         initView();
-
         initBaiduTTs();
     }
 
     private void initView() {
+        toggleNightMode();
+
         mainHandler = new Handler() {
             /*
              * @param msg
@@ -223,7 +224,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
 
     @Override
     protected void initListener() {
-        sb_progress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mSbReadProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             float pro;
 
             // 触发操作，拖动
@@ -243,20 +244,6 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 pageFactory.changeProgress(pro);
-            }
-        });
-
-        mPageModeDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                hideSystemUI();
-            }
-        });
-
-        mPageModeDialog.setPageModeListener(new PageModeDialog.PageModeListener() {
-            @Override
-            public void changePageMode(int pageMode) {
-                bookpage.setPageMode(pageMode);
             }
         });
 
@@ -289,8 +276,13 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             }
 
             @Override
-            public void changeBookBg(int type) {
-                pageFactory.changeBookBg(type);
+            public void changeBookPageStyle(PageStyle pageStyle) {
+                pageFactory.changeBookPageStyle(pageStyle);
+            }
+
+            @Override
+            public void changePageMode(PageMode pageMode) {
+                bookpage.setPageMode(pageMode);
             }
         });
 
@@ -319,7 +311,6 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
                 if (isShow || isSpeaking) {
                     return false;
                 }
-
                 pageFactory.prePage();
                 if (pageFactory.isfirstPage()) {
                     return false;
@@ -334,11 +325,11 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
                 if (isShow || isSpeaking) {
                     return false;
                 }
-
                 pageFactory.nextPage();
                 if (pageFactory.islastPage()) {
                     return false;
                 }
+
                 return true;
             }
 
@@ -362,7 +353,6 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             }
         }
     };
-
 
     @Override
     protected void onResume() {
@@ -406,10 +396,6 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
                 mSettingDialog.hide();
                 return true;
             }
-            if (mPageModeDialog.isShowing()) {
-                mPageModeDialog.hide();
-                return true;
-            }
             finish();
         }
         return super.onKeyDown(keyCode, event);
@@ -426,59 +412,69 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         int id = item.getItemId();
 
         if (id == R.id.action_add_bookmark) {
-            if (pageFactory.getCurrentPage() != null) {
-                List<BookMark> bookMarkList = LitePal.where("bookPath = ? and begin = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getBegin() + "").find(BookMark.class);
-
-                if (!bookMarkList.isEmpty()) {
-                    Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();
-                } else {
-                    BookMark bookMark = new BookMark();
-                    String word = "";
-                    for (String line : pageFactory.getCurrentPage().getLines()) {
-                        word += line;
-                    }
-                    try {
-                        SimpleDateFormat sf = new SimpleDateFormat(
-                                "yyyy-MM-dd HH:mm ss");
-                        String time = sf.format(new Date());
-                        bookMark.setTime(time);
-                        bookMark.setBegin(pageFactory.getCurrentPage().getBegin());
-                        bookMark.setText(word);
-                        bookMark.setBookPath(pageFactory.getBookPath());
-                        bookMark.save();
-
-                        Toast.makeText(ReadActivity.this, "书签添加成功", Toast.LENGTH_SHORT).show();
-                    } catch (SQLException e) {
-                        Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        Toast.makeText(ReadActivity.this, "添加书签失败", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
+            addBookmark();
         } else if (id == R.id.action_read_book) {
-            if (mSpeechSynthesizer != null) {
-                wholePageStr = pageFactory.getCurrentPage().getWholePageStr();
-                int len = wholePageStr.length();
-                Log.d(LOG_TAG, "len = " + len + ", str=" + wholePageStr);
-                if (len < 60) {
-                    pageSegmentStr = wholePageStr.substring(0, len);
-                    wholePageStr = "";
-                } else {
-                    pageSegmentStr = wholePageStr.substring(0, 60);
-                    wholePageStr = wholePageStr.substring(60);
-                }
-                Log.d(LOG_TAG, "After len = " + wholePageStr.length() + ", str=" + wholePageStr);
-                int result = mSpeechSynthesizer.speak(pageSegmentStr);
-                if (result < 0) {
-                    Log.e(LOG_TAG, "error result = " + result);
-                } else {
-                    hideReadSetting();
-                    isSpeaking = true;
-                }
-            }
+            startTtsReadBook();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addBookmark() {
+        if (pageFactory.getCurrentPage() != null) {
+            List<BookMark> bookMarkList = LitePal.where("bookPath = ? and begin = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getBegin() + "").find(BookMark.class);
+
+            if (!bookMarkList.isEmpty()) {
+                Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();
+            } else {
+
+            }
+        }
+    }
+
+    private void startTtsReadBook() {
+        BookMark bookMark = new BookMark();
+        String word = "";
+        for (String line : pageFactory.getCurrentPage().getLines()) {
+            word += line;
+        }
+        try {
+            SimpleDateFormat sf = new SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm ss");
+            String time = sf.format(new Date());
+            bookMark.setTime(time);
+            bookMark.setBegin(pageFactory.getCurrentPage().getBegin());
+            bookMark.setText(word);
+            bookMark.setBookPath(pageFactory.getBookPath());
+            bookMark.save();
+
+            Toast.makeText(ReadActivity.this, "书签添加成功", Toast.LENGTH_SHORT).show();
+        } catch (SQLException e) {
+            Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(ReadActivity.this, "添加书签失败", Toast.LENGTH_SHORT).show();
+        }
+
+        if (mSpeechSynthesizer != null) {
+            wholePageStr = pageFactory.getCurrentPage().getWholePageStr();
+            int len = wholePageStr.length();
+            Log.d(LOG_TAG, "len = " + len + ", str=" + wholePageStr);
+            if (len < 60) {
+                pageSegmentStr = wholePageStr.substring(0, len);
+                wholePageStr = "";
+            } else {
+                pageSegmentStr = wholePageStr.substring(0, 60);
+                wholePageStr = wholePageStr.substring(60);
+            }
+            Log.d(LOG_TAG, "After len = " + wholePageStr.length() + ", str=" + wholePageStr);
+            int result = mSpeechSynthesizer.speak(pageSegmentStr);
+            if (result < 0) {
+                Log.e(LOG_TAG, "error result = " + result);
+            } else {
+                hideReadSetting();
+                isSpeaking = true;
+            }
+        }
     }
 
     public static boolean openBook(Activity context, final BookMeta bookMeta) {
@@ -537,26 +533,16 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         rl_progress.setVisibility(View.GONE);
     }
 
-    public void initDayOrNight() {
-        mDayOrNight = config.getDayOrNight();
-        if (mDayOrNight) {
-            tv_dayornight.setText(getResources().getString(R.string.read_setting_day));
+    private void toggleNightMode() {
+        if (isNightMode) {
+            mTvDayNightMode.setText(StringUtils.getString(R.string.nb_mode_morning));
+            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_read_menu_morning);
+            mTvDayNightMode.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
         } else {
-            tv_dayornight.setText(getResources().getString(R.string.read_setting_night));
+            mTvDayNightMode.setText(StringUtils.getString(R.string.nb_mode_night));
+            Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_read_menu_night);
+            mTvDayNightMode.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
         }
-    }
-
-    //改变显示模式
-    public void changeDayOrNight() {
-        if (mDayOrNight) {
-            mDayOrNight = false;
-            tv_dayornight.setText(getResources().getString(R.string.read_setting_night));
-        } else {
-            mDayOrNight = true;
-            tv_dayornight.setText(getResources().getString(R.string.read_setting_day));
-        }
-        config.setDayOrNight(mDayOrNight);
-        pageFactory.setDayOrNight(mDayOrNight);
     }
 
     private void setProgress(float progress) {
@@ -566,11 +552,12 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
     }
 
     public void setSeekBarProgress(float progress) {
-        sb_progress.setProgress((int) (progress * 10000));
+        mSbReadProgress.setProgress((int) (progress * 10000));
     }
 
     private void showReadSetting() {
         isShow = true;
+
         rl_progress.setVisibility(View.GONE);
 
         if (isSpeaking) {
@@ -649,57 +636,44 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
 
     }
 
-    @OnClick({R.id.tv_progress, R.id.rl_progress, R.id.tv_pre, R.id.sb_progress, R.id.tv_next, R.id.tv_directory, R.id.tv_dayornight, R.id.tv_pagemode, R.id.tv_setting, R.id.bookpop_bottom, R.id.rl_bottom, R.id.tv_stop_read})
+    @OnClick({R.id.read_tv_pre_chapter, R.id.read_tv_next_chapter, R.id.read_tv_contents,
+            R.id.read_tv_day_night_mode, R.id.read_tv_setting, R.id.tv_stop_tts_read})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_progress:
-                break;
-
-            case R.id.rl_progress:
-                break;
-
-            case R.id.tv_pre:
+            case R.id.read_tv_pre_chapter:
                 pageFactory.preChapter();
                 break;
 
-            case R.id.sb_progress:
-                break;
-
-            case R.id.tv_next:
+            case R.id.read_tv_next_chapter:
                 pageFactory.nextChapter();
                 break;
 
-            case R.id.tv_directory:
+            case R.id.read_tv_contents:
                 Intent intent = new Intent(ReadActivity.this, BookMarkActivity.class);
                 startActivity(intent);
                 break;
 
-            case R.id.tv_dayornight:
-                changeDayOrNight();
+            case R.id.read_tv_day_night_mode:
+                isNightMode = !isNightMode;
+                toggleNightMode();
+                readSettingManager.setNightMode(isNightMode);
+                pageFactory.setDayOrNight(isNightMode);
                 break;
 
-            case R.id.tv_pagemode:
-                hideReadSetting();
-                mPageModeDialog.show();
-                break;
-
-            case R.id.tv_setting:
+            case R.id.read_tv_setting:
                 hideReadSetting();
                 mSettingDialog.show();
                 break;
 
-            case R.id.bookpop_bottom:
-                break;
-
-            case R.id.rl_bottom:
-                break;
-
-            case R.id.tv_stop_read:
+            case R.id.tv_stop_tts_read:
                 if (mSpeechSynthesizer != null) {
                     mSpeechSynthesizer.stop();
                     isSpeaking = false;
                     hideReadSetting();
                 }
+                break;
+
+            default:
                 break;
         }
     }

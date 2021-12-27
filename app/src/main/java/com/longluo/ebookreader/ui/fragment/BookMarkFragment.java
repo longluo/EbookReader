@@ -14,8 +14,6 @@ import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.ui.adapter.BookMarkAdapter;
 import com.longluo.ebookreader.util.PageFactory;
 import com.longluo.ebookreader.widget.itemdecoration.DividerItemDecoration;
-import com.longluo.ebookreader.widget.itemdecoration.RecycleViewDivider;
-
 
 import org.litepal.LitePal;
 
@@ -23,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-
 
 public class BookMarkFragment extends BaseFragment {
     private static final String BOOK_PATH = "book_path";
@@ -46,7 +43,7 @@ public class BookMarkFragment extends BaseFragment {
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.fragment_book_mark;
+        return R.layout.fragment_bookmark;
     }
 
     @Override

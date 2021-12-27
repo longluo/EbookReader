@@ -14,9 +14,6 @@ public abstract class BaseFragment extends Fragment {
 
     private View rootView;
 
-    /**
-     * 初始化布局
-     */
     protected abstract int getLayoutRes();
 
     protected abstract void initData(View view);

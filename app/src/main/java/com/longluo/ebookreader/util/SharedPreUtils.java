@@ -14,7 +14,7 @@ public class SharedPreUtils {
 
     private SharedPreUtils() {
         sharedReadable = App.getContext()
-                .getSharedPreferences(SHARED_NAME, Context.MODE_MULTI_PROCESS);
+                .getSharedPreferences(SHARED_NAME, Context.MODE_PRIVATE);
         sharedWritable = sharedReadable.edit();
     }
 
@@ -34,18 +34,12 @@ public class SharedPreUtils {
         return sharedReadable.getString(key, "");
     }
 
+    public String getString(String key, String defaultStr) {
+        return sharedReadable.getString(key, defaultStr);
+    }
+
     public void putString(String key, String value) {
         sharedWritable.putString(key, value);
-        sharedWritable.commit();
-    }
-
-    public void putInt(String key, int value) {
-        sharedWritable.putInt(key, value);
-        sharedWritable.commit();
-    }
-
-    public void putBoolean(String key, boolean value) {
-        sharedWritable.putBoolean(key, value);
         sharedWritable.commit();
     }
 
@@ -53,7 +47,26 @@ public class SharedPreUtils {
         return sharedReadable.getInt(key, def);
     }
 
+    public void putInt(String key, int value) {
+        sharedWritable.putInt(key, value);
+        sharedWritable.commit();
+    }
+
+    public float getFloat(String key, float def) {
+        return sharedReadable.getFloat(key, def);
+    }
+
+    public void putFloat(String key, float value) {
+        sharedWritable.putFloat(key, value);
+        sharedWritable.commit();
+    }
+
     public boolean getBoolean(String key, boolean def) {
         return sharedReadable.getBoolean(key, def);
+    }
+
+    public void putBoolean(String key, boolean value) {
+        sharedWritable.putBoolean(key, value);
+        sharedWritable.commit();
     }
 }

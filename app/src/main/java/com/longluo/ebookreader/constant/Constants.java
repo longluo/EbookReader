@@ -30,4 +30,21 @@ public class Constants {
     public static String BOOK_RECORD_PATH = FileUtils.getCachePath() + File.separator
             + "book_record" + File.separator;
 
+    public final static int READ_BG_DEFAULT = 0;
+    public final static int READ_BG_1 = 1;
+    public final static int READ_BG_2 = 2;
+    public final static int READ_BG_3 = 3;
+    public final static int READ_BG_4 = 4;
+
+    public final static int PAGE_MODE_SIMULATION = 0;
+    public final static int PAGE_MODE_COVER = 1;
+    public final static int PAGE_MODE_SLIDE = 2;
+    public final static int PAGE_MODE_NONE = 3;
+    public final static int PAGE_MODE_SCROLL = 4;
+    
+    public final static String FONT_TYPE_DEFAULT = "";
+    public final static String FONT_TYPE_QIHEI = "font/qihei.ttf";
+    public final static String FONT_TYPE_FZXINGHEI = "font/fzxinghei.ttf";
+    public final static String FONT_TYPE_FZKATONG = "font/fzkatong.ttf";
+    public final static String FONT_TYPE_BYSONG = "font/bysong.ttf";
 }

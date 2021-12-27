@@ -13,13 +13,13 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 
-import com.longluo.ebookreader.Config;
 import com.longluo.ebookreader.util.PageFactory;
 import com.longluo.ebookreader.view.animation.AnimationProvider;
 import com.longluo.ebookreader.view.animation.CoverAnimation;
 import com.longluo.ebookreader.view.animation.NoneAnimation;
 import com.longluo.ebookreader.view.animation.SimulationAnimation;
 import com.longluo.ebookreader.view.animation.SlideAnimation;
+import com.longluo.ebookreader.widget.page.PageMode;
 
 public class PageWidget extends View {
     private final static String TAG = "BookPageWidget";
@@ -79,21 +79,21 @@ public class PageWidget extends View {
         mNextPageBitmap = Bitmap.createBitmap(mScreenWidth, mScreenHeight, Bitmap.Config.RGB_565);
     }
 
-    public void setPageMode(int pageMode) {
+    public void setPageMode(PageMode pageMode) {
         switch (pageMode) {
-            case Config.PAGE_MODE_SIMULATION:
+            case MODE_SIMULATION:
                 mAnimationProvider = new SimulationAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
                 break;
 
-            case Config.PAGE_MODE_COVER:
+            case MODE_COVER:
                 mAnimationProvider = new CoverAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
                 break;
 
-            case Config.PAGE_MODE_SLIDE:
+            case MODE_SLIDE:
                 mAnimationProvider = new SlideAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
                 break;
 
-            case Config.PAGE_MODE_NONE:
+            case MODE_NONE:
                 mAnimationProvider = new NoneAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
                 break;
 

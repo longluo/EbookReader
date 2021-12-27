@@ -35,8 +35,7 @@ public class ReadSettingManager {
 
     //字体
     private Typeface typeface;
-    //字体大小
-    private float mFontSize = 0;
+
     //亮度值
     private float light = 0;
 

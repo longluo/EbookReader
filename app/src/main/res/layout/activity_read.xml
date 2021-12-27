@@ -7,7 +7,7 @@
     android:background="#000000"
     android:orientation="vertical">
 
-    <com.longluo.ebookreader.view.PageWidget
+    <com.longluo.ebookreader.widget.view.PageWidget
         android:id="@+id/bookpage"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

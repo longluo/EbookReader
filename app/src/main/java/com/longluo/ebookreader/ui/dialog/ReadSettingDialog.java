@@ -63,16 +63,14 @@ public class ReadSettingDialog extends Dialog {
     @BindView(R.id.cb_read_setting_font_default)
     CheckBox mCbFontDefault;
 
-    @BindView(R.id.tv_font_default)
-    TextView tv_default;
-    @BindView(R.id.tv_qihei)
-    TextView tv_qihei;
-    @BindView(R.id.tv_fzxinghei)
-    TextView tv_fzxinghei;
-    @BindView(R.id.tv_fzkatong)
-    TextView tv_fzkatong;
-    @BindView(R.id.tv_bysong)
-    TextView tv_bysong;
+    @BindView(R.id.tv_typeface_default)
+    TextView mTvTypefaceDefault;
+    @BindView(R.id.tv_typeface_msyh)
+    TextView mTvTypefaceMsyh;
+    @BindView(R.id.tv_typeface_syht)
+    TextView mTvTypefaceSyht;
+    @BindView(R.id.tv_typeface_fzcartoon)
+    TextView mTvTypefaceCartoon;
 
     @BindView(R.id.read_setting_rg_page_mode)
     RadioGroup mRgPageMode;
@@ -153,10 +151,10 @@ public class ReadSettingDialog extends Dialog {
         mTvFontSize.setText(currentFontSize + "");
 
         //初始化字体
-        tv_default.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_DEFAULT));
-        tv_qihei.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_QIHEI));
-        tv_fzkatong.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_FZKATONG));
-        tv_bysong.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_BYSONG));
+        mTvTypefaceDefault.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_DEFAULT));
+        mTvTypefaceMsyh.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_QIHEI));
+        mTvTypefaceSyht.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_SYHT));
+        mTvTypefaceCartoon.setTypeface(readSettingManager.getTypeface(Constants.FONT_TYPE_FZCARTOON));
         selectTypeface(readSettingManager.getTypefacePath());
     }
 
@@ -344,43 +342,25 @@ public class ReadSettingDialog extends Dialog {
     //选择字体
     private void selectTypeface(String typeface) {
         if (typeface.equals(Constants.FONT_TYPE_DEFAULT)) {
-            setTextViewSelect(tv_default, true);
-            setTextViewSelect(tv_qihei, false);
-            setTextViewSelect(tv_fzxinghei, false);
-            setTextViewSelect(tv_fzkatong, false);
-            setTextViewSelect(tv_bysong, false);
-//            setTextViewSelect(tv_xinshou, false);
-//            setTextViewSelect(tv_wawa, false);
-        } else if (typeface.equals(Constants.FONT_TYPE_QIHEI)) {
-            setTextViewSelect(tv_default, false);
-            setTextViewSelect(tv_qihei, true);
-            setTextViewSelect(tv_fzxinghei, false);
-            setTextViewSelect(tv_fzkatong, false);
-            setTextViewSelect(tv_bysong, false);
-//            setTextViewSelect(tv_xinshou, false);
-//            setTextViewSelect(tv_wawa, false);
-        } else if (typeface.equals(Constants.FONT_TYPE_FZXINGHEI)) {
-            setTextViewSelect(tv_default, false);
-            setTextViewSelect(tv_qihei, false);
-            setTextViewSelect(tv_fzxinghei, true);
-            setTextViewSelect(tv_fzkatong, false);
-            setTextViewSelect(tv_bysong, false);
-        } else if (typeface.equals(Constants.FONT_TYPE_FZKATONG)) {
-            setTextViewSelect(tv_default, false);
-            setTextViewSelect(tv_qihei, false);
-            setTextViewSelect(tv_fzxinghei, false);
-            setTextViewSelect(tv_fzkatong, true);
-            setTextViewSelect(tv_bysong, false);
-//            setTextViewSelect(tv_xinshou, false);
-//            setTextViewSelect(tv_wawa, true);
-        } else if (typeface.equals(Constants.FONT_TYPE_BYSONG)) {
-            setTextViewSelect(tv_default, false);
-            setTextViewSelect(tv_qihei, false);
-            setTextViewSelect(tv_fzxinghei, false);
-            setTextViewSelect(tv_fzkatong, false);
-            setTextViewSelect(tv_bysong, true);
-//            setTextViewSelect(tv_xinshou, false);
-//            setTextViewSelect(tv_wawa, true);
+            setTextViewSelect(mTvTypefaceDefault, true);
+            setTextViewSelect(mTvTypefaceMsyh, false);
+            setTextViewSelect(mTvTypefaceSyht, false);
+            setTextViewSelect(mTvTypefaceCartoon, false);
+        } else if (typeface.equals(Constants.FONT_TYPE_MSYH)) {
+            setTextViewSelect(mTvTypefaceDefault, false);
+            setTextViewSelect(mTvTypefaceMsyh, true);
+            setTextViewSelect(mTvTypefaceSyht, false);
+            setTextViewSelect(mTvTypefaceCartoon, false);
+        } else if (typeface.equals(Constants.FONT_TYPE_SYHT)) {
+            setTextViewSelect(mTvTypefaceDefault, false);
+            setTextViewSelect(mTvTypefaceMsyh, false);
+            setTextViewSelect(mTvTypefaceSyht, true);
+            setTextViewSelect(mTvTypefaceCartoon, false);
+        } else if (typeface.equals(Constants.FONT_TYPE_FZCARTOON)) {
+            setTextViewSelect(mTvTypefaceDefault, false);
+            setTextViewSelect(mTvTypefaceMsyh, false);
+            setTextViewSelect(mTvTypefaceSyht, false);
+            setTextViewSelect(mTvTypefaceCartoon, true);
         }
     }
 
@@ -421,34 +401,28 @@ public class ReadSettingDialog extends Dialog {
         return isShowing();
     }
 
-
-    @OnClick({R.id.tv_qihei, R.id.tv_fzxinghei, R.id.tv_fzkatong, R.id.tv_bysong,
-            R.id.tv_font_default, R.id.tv_read_setting_more})
+    @OnClick({R.id.tv_typeface_default, R.id.tv_typeface_msyh, R.id.tv_typeface_syht,
+            R.id.tv_typeface_fzcartoon, R.id.tv_read_setting_more})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_qihei:
+            case R.id.tv_typeface_default:
+                selectTypeface(Constants.FONT_TYPE_DEFAULT);
+                setTypeface(Constants.FONT_TYPE_DEFAULT);
+                break;
+
+            case R.id.tv_typeface_msyh:
                 selectTypeface(Constants.FONT_TYPE_QIHEI);
                 setTypeface(Constants.FONT_TYPE_QIHEI);
                 break;
 
-            case R.id.tv_fzxinghei:
-                selectTypeface(Constants.FONT_TYPE_FZXINGHEI);
-                setTypeface(Constants.FONT_TYPE_FZXINGHEI);
+            case R.id.tv_typeface_syht:
+                selectTypeface(Constants.FONT_TYPE_SYHT);
+                setTypeface(Constants.FONT_TYPE_SYHT);
                 break;
 
-            case R.id.tv_fzkatong:
-                selectTypeface(Constants.FONT_TYPE_FZKATONG);
-                setTypeface(Constants.FONT_TYPE_FZKATONG);
-                break;
-
-            case R.id.tv_bysong:
-                selectTypeface(Constants.FONT_TYPE_BYSONG);
-                setTypeface(Constants.FONT_TYPE_BYSONG);
-                break;
-
-            case R.id.tv_font_default:
-                selectTypeface(Constants.FONT_TYPE_DEFAULT);
-                setTypeface(Constants.FONT_TYPE_DEFAULT);
+            case R.id.tv_typeface_fzcartoon:
+                selectTypeface(Constants.FONT_TYPE_FZCARTOON);
+                setTypeface(Constants.FONT_TYPE_FZCARTOON);
                 break;
 
             case R.id.tv_read_setting_more:

@@ -43,8 +43,11 @@ public class Constants {
     public final static int PAGE_MODE_SCROLL = 4;
     
     public final static String FONT_TYPE_DEFAULT = "";
-    public final static String FONT_TYPE_QIHEI = "font/qihei.ttf";
-    public final static String FONT_TYPE_FZXINGHEI = "font/fzxinghei.ttf";
-    public final static String FONT_TYPE_FZKATONG = "font/fzkatong.ttf";
-    public final static String FONT_TYPE_BYSONG = "font/bysong.ttf";
+    public final static String FONT_TYPE_MSYH = "font/MSYHMONO.ttf";
+    public final static String FONT_TYPE_QIHEI = "font/YiChuangQiHei.ttf";
+    public final static String FONT_TYPE_SYHT = "font/SourceHanSansRegular.ttf";
+    public final static String FONT_TYPE_FZCARTOON = "font/FZCartoon.ttf";
+    public final static String FONT_TYPE_FZFS = "font/FZFanSong.ttf";
+
+
 }

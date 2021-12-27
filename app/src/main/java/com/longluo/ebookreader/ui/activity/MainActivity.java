@@ -36,7 +36,7 @@ import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.ui.adapter.ShelfAdapter;
 import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.util.DisplayUtils;
-import com.longluo.ebookreader.view.DragGridView;
+import com.longluo.ebookreader.widget.view.DragGridView;
 import com.longluo.ebookreader.widget.animation.ContentScaleAnimation;
 import com.longluo.ebookreader.widget.animation.Rotate3DAnimation;
 

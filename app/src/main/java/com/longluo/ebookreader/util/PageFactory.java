@@ -23,7 +23,7 @@ import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.db.BookContent;
 import com.longluo.ebookreader.db.BookMeta;
-import com.longluo.ebookreader.view.PageWidget;
+import com.longluo.ebookreader.widget.view.PageWidget;
 import com.longluo.ebookreader.widget.page.PageStyle;
 
 import org.litepal.LitePal;

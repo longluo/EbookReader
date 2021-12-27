@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.db.BookMeta;
-import com.longluo.ebookreader.view.DragGridListener;
-import com.longluo.ebookreader.view.DragGridView;
+import com.longluo.ebookreader.widget.view.DragGridListener;
+import com.longluo.ebookreader.widget.view.DragGridView;
 
 
 import org.litepal.LitePal;

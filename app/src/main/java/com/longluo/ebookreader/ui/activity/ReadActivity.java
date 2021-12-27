@@ -46,7 +46,7 @@ import com.longluo.ebookreader.ui.dialog.ReadSettingDialog;
 import com.longluo.ebookreader.util.BrightnessUtils;
 import com.longluo.ebookreader.util.PageFactory;
 import com.longluo.ebookreader.util.StringUtils;
-import com.longluo.ebookreader.view.PageWidget;
+import com.longluo.ebookreader.widget.view.PageWidget;
 import com.longluo.ebookreader.widget.page.PageMode;
 import com.longluo.ebookreader.widget.page.PageStyle;
 
@@ -178,14 +178,20 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
         display.getSize(displaysize);
         screenWidth = displaysize.x;
         screenHeight = displaysize.y;
+
         //保持屏幕常亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         //隐藏
         hideSystemUI();
+
         //改变屏幕亮度
-        if (!readSettingManager.isSystemLight()) {
-            BrightnessUtils.setBrightness(this, (int) readSettingManager.getLight());
+        if (ReadSettingManager.getInstance().isBrightnessAuto()) {
+            BrightnessUtils.setDefaultBrightness(this);
+        } else {
+            BrightnessUtils.setBrightness(this, ReadSettingManager.getInstance().getBrightness());
         }
+
         //获取intent中的携带的信息
         Intent intent = getIntent();
         bookMeta = (BookMeta) intent.getSerializableExtra(EXTRA_BOOK);

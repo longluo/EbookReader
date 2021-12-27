@@ -24,7 +24,7 @@ import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.util.FileUtils;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -181,7 +181,7 @@ public class FileActivity extends BaseActivity {
         protected Integer doInBackground(List<BookMeta>... params) {
             List<BookMeta> bookMetas = params[0];
             for (BookMeta bookMeta : bookMetas) {
-                List<BookMeta> books = DataSupport.where("bookPath = ?", bookMeta.getBookPath()).find(BookMeta.class);
+                List<BookMeta> books = LitePal.where("bookPath = ?", bookMeta.getBookPath()).find(BookMeta.class);
                 if (books.size() > 0) {
                     repeatBookMeta = bookMeta;
                     return REPEAT;
@@ -189,7 +189,7 @@ public class FileActivity extends BaseActivity {
             }
 
             try {
-                DataSupport.saveAll(bookMetas);
+                LitePal.saveAll(bookMetas);
             } catch (Exception e) {
                 e.printStackTrace();
                 return FAIL;

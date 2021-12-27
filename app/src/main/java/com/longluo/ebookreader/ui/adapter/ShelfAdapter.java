@@ -17,7 +17,8 @@ import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.view.DragGridListener;
 import com.longluo.ebookreader.view.DragGridView;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 import org.litepal.exceptions.DataSupportException;
 
 import java.util.ArrayList;
@@ -122,7 +123,7 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
 
         BookMeta temp = bilist.get(oldPosition);
         List<BookMeta> bookLists1 = new ArrayList<>();
-        bookLists1 = DataSupport.findAll(BookMeta.class);
+        bookLists1 = LitePal.findAll(BookMeta.class);
 
         int tempId = bookLists1.get(newPosition).getId();
         // Log.d("oldposotion is",oldPosition+"");
@@ -131,7 +132,7 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
             for (int i = oldPosition; i < newPosition; i++) {
                 //获得交换前的ID,必须是数据库的真正的ID，如果使用bilist获取id是错误的，因为bilist交换后id是跟着交换的
                 List<BookMeta> bookMetas = new ArrayList<>();
-                bookMetas = DataSupport.findAll(BookMeta.class);
+                bookMetas = LitePal.findAll(BookMeta.class);
                 int dataBasesId = bookMetas.get(i).getId();
                 Collections.swap(bilist, i, i + 1);
 
@@ -141,7 +142,7 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
         } else if (oldPosition > newPosition) {
             for (int i = oldPosition; i > newPosition; i--) {
                 List<BookMeta> bookMetas = new ArrayList<>();
-                bookMetas = DataSupport.findAll(BookMeta.class);
+                bookMetas = LitePal.findAll(BookMeta.class);
                 int dataBasesId = bookMetas.get(i).getId();
 
                 Collections.swap(bilist, i, i - 1);
@@ -192,13 +193,10 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
     @Override
     public void removeItem(int deletePosition) {
 
-        String bookpath = bilist.get(deletePosition).getBookPath();
-        DataSupport.deleteAll(BookMeta.class, "bookpath = ?", bookpath);
+        String bookPath = bilist.get(deletePosition).getBookPath();
+        LitePal.deleteAll(BookMeta.class, "bookPath = ?", bookPath);
         bilist.remove(deletePosition);
-        // Log.d("删除的书本是", bookpath);
-
         notifyDataSetChanged();
-
     }
 
     public void setBookList(List<BookMeta> bookMetas) {
@@ -215,14 +213,14 @@ public class ShelfAdapter extends BaseAdapter implements DragGridListener {
     public void setItemToFirst(int openPosition) {
 
         List<BookMeta> bookLists1 = new ArrayList<>();
-        bookLists1 = DataSupport.findAll(BookMeta.class);
+        bookLists1 = LitePal.findAll(BookMeta.class);
         int tempId = bookLists1.get(0).getId();
         BookMeta temp = bookLists1.get(openPosition);
         // Log.d("setitem adapter ",""+openPosition);
         if (openPosition != 0) {
             for (int i = openPosition; i > 0; i--) {
                 List<BookMeta> bookListsMeta = new ArrayList<>();
-                bookListsMeta = DataSupport.findAll(BookMeta.class);
+                bookListsMeta = LitePal.findAll(BookMeta.class);
                 int dataBasesId = bookListsMeta.get(i).getId();
 
                 Collections.swap(bookLists1, i, i - 1);

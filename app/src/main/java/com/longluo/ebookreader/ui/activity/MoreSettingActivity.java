@@ -44,6 +44,31 @@ public class MoreSettingActivity extends BaseActivity {
     private int convertType;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.conversion_type_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mScConvertType.setAdapter(adapter);
+
+        // initSwitchStatus() be called earlier than onCreate(), so setSelection() won't work
+        mScConvertType.setSelection(convertType);
+
+        mScConvertType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mSettingManager.setConvertType(position);
+                convertType = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    @Override
     public int getLayoutRes() {
         return R.layout.activity_more_setting;
     }
@@ -98,30 +123,5 @@ public class MoreSettingActivity extends BaseActivity {
                     mSettingManager.setFullScreen(isFullScreen);
                 }
         );
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.conversion_type_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mScConvertType.setAdapter(adapter);
-
-        // initSwitchStatus() be called earlier than onCreate(), so setSelection() won't work
-        mScConvertType.setSelection(convertType);
-
-        mScConvertType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSettingManager.setConvertType(position);
-                convertType = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
     }
 }

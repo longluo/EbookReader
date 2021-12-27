@@ -1,8 +1,8 @@
 package com.longluo.ebookreader.db;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
-public class BookMark extends DataSupport {
+public class BookMark extends LitePalSupport {
     private int id;
 
     private long begin; // 书签记录页面的结束点位置
@@ -10,7 +10,7 @@ public class BookMark extends DataSupport {
     private String text;
 
     private String time;
-    
+
     private String bookPath;
 
     public int getId() {

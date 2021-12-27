@@ -10,9 +10,9 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private static final String TAG = "DividerItemDecoration";
+
     private static final int[] ATTRS = new int[]{
             android.R.attr.listDivider
     };
@@ -44,6 +44,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
         if (!(manager instanceof LinearLayoutManager)) {
             throw new IllegalArgumentException("only supply linearLayoutManager");
         }
+
         return ((LinearLayoutManager) manager).getOrientation();
     }
 

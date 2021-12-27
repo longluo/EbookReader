@@ -16,7 +16,7 @@ import com.longluo.ebookreader.libs.LibMobi;
 import com.longluo.ebookreader.ui.activity.ReadActivity;
 import com.longluo.viewer.DocumentActivity;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -245,7 +245,7 @@ public class BookUtils {
             }
             ContentValues values = new ContentValues();
             values.put("charset", strCharsetName);
-            DataSupport.update(BookMeta.class, values, bookMeta.getId());
+            LitePal.update(BookMeta.class, values, bookMeta.getId());
         } else {
             strCharsetName = bookMeta.getCharset();
         }

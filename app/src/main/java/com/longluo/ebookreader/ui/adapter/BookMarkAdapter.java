@@ -18,7 +18,6 @@ import com.longluo.ebookreader.util.PageFactory;
 import java.text.DecimalFormat;
 import java.util.List;
 
-
 public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkViewHolder> {
     private Context mContext;
     private List<BookMark> mMarkDatas;
@@ -70,7 +69,7 @@ public class BookMarkAdapter extends RecyclerView.Adapter<BookMarkViewHolder> {
         long begin = mMarkDatas.get(position).getBegin();
         float fPercent = (float) (begin * 1.0 / pageFactory.getBookLen());
         DecimalFormat df = new DecimalFormat("#0.0");
-        String strPercent = df.format(fPercent * 100) + "%";
+        String strPercent = df.format(fPercent * 255) + "%";
         holder.tvMarkProgress.setText(strPercent);
         holder.tvMarkTime.setText(mMarkDatas.get(position).getTime().substring(0, 16));
 

@@ -13,9 +13,11 @@ import com.longluo.ebookreader.base.BaseFragment;
 import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.ui.adapter.BookMarkAdapter;
 import com.longluo.ebookreader.util.PageFactory;
+import com.longluo.ebookreader.widget.itemdecoration.DividerItemDecoration;
 import com.longluo.ebookreader.widget.itemdecoration.RecycleViewDivider;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,13 +56,16 @@ public class BookMarkFragment extends BaseFragment {
         if (bundle != null) {
             bookPath = bundle.getString(BOOK_PATH);
         }
+
         bookMarkList = new ArrayList<>();
-        bookMarkList = DataSupport.where("bookpath = ?", bookPath).find(BookMark.class);
+        bookMarkList = LitePal.where("bookPath = ?", bookPath).order("time").find(BookMark.class);
+
         bookMarkAdapter = new BookMarkAdapter(getActivity(), bookMarkList);
         rvBookMark.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvBookMark.setAdapter(bookMarkAdapter);
-        rvBookMark.addItemDecoration(new RecycleViewDivider(
-                getActivity(), LinearLayoutManager.VERTICAL, 3, getResources().getColor(R.color.list_item_divider)));
+        rvBookMark.addItemDecoration(new DividerItemDecoration(getActivity()));
+
+        bookMarkAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -89,9 +94,9 @@ public class BookMarkFragment extends BaseFragment {
                         .setPositiveButton("删除", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                DataSupport.delete(BookMark.class, bookMarkList.get(position).getId());
+                                LitePal.delete(BookMark.class, bookMarkList.get(position).getId());
                                 bookMarkList.clear();
-                                bookMarkList.addAll(DataSupport.where("bookpath = ?", bookPath).find(BookMark.class));
+                                bookMarkList.addAll(LitePal.where("bookPath = ?", bookPath).find(BookMark.class));
                                 bookMarkAdapter.notifyDataSetChanged();
                             }
                         }).setCancelable(true).show();

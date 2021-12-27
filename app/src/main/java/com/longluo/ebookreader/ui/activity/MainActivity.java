@@ -40,7 +40,8 @@ import com.longluo.ebookreader.view.DragGridView;
 import com.longluo.ebookreader.widget.animation.ContentScaleAnimation;
 import com.longluo.ebookreader.widget.animation.Rotate3DAnimation;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.util.List;
@@ -118,7 +119,7 @@ public class MainActivity extends BaseActivity
         rootView = getWindow().getDecorView();
 //        SQLiteDatabase db = Connector.getDatabase();  //初始化数据库
         typeface = config.getTypeface();
-        bookMetas = DataSupport.findAll(BookMeta.class);
+        bookMetas = LitePal.findAll(BookMeta.class);
         shelfAdapter = new ShelfAdapter(MainActivity.this, bookMetas);
         bookShelf.setAdapter(shelfAdapter);
     }
@@ -160,8 +161,8 @@ public class MainActivity extends BaseActivity
                                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        DataSupport.deleteAll(BookMeta.class, "bookpath = ?", path);
-                                        bookMetas = DataSupport.findAll(BookMeta.class);
+                                        LitePal.deleteAll(BookMeta.class, "bookPath = ?", path);
+                                        bookMetas = LitePal.findAll(BookMeta.class);
                                         shelfAdapter.setBookList(bookMetas);
                                     }
                                 }).setCancelable(true).show();
@@ -222,7 +223,7 @@ public class MainActivity extends BaseActivity
     protected void onRestart() {
         super.onRestart();
         DragGridView.setIsShowDeleteButton(false);
-        bookMetas = DataSupport.findAll(BookMeta.class);
+        bookMetas = LitePal.findAll(BookMeta.class);
         shelfAdapter.setBookList(bookMetas);
         closeBookAnimation();
     }

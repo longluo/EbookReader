@@ -36,7 +36,8 @@ import com.longluo.ebookreader.widget.TextDetailDocumentsCell;
 import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.util.FileUtils;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -288,7 +289,7 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onResume() {
         super.onResume();
-        bookMetas = DataSupport.findAll(BookMeta.class);
+        bookMetas = LitePal.findAll(BookMeta.class);
         listAdapter.notifyDataSetChanged();
     }
 
@@ -367,7 +368,7 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
         protected Integer doInBackground(List<BookMeta>... params) {
             List<BookMeta> bookMetas = params[0];
             for (BookMeta bookMeta : bookMetas) {
-                List<BookMeta> books = DataSupport.where("bookpath = ?", bookMeta.getBookPath()).find(BookMeta.class);
+                List<BookMeta> books = LitePal.where("bookPath = ?", bookMeta.getBookPath()).find(BookMeta.class);
                 if (books.size() > 0) {
                     repeatBookMeta = bookMeta;
                     return REPEAT;
@@ -375,7 +376,7 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
             }
 
             try {
-                DataSupport.saveAll(bookMetas);
+                LitePal.saveAll(bookMetas);
             } catch (Exception e) {
                 e.printStackTrace();
                 return FAIL;
@@ -395,7 +396,7 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
                 case SUCCESS:
                     msg = "导入书本成功";
                     checkItems.clear();
-                    bookMetas = DataSupport.findAll(BookMeta.class);
+                    bookMetas = LitePal.findAll(BookMeta.class);
                     listAdapter.notifyDataSetChanged();
                     changgeCheckBookNum();
                     break;

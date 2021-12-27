@@ -24,7 +24,7 @@ import com.longluo.ebookreader.db.BookContent;
 import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.view.PageWidget;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -294,7 +294,7 @@ public class PageFactory {
                 public void run() {
                     super.run();
                     values.put("begin", currentPage.getBegin());
-                    DataSupport.update(BookMeta.class, values, bookMeta.getId());
+                    LitePal.update(BookMeta.class, values, bookMeta.getId());
                 }
             }.start();
         }

@@ -47,7 +47,8 @@ import com.longluo.ebookreader.util.BrightnessUtils;
 import com.longluo.ebookreader.util.PageFactory;
 import com.longluo.ebookreader.view.PageWidget;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -426,7 +427,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
 
         if (id == R.id.action_add_bookmark) {
             if (pageFactory.getCurrentPage() != null) {
-                List<BookMark> bookMarkList = DataSupport.where("bookpath = ? and begin = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getBegin() + "").find(BookMark.class);
+                List<BookMark> bookMarkList = LitePal.where("bookPath = ? and begin = ?", pageFactory.getBookPath(), pageFactory.getCurrentPage().getBegin() + "").find(BookMark.class);
 
                 if (!bookMarkList.isEmpty()) {
                     Toast.makeText(ReadActivity.this, "该书签已存在", Toast.LENGTH_SHORT).show();

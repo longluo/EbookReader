@@ -28,6 +28,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
 
+    public abstract int getLayoutRes();
+
+    protected abstract void initData(Bundle savedInstanceState);
+
+    protected abstract void initListener();
+
     protected void addDisposable(Disposable d) {
         if (mDisposable == null) {
             mDisposable = new CompositeDisposable();
@@ -39,15 +45,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void setUpToolbar(Toolbar toolbar) {
 
     }
-
-    /**
-     * 初始化布局
-     */
-    public abstract int getLayoutRes();
-
-    protected abstract void initData(Bundle savedInstanceState);
-
-    protected abstract void initListener();
 
     private void initToolbar() {
         if (mToolbar != null) {

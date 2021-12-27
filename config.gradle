@@ -9,8 +9,8 @@ ext {
             minSdkVersion           : 23,
             targetSdkVersion        : 28,
             ndkVersion              : "21.4.7075529",
-            versionCode             : 21,
-            versionName             : "6.8.2.1",
+            versionCode             : 22,
+            versionName             : "6.8.2.2",
     ]
 
     //version配置
@@ -57,7 +57,7 @@ ext {
             "greendao-api"                         : "org.greenrobot:greendao-api:3.3.0",
 
             // LitePal
-            "litepal"                              : "org.litepal.android:core:1.6.1",
+            "litepal"                              : "org.litepal.guolindev:core:3.2.3",
 
             //json解析
             "gson"                                 : "com.google.code.gson:gson:2.8.7",

@@ -1,11 +1,12 @@
 package com.longluo.ebookreader.db;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
+import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class BookMeta extends DataSupport implements Serializable{
+public class BookMeta extends LitePalSupport implements Serializable {
     private int id;
 
     private String bookName;
@@ -121,7 +122,7 @@ public class BookMeta extends DataSupport implements Serializable{
 
     public List<BookChapter> getBookChapterList() {
         if (bookChapters == null) {
-            List<BookChapter> chapterList = DataSupport.where("bookPath = ?", getBookPath()).find(BookChapter.class);
+            List<BookChapter> chapterList = LitePal.where("bookPath = ?", getBookPath()).find(BookChapter.class);
             synchronized (this) {
                 if (bookChapters == null) {
                     bookChapters = chapterList;

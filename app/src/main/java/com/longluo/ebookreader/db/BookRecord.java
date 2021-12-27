@@ -1,8 +1,8 @@
 package com.longluo.ebookreader.db;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
-public class BookRecord extends DataSupport {
+public class BookRecord extends LitePalSupport {
     private int id;
 
     private String bookId;

@@ -4,12 +4,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.longluo.ebookreader.ui.fragment.BookContentsFragment;
 import com.longluo.ebookreader.ui.fragment.BookMarkFragment;
-import com.longluo.ebookreader.ui.fragment.BookContentFragment;
-
 
 public class MyPagerAdapter extends FragmentPagerAdapter {
-    private BookContentFragment catalogueFragment;
+    private BookContentsFragment contentsFragment;
     private BookMarkFragment bookMarkFragment;
     private String bookPath;
     private final String[] titles = {"目录", "书签"};
@@ -33,10 +32,10 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                if (catalogueFragment == null) {
-                    catalogueFragment = BookContentFragment.newInstance(bookPath);
+                if (contentsFragment == null) {
+                    contentsFragment = BookContentsFragment.newInstance(bookPath);
                 }
-                return catalogueFragment;
+                return contentsFragment;
 
             case 1:
                 if (bookMarkFragment == null) {

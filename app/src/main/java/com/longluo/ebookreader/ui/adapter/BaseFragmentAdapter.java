@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.filechooser;
+package com.longluo.ebookreader.ui.adapter;
 
 import android.database.DataSetObserver;
 import android.view.View;

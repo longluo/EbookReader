@@ -13,7 +13,7 @@ import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.ui.adapter.view.BookMarkViewHolder;
-import com.longluo.ebookreader.util.PageFactory;
+import com.longluo.ebookreader.model.PageFactory;
 
 import java.text.DecimalFormat;
 import java.util.List;

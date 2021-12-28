@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.longluo.ebookreader.filechooser.AndroidUtilities;
+import com.longluo.ebookreader.util.AndroidUtils;
 
 public class TextDetailDocumentsCell extends FrameLayout {
 
@@ -37,9 +37,9 @@ public class TextDetailDocumentsCell extends FrameLayout {
         LayoutParams layoutParams = (LayoutParams) textView.getLayoutParams();
         layoutParams.width = LayoutParams.WRAP_CONTENT;
         layoutParams.height = LayoutParams.WRAP_CONTENT;
-        layoutParams.topMargin = AndroidUtilities.dp(10);
-        layoutParams.leftMargin = AndroidUtilities.dp(71);
-        layoutParams.rightMargin = AndroidUtilities.dp(16);
+        layoutParams.topMargin = AndroidUtils.dp(10);
+        layoutParams.leftMargin = AndroidUtils.dp(71);
+        layoutParams.rightMargin = AndroidUtils.dp(16);
         layoutParams.gravity = Gravity.LEFT;
         textView.setLayoutParams(layoutParams);
 
@@ -54,9 +54,9 @@ public class TextDetailDocumentsCell extends FrameLayout {
         layoutParams = (LayoutParams) valueTextView.getLayoutParams();
         layoutParams.width = LayoutParams.WRAP_CONTENT;
         layoutParams.height = LayoutParams.WRAP_CONTENT;
-        layoutParams.topMargin = AndroidUtilities.dp(35);
-        layoutParams.leftMargin = AndroidUtilities.dp(71);
-        layoutParams.rightMargin = AndroidUtilities.dp(16);
+        layoutParams.topMargin = AndroidUtils.dp(35);
+        layoutParams.leftMargin = AndroidUtils.dp(71);
+        layoutParams.rightMargin = AndroidUtils.dp(16);
         layoutParams.gravity = Gravity.LEFT;
         valueTextView.setLayoutParams(layoutParams);
 
@@ -70,20 +70,20 @@ public class TextDetailDocumentsCell extends FrameLayout {
         typeTextView.setTypeface(Typeface.DEFAULT_BOLD);
         addView(typeTextView);
         layoutParams = (LayoutParams) typeTextView.getLayoutParams();
-        layoutParams.width = AndroidUtilities.dp(40);
-        layoutParams.height = AndroidUtilities.dp(40);
-        layoutParams.leftMargin = AndroidUtilities.dp(16);
-        layoutParams.rightMargin = AndroidUtilities.dp(0);
+        layoutParams.width = AndroidUtils.dp(40);
+        layoutParams.height = AndroidUtils.dp(40);
+        layoutParams.leftMargin = AndroidUtils.dp(16);
+        layoutParams.rightMargin = AndroidUtils.dp(0);
         layoutParams.gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
         typeTextView.setLayoutParams(layoutParams);
 
         imageView = new ImageView(context);
         addView(imageView);
         layoutParams = (LayoutParams) imageView.getLayoutParams();
-        layoutParams.width = AndroidUtilities.dp(40);
-        layoutParams.height = AndroidUtilities.dp(40);
-        layoutParams.leftMargin = AndroidUtilities.dp(16);
-        layoutParams.rightMargin = AndroidUtilities.dp(0);
+        layoutParams.width = AndroidUtils.dp(40);
+        layoutParams.height = AndroidUtils.dp(40);
+        layoutParams.leftMargin = AndroidUtils.dp(16);
+        layoutParams.rightMargin = AndroidUtils.dp(0);
         layoutParams.gravity = Gravity.LEFT | Gravity.CENTER_VERTICAL;
         imageView.setLayoutParams(layoutParams);
 
@@ -95,8 +95,8 @@ public class TextDetailDocumentsCell extends FrameLayout {
         layoutParams.width = LayoutParams.WRAP_CONTENT;
         layoutParams.height = LayoutParams.WRAP_CONTENT;
 //        layoutParams.topMargin = AndroidUtilities.dp(34);
-        layoutParams.leftMargin = AndroidUtilities.dp(16);
-        layoutParams.rightMargin = AndroidUtilities.dp(16);
+        layoutParams.leftMargin = AndroidUtils.dp(16);
+        layoutParams.rightMargin = AndroidUtils.dp(16);
         layoutParams.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
         checkBox.setLayoutParams(layoutParams);
 
@@ -113,15 +113,15 @@ public class TextDetailDocumentsCell extends FrameLayout {
         layoutParams = (LayoutParams) storageTextView.getLayoutParams();
         layoutParams.width = LayoutParams.WRAP_CONTENT;
         layoutParams.height = LayoutParams.WRAP_CONTENT;
-        layoutParams.leftMargin = AndroidUtilities.dp(16);
-        layoutParams.rightMargin = AndroidUtilities.dp(16);
+        layoutParams.leftMargin = AndroidUtils.dp(16);
+        layoutParams.rightMargin = AndroidUtils.dp(16);
         layoutParams.gravity = Gravity.RIGHT | Gravity.CENTER_VERTICAL;
         storageTextView.setLayoutParams(layoutParams);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(AndroidUtilities.dp(64), MeasureSpec.EXACTLY));
+        super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(AndroidUtils.dp(64), MeasureSpec.EXACTLY));
     }
 
     public void setTextAndValueAndTypeAndThumb(String text, String value, String type, String thumb, int resId, boolean isStorage) {

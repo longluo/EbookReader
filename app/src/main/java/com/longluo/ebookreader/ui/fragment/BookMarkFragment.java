@@ -12,7 +12,7 @@ import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseFragment;
 import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.ui.adapter.BookMarkAdapter;
-import com.longluo.ebookreader.util.PageFactory;
+import com.longluo.ebookreader.model.PageFactory;
 import com.longluo.ebookreader.widget.itemdecoration.DividerItemDecoration;
 
 import org.litepal.LitePal;

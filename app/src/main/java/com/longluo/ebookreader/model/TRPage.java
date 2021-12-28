@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.util;
+package com.longluo.ebookreader.model;
 
 import java.util.List;
 

@@ -44,7 +44,7 @@ import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.ui.dialog.ReadSettingDialog;
 import com.longluo.ebookreader.util.BrightnessUtils;
-import com.longluo.ebookreader.util.PageFactory;
+import com.longluo.ebookreader.model.PageFactory;
 import com.longluo.ebookreader.util.StringUtils;
 import com.longluo.ebookreader.widget.view.PageWidget;
 import com.longluo.ebookreader.widget.page.PageMode;

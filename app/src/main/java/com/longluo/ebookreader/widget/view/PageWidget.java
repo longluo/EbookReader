@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 
-import com.longluo.ebookreader.util.PageFactory;
+import com.longluo.ebookreader.model.PageFactory;
 import com.longluo.ebookreader.view.animation.AnimationProvider;
 import com.longluo.ebookreader.view.animation.CoverAnimation;
 import com.longluo.ebookreader.view.animation.NoneAnimation;

@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.util;
+package com.longluo.ebookreader.model;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,6 +23,10 @@ import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.db.BookContent;
 import com.longluo.ebookreader.db.BookMeta;
+import com.longluo.ebookreader.util.BitmapUtils;
+import com.longluo.ebookreader.util.BookUtils;
+import com.longluo.ebookreader.util.CommonUtils;
+import com.longluo.ebookreader.util.FileUtils;
 import com.longluo.ebookreader.widget.view.PageWidget;
 import com.longluo.ebookreader.widget.page.PageStyle;
 
@@ -439,7 +443,7 @@ public class PageFactory {
         bookTask.execute(bookMeta.getBegin());
     }
 
-    private class BookTask extends AsyncTask<Long, Void, Boolean> {
+    private class BookTask extends AsyncTask<Long, java.lang.Void, Boolean> {
         private long begin = 0;
 
         @Override
@@ -471,7 +475,7 @@ public class PageFactory {
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
+        protected void onProgressUpdate(java.lang.Void... values) {
             super.onProgressUpdate(values);
         }
 

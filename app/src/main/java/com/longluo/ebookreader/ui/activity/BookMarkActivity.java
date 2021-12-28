@@ -18,7 +18,7 @@ import com.longluo.ebookreader.ui.adapter.MyPagerAdapter;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookContent;
 import com.longluo.ebookreader.util.FileUtils;
-import com.longluo.ebookreader.util.PageFactory;
+import com.longluo.ebookreader.model.PageFactory;
 
 import java.util.ArrayList;
 

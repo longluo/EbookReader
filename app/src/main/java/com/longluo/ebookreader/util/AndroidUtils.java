@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.filechooser;
+package com.longluo.ebookreader.util;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -9,7 +9,7 @@ import android.view.WindowManager;
 import com.longluo.ebookreader.App;
 
 
-public class AndroidUtilities {
+public class AndroidUtils {
 
 	public static float density = 1;
 	public static Point displaySize = new Point();

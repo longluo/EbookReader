@@ -10,7 +10,7 @@ import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseFragment;
 import com.longluo.ebookreader.db.BookContent;
 import com.longluo.ebookreader.ui.adapter.BookContentAdapter;
-import com.longluo.ebookreader.util.PageFactory;
+import com.longluo.ebookreader.model.PageFactory;
 import com.longluo.ebookreader.widget.itemdecoration.DividerItemDecoration;
 
 import java.util.ArrayList;

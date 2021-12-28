@@ -3,7 +3,7 @@ package com.longluo.ebookreader;
 import android.app.Application;
 import android.content.Context;
 
-import com.longluo.ebookreader.util.PageFactory;
+import com.longluo.ebookreader.model.PageFactory;
 import com.squareup.leakcanary.LeakCanary;
 
 import org.litepal.LitePal;

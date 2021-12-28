@@ -31,10 +31,9 @@ public abstract class AnimationProvider {
     private Direction direction = Direction.NONE;
     private boolean isCancel = false;
 
-    public AnimationProvider(int width, int height) {
-        mCurPageBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-        mNextPageBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-
+    public AnimationProvider(Bitmap mCurrentBitmap, Bitmap mNextBitmap, int width, int height) {
+        this.mCurPageBitmap = mCurrentBitmap;
+        this.mNextPageBitmap = mNextBitmap;
         this.mScreenWidth = width;
         this.mScreenHeight = height;
     }
@@ -92,4 +91,5 @@ public abstract class AnimationProvider {
     public boolean getCancel() {
         return isCancel;
     }
+
 }

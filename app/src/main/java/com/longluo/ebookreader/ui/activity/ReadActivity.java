@@ -46,7 +46,7 @@ import com.longluo.ebookreader.ui.dialog.ReadSettingDialog;
 import com.longluo.ebookreader.util.BrightnessUtils;
 import com.longluo.ebookreader.model.PageFactory;
 import com.longluo.ebookreader.util.StringUtils;
-import com.longluo.ebookreader.widget.view.PageWidget;
+import com.longluo.ebookreader.widget.page.PageView;
 import com.longluo.ebookreader.widget.page.PageMode;
 import com.longluo.ebookreader.widget.page.PageStyle;
 
@@ -73,7 +73,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
     private final static int MESSAGE_CHANGEPROGRESS = 1;
 
     @BindView(R.id.bookpage)
-    PageWidget bookpage;
+    PageView bookpage;
 
     @BindView(R.id.tv_progress)
     TextView tv_progress;
@@ -302,7 +302,7 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
             }
         });
 
-        bookpage.setTouchListener(new PageWidget.TouchListener() {
+        bookpage.setTouchListener(new PageView.TouchListener() {
             @Override
             public void center() {
                 if (isShow) {

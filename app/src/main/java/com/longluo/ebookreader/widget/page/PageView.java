@@ -1,4 +1,4 @@
-package com.longluo.ebookreader.widget.view;
+package com.longluo.ebookreader.widget.page;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,15 +14,14 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Scroller;
 
 import com.longluo.ebookreader.model.PageFactory;
-import com.longluo.ebookreader.view.animation.AnimationProvider;
-import com.longluo.ebookreader.view.animation.CoverAnimation;
-import com.longluo.ebookreader.view.animation.NoneAnimation;
-import com.longluo.ebookreader.view.animation.SimulationAnimation;
-import com.longluo.ebookreader.view.animation.SlideAnimation;
-import com.longluo.ebookreader.widget.page.PageMode;
+import com.longluo.ebookreader.widget.animation.AnimationProvider;
+import com.longluo.ebookreader.widget.animation.CoverPageAnimation;
+import com.longluo.ebookreader.widget.animation.NonePageAnimation;
+import com.longluo.ebookreader.widget.animation.SimulationPageAnimation;
+import com.longluo.ebookreader.widget.animation.SlidePageAnimation;
 
-public class PageWidget extends View {
-    private final static String TAG = "BookPageWidget";
+public class PageView extends View {
+    private final static String TAG = PageView.class.getSimpleName();
 
     private Context mContext;
 
@@ -53,20 +52,20 @@ public class PageWidget extends View {
     private int mBgColor = 0xFFCEC29C;
     private TouchListener mTouchListener;
 
-    public PageWidget(Context context) {
+    public PageView(Context context) {
         this(context, null);
     }
 
-    public PageWidget(Context context, AttributeSet attrs) {
+    public PageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public PageWidget(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
         initPage();
         mScroller = new Scroller(getContext(), new LinearInterpolator());
-        mAnimationProvider = new SimulationAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
+        mAnimationProvider = new SimulationPageAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
     }
 
     private void initPage() {
@@ -82,23 +81,23 @@ public class PageWidget extends View {
     public void setPageMode(PageMode pageMode) {
         switch (pageMode) {
             case MODE_SIMULATION:
-                mAnimationProvider = new SimulationAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
+                mAnimationProvider = new SimulationPageAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
                 break;
 
             case MODE_COVER:
-                mAnimationProvider = new CoverAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
+                mAnimationProvider = new CoverPageAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
                 break;
 
             case MODE_SLIDE:
-                mAnimationProvider = new SlideAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
+                mAnimationProvider = new SlidePageAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
                 break;
 
             case MODE_NONE:
-                mAnimationProvider = new NoneAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
+                mAnimationProvider = new NonePageAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
                 break;
 
             default:
-                mAnimationProvider = new SimulationAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
+                mAnimationProvider = new SimulationPageAnimation(mCurPageBitmap, mNextPageBitmap, mScreenWidth, mScreenHeight);
         }
     }
 
@@ -170,7 +169,7 @@ public class PageWidget extends View {
                     if (isNext) {
                         Boolean isNext = mTouchListener.nextPage();
 //                        calcCornerXY(downX,mScreenHeight);
-                        mAnimationProvider.setDirection(AnimationProvider.Direction.next);
+                        mAnimationProvider.setDirection(AnimationProvider.Direction.NEXT);
 
                         if (!isNext) {
                             noNext = true;
@@ -178,8 +177,7 @@ public class PageWidget extends View {
                         }
                     } else {
                         Boolean isPre = mTouchListener.prePage();
-                        mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
-
+                        mAnimationProvider.setDirection(AnimationProvider.Direction.PRE);
                         if (!isPre) {
                             noNext = true;
                             return true;
@@ -236,13 +234,13 @@ public class PageWidget extends View {
 
                 if (isNext) {
                     Boolean isNext = mTouchListener.nextPage();
-                    mAnimationProvider.setDirection(AnimationProvider.Direction.next);
+                    mAnimationProvider.setDirection(AnimationProvider.Direction.NEXT);
                     if (!isNext) {
                         return true;
                     }
                 } else {
                     Boolean isPre = mTouchListener.prePage();
-                    mAnimationProvider.setDirection(AnimationProvider.Direction.pre);
+                    mAnimationProvider.setDirection(AnimationProvider.Direction.PRE);
                     if (!isPre) {
                         return true;
                     }

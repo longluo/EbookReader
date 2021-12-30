@@ -15,20 +15,24 @@ The EbookReader is an Android application for reading books on Android devices. 
 
 App Screen Shots:
 
-支持Epub格式和Pdf格式文件
+支持Epub格式
 
-<a href="./screenshots/EbookReader_Epub.png"><img src="./screenshots/EbookReader_Epub.png" width="30%" /></a><a href="./screenshots/EbookReader_Pdf.png"><img src="./screenshots/EbookReader_Pdf.png" width="30%" /></a>
+<a href="./pictures/EbookReader_Epub.png"><img src="./pictures/EbookReader_Epub.png" width="30%" /></a>
+
+Pdf格式文件
+
+<a href="./pictures/pdf/EbookReader_Pdf.png"><img src="./pictures/pdf/EbookReader_Pdf.png" width="30%" /></a>
 
 阅读界面：
 
-<a href="./screenshots/EbookReader_Reader_Page.png"><img src="./screenshots/EbookReader_Reader_Page.png" width="30%" /></a><a href="./screenshots/EbookReader_Read_Contents.png"><img src="./screenshots/EbookReader_Read_Contents.png" width="30%" /></a><a href="./screenshots/EbookReader_Read_NightMode.png"><img src="./screenshots/EbookReader_Read_NightMode.png" width="30%" /></a>
+<a href="./pictures/read/EbookReader_Reader_Page.png"><img src="./pictures/read/EbookReader_Reader_Page.png" width="30%" /></a><a href="./pictures/read/EbookReader_Read_Contents.png"><img src="./pictures/read/EbookReader_Read_Contents.png" width="30%" /></a><a href="./pictures/read/EbookReader_Read_NightMode.png"><img src="./pictures/read/EbookReader_Read_NightMode.png" width="30%" /></a>
 
 阅读设置：
 
-<a href="./screenshots/EbookReader_Read_Setting.png"><img src="./screenshots/EbookReader_Read_Setting.png" width="30%" /></a><a href="./screenshots/EbookReader_Read_ReadSetting.png"><img src="./screenshots/EbookReader_Read_ReadSetting.png" width="30%" /></a><a href="./screenshots/EbookReader_Read_Progress.png"><img src="./screenshots/EbookReader_Read_Progress.png" width="30%" /></a>
+<a href="./pictures/read/EbookReader_Read_Setting.png"><img src="./pictures/read/EbookReader_Read_Setting.png" width="30%" /></a><a href="./pictures/read/EbookReader_Read_ReadSetting.png"><img src="./pictures/read/EbookReader_Read_ReadSetting.png" width="30%" /></a><a href="./pictures/read/EbookReader_Read_Progress.png"><img src="./pictures/read/EbookReader_Read_Progress.png" width="30%" /></a>
 
 TTS阅读：
 
-<a href="./screenshots/EbookReader_Read_TTS.png"><img src="./screenshots/EbookReader_Read_TTS.png" width="30%" /></a>
+<a href="./pictures/read/EbookReader_Read_TTS.png"><img src="./pictures/read/EbookReader_Read_TTS.png" width="30%" /></a>
 
 

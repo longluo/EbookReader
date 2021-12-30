@@ -1,18 +1,12 @@
 apply plugin: 'com.android.library'
 
+apply from : '../common.gradle'
+
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
-
     defaultConfig {
-        minSdkVersion rootProject.ext.android.libMinSdkVersion
-        targetSdkVersion rootProject.ext.android.libTargetSdkVersion
-        versionCode 1
-        versionName '1.0'
-
         consumerProguardFiles 'consumer-rules.pro'
 
-        ndkVersion rootProject.ext.android.ndkVersion
+        ndkVersion '21.4.7075529'
 
         ndk {
             // 设置支持的SO库架构
@@ -20,28 +14,4 @@ android {
             abiFilters 'armeabi-v7a'
         }
     }
-
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-
-        debug {
-            minifyEnabled false
-        }
-    }
-    
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
-
-    lintOptions {
-        abortOnError false
-    }
-}
-
-dependencies {
-    implementation rootProject.ext.support["appcompat"]
 }

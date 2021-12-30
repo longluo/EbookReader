@@ -4,6 +4,8 @@ import androidx.annotation.ColorRes;
 
 import com.longluo.ebookreader.R;
 
+//import com.longluo.ebookreader.R;
+
 /**
  * 页面的展示风格。
  */

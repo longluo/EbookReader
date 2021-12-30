@@ -1,32 +1,34 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-apply from: "config.gradle"
+// 导入配置文件
+apply from: 'configs.gradle'
 
 buildscript {
-//    ext.kotlin_version = '1.5.30-M1'
+    // 导入通用的 Maven 库配置
+    apply from: 'maven.gradle'
 
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/public' }
-        maven { url 'https://maven.aliyun.com/repository/central' }
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/public' }
+        // 阿里云云效仓库（Gradle 插件）：https://maven.aliyun.com/mvn/guide
         maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
-        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
-        maven { url 'https://github.com/psiegman/mvn-repo/raw/master/releases' }
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-//        maven { url 'https://dl.bintray.com' }
+
+        // Umeng https://developer.umeng.com/docs/193624/detail/194590
+        maven { url 'https://repo1.maven.org/maven2/' }
+
+        addCommonMaven(repositories)
     }
 
+    // Studio 插件推荐：https://github.com/getActivity/StudioPlugins
     dependencies {
+        // Gradle 插件版本说明：https://developer.android.google.cn/studio/releases/gradle-plugin.html#updating-pluginnoinspection GradleDependency
         classpath 'com.android.tools.build:gradle:4.2.2'
 
         // Added for bufferknife for BindView
         classpath 'com.jakewharton:butterknife-gradle-plugin:10.2.1'
 
         classpath 'org.greenrobot:greendao-gradle-plugin:3.3.0'
+
+        // AOP 配置插件：https://github.com/HujiangTechnology/gradle_plugin_android_aspectjx
+        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -35,19 +37,28 @@ buildscript {
 
 allprojects {
     repositories {
-        maven { url 'https://maven.aliyun.com/repository/public' }
-        maven { url 'https://maven.aliyun.com/repository/central' }
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/public' }
-        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
-        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
-        maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
-        maven { url 'https://github.com/psiegman/mvn-repo/raw/master/releases' }
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-//        maven { url 'https://dl.bintray.com' }
+        // 友盟远程仓库：https://info.umeng.com/detail?id=443&cateId=1
+        maven { url 'https://repo1.maven.org/maven2' }
+
+        addCommonMaven(repositories)
     }
+
+    tasks.withType(JavaCompile) {
+        // 设置全局编码
+        options.encoding = 'UTF-8'
+    }
+    
+    tasks.withType(Javadoc) {
+        // 设置文档编码
+        options {
+            encoding 'UTF-8'
+            charSet 'UTF-8'
+            links 'http://docs.oracle.com/javase/7/docs/api'
+        }
+    }
+
+    // 将构建文件统一输出到项目根目录下的 build 文件夹
+    setBuildDir(new File(rootDir, "build/${path.replaceAll(':', '/')}"))
 }
 
 task clean(type: Delete) {

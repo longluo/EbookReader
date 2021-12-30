@@ -1,0 +1,10 @@
+plugins {
+    id 'com.android.library'
+}
+
+apply from : '../common.gradle'
+
+dependencies {
+    // 基础库（不包任何第三方框架）
+    implementation project(':DroidBase')
+}

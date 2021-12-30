@@ -4,14 +4,20 @@ The EbookReader is an Android application for reading books on Android devices. 
 
 -----------------------
 
-2021.12.11 增加mobi, azw, azw3, azw4, fb2, cbz, xps, openxps格式电子书支持;
+* 项目地址：[Github](https://github.com/longluo/EbookReader)
 
-2021.12.13 修复之前的txt阅读界面bug;
-
-2021.12.15 增加tts阅读支持;
+* 博客地址：[Long Luo's Develop Notes](https://longluo.me)
 
 
----------------
+* [点击下载 Apk 体验](https://raw.githubusercontent.com/longluo/Android_Dev_Quick/dev/releases/Android_Dev_Quick_debug.apk)，
+
+或者扫码下载
+
+![](pictures/EbookReader_QRCode.png)
+
+-----------------
+
+
 
 App Screen Shots:
 
@@ -34,5 +40,13 @@ Pdf格式文件
 TTS阅读：
 
 <a href="./pictures/read/EbookReader_Read_TTS.png"><img src="./pictures/read/EbookReader_Read_TTS.png" width="30%" /></a>
+
+-----------------
+
+2021.12.11 增加mobi, azw, azw3, azw4, fb2, cbz, xps, openxps格式电子书支持;
+
+2021.12.13 修复之前的txt阅读界面bug;
+
+2021.12.15 增加tts阅读支持;
 
 

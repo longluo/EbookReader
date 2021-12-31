@@ -39,13 +39,12 @@ android {
 
     // 代码警告配置
     lintOptions {
-        //
         abortOnError false
 
         // 禁用文本硬编码警告
-//        disable 'HardcodedText'
+        disable 'HardcodedText'
         // 禁用图片描述警告
-//        disable 'ContentDescription'
+        disable 'ContentDescription'
     }
 }
 
@@ -65,6 +64,18 @@ dependencies {
 
     // AndroidX 库：https://github.com/androidx/androidx
     implementation 'androidx.appcompat:appcompat:1.3.1'
+
     // Material 库：https://github.com/material-components/material-components-android
+    // Design
     implementation 'com.google.android.material:material:1.4.0'
+
+    // CardView
+    implementation "androidx.cardview:cardview:1.0.0"
+
+    // Recyclerview
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+
+    // Support-V4
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
 }

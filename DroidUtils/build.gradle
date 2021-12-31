@@ -12,10 +12,10 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName '1.0'
-	
-	    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    
+
     testOptions {
         unitTests {
             includeAndroidResources = true
@@ -23,8 +23,17 @@ android {
     }
 
     buildTypes {
-        release {
+        // 调试版本
+        debug {
             minifyEnabled false
+        }
+
+        // 预览版本
+        preview {}
+
+        // 正式版本
+        release {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -53,7 +62,7 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.4'
     testImplementation 'androidx.test:core:1.0.0'
 
-    lintChecks 'org.wordpress:lint:1.1.0'
+//    lintChecks 'org.wordpress:lint:1.1.0'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test:rules:1.1.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'

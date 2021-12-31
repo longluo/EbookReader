@@ -2,7 +2,13 @@ name: Android CI
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - dev
+
+    tags:
+      - 'v*'
+
   pull_request:
     branches: [ master ]
 
@@ -12,17 +18,57 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: checkout code
+      uses: actions/checkout@v2
+
     - name: set up JDK 11
       uses: actions/setup-java@v2
       with:
-        java-version: '11'
+        java-version: '14'
         distribution: 'adopt'
         cache: gradle
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      
     - name: Build with Gradle
-      run: ./gradlew build
-     
+      id: build
+      run: |
+        pwd
+        echo -e "\n gradlew assembleRelease \n"
+        chmod a+x gradlew
+        ./gradlew assembleRelease
+
+    - name: Get Time
+      id: time
+      uses: JantHsueh/get-time-action@master
+      with:
+        timeZone: 8
+
+    - name: Get Apk Info
+      id: apkInfo
+      uses: JantHsueh/get-apk-info-action@master
+      with:
+        apkPath: ./build/app/outputs/apk/release/*.apk
+
+    - name: Get git log
+      id: gitLog
+      uses: JantHsueh/get-git-log-action@master
+      with:
+        tag: release
+
+    - name: upload apk
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: EbookReader.apk
+        path: |
+          echo -e "\n show path \n"
+          pwd
+          ls -l
+          ${{github.workspace}}/build/app/outputs/apk/release/*.apk
+
+    - name: Upload File to Pgyer
+      id: upload
+      uses: JantHsueh/upload-file-action@master
+      with:
+        url: https://www.pgyer.com/apiv2/app/upload
+        forms: '{"_api_key":"${{ secrets.pgyer_key }}","buildInstallType":3}'
+        fileForms: '{"file":"releases/EbookReader_release.apk"}'

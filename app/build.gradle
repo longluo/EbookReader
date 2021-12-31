@@ -288,3 +288,28 @@ dependencies {
     // 嵌套滚动容器：https://github.com/donkingliang/ConsecutiveScroller
     // 隐私调用监控：https://github.com/huage2580/PermissionMonitor
 }
+
+tasks.whenTaskAdded { task ->
+    task.doLast {
+        outputReleaseFile()
+    }
+}
+
+void outputReleaseFile() {
+    android.applicationVariants.all { variant ->
+        // 如果是正式版打包
+        if (variant.name.equalsIgnoreCase("release")) {
+            File outputPath = new File("$rootDir" + File.separator + "releases")
+            println(String.format('拷贝生成文件到指定目录[%s]', outputPath.getAbsolutePath()))
+            // 拷贝apk文件
+            copy {
+                from variant.outputs[0].outputFile
+                into outputPath
+                // 重命名导出名称
+                rename {
+                    rootProject.getName() + '_' + variant.name + ".apk"
+                }
+            }
+        }
+    }
+}

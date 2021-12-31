@@ -254,8 +254,8 @@ dependencies {
     implementation 'com.tencent:mmkv-static:1.2.10'
 
     // 内存泄漏监测框架：https://github.com/square/leakcanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
-    previewImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    // debugImplementation because LeakCanary should only run in debug builds.
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
 

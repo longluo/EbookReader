@@ -2,21 +2,17 @@ package com.longluo.ebookreader.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.app.TitleBarFragment;
 import com.longluo.ebookreader.db.BookMeta;
-import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.ui.activity.HomeActivity;
-import com.longluo.ebookreader.ui.adapter.ShelfAdapter;
+import com.longluo.ebookreader.ui.adapter.BookshelfAdapter;
 import com.longluo.ebookreader.util.BookUtils;
-import com.longluo.ebookreader.widget.animation.ContentScaleAnimation;
-import com.longluo.ebookreader.widget.animation.Rotate3DAnimation;
+import com.longluo.ebookreader.widget.itemdecoration.DividerItemDecoration;
 import com.longluo.ebookreader.widget.view.DragGridView;
 
 import org.litepal.LitePal;
@@ -24,38 +20,15 @@ import org.litepal.LitePal;
 import java.io.File;
 import java.util.List;
 
+import io.github.longluo.util.ToastUtils;
+
 public class BookshelfFragment extends TitleBarFragment<HomeActivity> {
 
-    DragGridView mBookshelf;
+    private RecyclerView mRvBookshelf;
 
-    private Typeface mTypeface;
+    private BookshelfAdapter mBookshelfAdapter;
 
-    private List<BookMeta> bookMetas;
-    private ShelfAdapter shelfAdapter;
-
-    //点击书本的位置
-    private int itemPosition;
-    private TextView itemTextView;
-    //点击书本在屏幕中的x，y坐标
-    private int[] location = new int[2];
-
-    private static TextView cover;
-    private static ImageView content;
-    //书本打开动画缩放比例
-    private float scaleTimes;
-    //书本打开缩放动画
-    private static ContentScaleAnimation contentAnimation;
-    private static Rotate3DAnimation coverAnimation;
-    //书本打开缩放动画持续时间
-    public static final int ANIMATION_DURATION = 800;
-    //打开书本的第一个动画是否完成
-    private boolean mIsOpen = false;
-    //动画加载计数器  0 默认  1一个动画执行完毕   2二个动画执行完毕
-    private int animationCount = 0;
-
-    private static Boolean isExit = false;
-
-    private ReadSettingManager readSettingManager;
+    private List<BookMeta> mBooks;
 
     public static BookshelfFragment newInstance() {
         return new BookshelfFragment();
@@ -68,48 +41,52 @@ public class BookshelfFragment extends TitleBarFragment<HomeActivity> {
 
     @Override
     protected void initView() {
-        mBookshelf = findViewById(R.id.bookShelf);
+        mRvBookshelf = findViewById(R.id.bookShelf);
 
     }
 
     @Override
     protected void initData() {
-        readSettingManager = ReadSettingManager.getInstance();
+        mBooks = LitePal.findAll(BookMeta.class);
 
-        mTypeface = readSettingManager.getTypeface();
+        mBookshelfAdapter = new BookshelfAdapter(getActivity(), mBooks);
+        mRvBookshelf.setAdapter(mBookshelfAdapter);
+        mRvBookshelf.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        mRvBookshelf.addItemDecoration(new DividerItemDecoration(getActivity()));
 
-        bookMetas = LitePal.findAll(BookMeta.class);
-        shelfAdapter = new ShelfAdapter(getActivity(), bookMetas);
-        mBookshelf.setAdapter(shelfAdapter);
+        initListener();
+    }
 
-        mBookshelf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void initListener() {
+        mBookshelfAdapter.setOnItemClickListener(new BookshelfAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (bookMetas.size() > position) {
-                    itemPosition = position;
-                    String bookname = bookMetas.get(itemPosition).getBookName();
-                    shelfAdapter.setItemToFirst(itemPosition);
-                    final BookMeta bookMeta = bookMetas.get(itemPosition);
-                    bookMeta.setId(bookMetas.get(0).getId());
-                    final String path = bookMeta.getBookPath();
-                    File file = new File(path);
-                    if (!file.exists()) {
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle(getActivity().getString(R.string.app_name))
-                                .setMessage(path + "文件不存在,是否删除该书本？")
-                                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        LitePal.deleteAll(BookMeta.class, "bookPath = ?", path);
-                                        bookMetas = LitePal.findAll(BookMeta.class);
-                                        shelfAdapter.setBookList(bookMetas);
-                                    }
-                                }).setCancelable(true).show();
-                        return;
-                    }
-
-                    BookUtils.openBook(getActivity(), bookMeta);
+            public void onClick(int position) {
+                final BookMeta book = mBooks.get(position);
+                final String path = book.getBookPath();
+                File file = new File(path);
+                if (!file.exists()) {
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle(getActivity().getString(R.string.app_name))
+                            .setMessage(path + "文件不存在,是否删除该书本？")
+                            .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    LitePal.deleteAll(BookMeta.class, "bookPath = ?", path);
+                                    mBooks = LitePal.findAll(BookMeta.class);
+                                    mBookshelfAdapter.setBookList(mBooks);
+                                }
+                            }).setCancelable(true).show();
+                    return;
                 }
+
+                BookUtils.openBook(getActivity(), book);
+            }
+        });
+
+        mBookshelfAdapter.setOnItemLongClickListener(new BookshelfAdapter.OnItemLongClickListener() {
+            @Override
+            public void onClick(int position) {
+                ToastUtils.showToast(getActivity(), "Click No: = " + position);
             }
         });
     }

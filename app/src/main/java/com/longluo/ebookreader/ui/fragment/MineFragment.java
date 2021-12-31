@@ -36,12 +36,24 @@ public final class MineFragment extends TitleBarFragment<HomeActivity> {
     @Override
     public void onClick(View view) {
         int viewId = view.getId();
-        if (viewId == R.id.btn_mine_crash) {
-            // 上报错误到 Bugly 上
-            CrashReport.postCatchedException(new IllegalStateException("are you ok?"));
-            // 关闭 Bugly 异常捕捉
-            CrashReport.closeBugly();
-            throw new IllegalStateException("are you ok?");
+        switch (viewId) {
+            case R.id.btn_mine_crash:
+                // 上报错误到 Bugly 上
+                CrashReport.postCatchedException(new IllegalStateException("are you ok?"));
+                // 关闭 Bugly 异常捕捉
+                CrashReport.closeBugly();
+                break;
+
+            case R.id.btn_mine_browser:
+
+                break;
+
+            case R.id.btn_mine_about:
+
+                break;
+
+            default:
+                break;
         }
     }
 

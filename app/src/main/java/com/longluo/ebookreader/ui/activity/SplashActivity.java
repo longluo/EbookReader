@@ -25,7 +25,7 @@ import java.util.List;
 
 
 public class SplashActivity extends AppCompatActivity {
-    private static final String LOG_TAG = "SplashActivity";
+    private static final String LOG_TAG = SplashActivity.class.getSimpleName();
 
     /**
      * permissions request code
@@ -102,8 +102,8 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     public void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-//        Intent intent = new Intent(this, HtmlViewActivity.class);
+//        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         this.startActivity(intent);
         SplashActivity.this.finish();
     }

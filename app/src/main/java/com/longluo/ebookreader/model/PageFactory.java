@@ -40,7 +40,7 @@ import java.util.List;
 
 
 public class PageFactory {
-    private static final String TAG = "PageFactory";
+    private static final String TAG = PageFactory.class.getSimpleName();
 
     private static PageFactory pageFactory;
 

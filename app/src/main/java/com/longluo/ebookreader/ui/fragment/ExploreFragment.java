@@ -1,22 +1,16 @@
 package com.longluo.ebookreader.ui.fragment;
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.StateSet;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,15 +21,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
-
+import com.hjq.permissions.Permission;
 import com.longluo.ebookreader.R;
+import com.longluo.ebookreader.aop.Permissions;
+import com.longluo.ebookreader.aop.SingleClick;
+import com.longluo.ebookreader.app.TitleBarFragment;
 import com.longluo.ebookreader.db.BookMeta;
+import com.longluo.ebookreader.ui.activity.HomeActivity;
 import com.longluo.ebookreader.ui.adapter.BaseFragmentAdapter;
-import com.longluo.ebookreader.widget.TextDetailDocumentsCell;
 import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.util.FileUtils;
-
+import com.longluo.ebookreader.widget.TextDetailDocumentsCell;
 
 import org.litepal.LitePal;
 
@@ -48,11 +44,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+public class ExploreFragment extends TitleBarFragment<HomeActivity> {
 
-public class DirectoryFragment extends Fragment implements View.OnClickListener {
-    private static final String LOG_TAG = DirectoryFragment.class.getSimpleName();
-
-    private View fragmentView;
     private boolean receiverRegistered = false;
     private File currentDir;
 
@@ -75,215 +68,119 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
     private List<BookMeta> bookMetas;
     private long sizeLimit = 1024 * 1024 * 1024;
 
-    private String[] chhosefileType = {".txt", ".epub", ".mobi", ".azw", ".azw3"};
+    private String[] chooseFileType = {".txt", ".epub", ".mobi", ".azw", ".azw3"};
 
     private class HistoryEntry {
-        int scrollItem, scrollOffset;
+        int scrollItem;
+        int scrollOffset;
         File dir;
         String title;
     }
 
-    public static abstract interface DocumentSelectActivityDelegate {
-        public void didSelectFiles(DirectoryFragment activity, ArrayList<String> files);
-
-        public void startDocumentSelectActivity();
-
-        public void updateToolBarName(String name);
-    }
-
-    public boolean onBackPressed_() {
-        if (history.size() > 0) {
-            HistoryEntry he = history.remove(history.size() - 1);
-            title_ = he.title;
-            updateName(title_);
-            if (he.dir != null) {
-                listFiles(he.dir);
-            } else {
-                listRoots();
-            }
-            listView.setSelectionFromTop(he.scrollItem, he.scrollOffset);
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private void updateName(String title_) {
-        if (delegate != null) {
-            delegate.updateToolBarName(title_);
-        }
-    }
-
-    public void onFragmentDestroy() {
-        try {
-            if (receiverRegistered) {
-                getActivity().unregisterReceiver(receiver);
-            }
-        } catch (Exception e) {
-            Log.e("tmessages", e.toString());
-        }
-    }
-
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context arg0, Intent intent) {
-            Runnable r = new Runnable() {
-                public void run() {
-                    try {
-                        if (currentDir == null) {
-                            listRoots();
-                        } else {
-                            listFiles(currentDir);
-                        }
-                    } catch (Exception e) {
-                        Log.e("tmessages", e.toString());
-                    }
-                }
-            };
-            if (Intent.ACTION_MEDIA_UNMOUNTED.equals(intent.getAction())) {
-                listView.postDelayed(r, 1000);
-            } else {
-                r.run();
-            }
-        }
-    };
-
-    public void setDelegate(DocumentSelectActivityDelegate delegate) {
-        this.delegate = delegate;
-    }
-
-    private class ListItem {
-        int icon;
-        String title;
-        String subtitle = "";
-        String ext = "";
-        String thumb;
-        File file;
+    public static ExploreFragment newInstance() {
+        return new ExploreFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        if (!receiverRegistered) {
-            receiverRegistered = true;
-            IntentFilter filter = new IntentFilter();
-            filter.addAction(Intent.ACTION_MEDIA_BAD_REMOVAL);
-            filter.addAction(Intent.ACTION_MEDIA_CHECKING);
-            filter.addAction(Intent.ACTION_MEDIA_EJECT);
-            filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
-            filter.addAction(Intent.ACTION_MEDIA_NOFS);
-            filter.addAction(Intent.ACTION_MEDIA_REMOVED);
-            filter.addAction(Intent.ACTION_MEDIA_SHARED);
-            filter.addAction(Intent.ACTION_MEDIA_UNMOUNTABLE);
-            filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-            filter.addDataScheme("file");
-            getActivity().registerReceiver(receiver, filter);
-        }
+    protected int getLayoutId() {
+        return R.layout.explore_fragment;
+    }
 
-        if (fragmentView == null) {
-            fragmentView = inflater.inflate(R.layout.document_select_layout,
-                    container, false);
+    @Override
+    protected void initView() {
+        layout_bottom = findViewById(R.id.layout_bottom);
+        btn_choose_all = findViewById(R.id.btn_choose_all);
+        btn_delete = findViewById(R.id.btn_delete);
+        btn_add_file = findViewById(R.id.btn_add_file);
 
-            layout_bottom = (LinearLayout) fragmentView
-                    .findViewById(R.id.layout_bottom);
-            btn_choose_all = (Button) fragmentView
-                    .findViewById(R.id.btn_choose_all);
-            btn_delete = (Button) fragmentView
-                    .findViewById(R.id.btn_delete);
-            btn_add_file = (Button) fragmentView
-                    .findViewById(R.id.btn_add_file);
-            btn_choose_all.setOnClickListener(this);
-            btn_delete.setOnClickListener(this);
-            btn_add_file.setOnClickListener(this);
+        listView = findViewById(R.id.listView);
+        emptyView = findViewById(R.id.searchEmptyView);
 
-            listAdapter = new ListAdapter(getActivity());
-            emptyView = (TextView) fragmentView
-                    .findViewById(R.id.searchEmptyView);
-            emptyView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    return true;
+        setOnClickListener(R.id.btn_choose_all, R.id.btn_delete, R.id.btn_add_file);
+    }
+
+    @Override
+    protected void initData() {
+        requestPermission();
+
+        listAdapter = new ListAdapter(getActivity());
+
+        listView.setEmptyView(emptyView);
+        listView.setAdapter(listAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view,
+                                    int i, long l) {
+                if (i < 0 || i >= items.size()) {
+                    return;
                 }
-            });
-            listView = (ListView) fragmentView.findViewById(R.id.listView);
-            listView.setEmptyView(emptyView);
-            listView.setAdapter(listAdapter);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view,
-                                        int i, long l) {
-                    if (i < 0 || i >= items.size()) {
+                ListItem item = items.get(i);
+                File file = item.file;
+                if (file == null) {
+                    HistoryEntry he = history.remove(history.size() - 1);
+                    title_ = he.title;
+                    updateName(title_);
+                    if (he.dir != null) {
+                        listFiles(he.dir);
+                    } else {
+                        listRoots();
+                    }
+                    listView.setSelectionFromTop(he.scrollItem,
+                            he.scrollOffset);
+                } else if (file.isDirectory()) {
+                    HistoryEntry he = new HistoryEntry();
+                    he.scrollItem = listView.getFirstVisiblePosition();
+                    he.scrollOffset = listView.getChildAt(0).getTop();
+                    he.dir = currentDir;
+                    he.title = title_.toString();
+                    updateName(title_);
+                    if (!listFiles(file)) {
                         return;
                     }
-                    ListItem item = items.get(i);
-                    File file = item.file;
-                    if (file == null) {
-                        HistoryEntry he = history.remove(history.size() - 1);
-                        title_ = he.title;
-                        updateName(title_);
-                        if (he.dir != null) {
-                            listFiles(he.dir);
-                        } else {
-                            listRoots();
-                        }
-                        listView.setSelectionFromTop(he.scrollItem,
-                                he.scrollOffset);
-                    } else if (file.isDirectory()) {
-                        HistoryEntry he = new HistoryEntry();
-                        he.scrollItem = listView.getFirstVisiblePosition();
-                        he.scrollOffset = listView.getChildAt(0).getTop();
-                        he.dir = currentDir;
-                        he.title = title_.toString();
-                        updateName(title_);
-                        if (!listFiles(file)) {
-                            return;
-                        }
-                        history.add(he);
-                        title_ = item.title;
-                        updateName(title_);
-                        listView.setSelection(0);
-                    } else {
-                        if (!file.canRead()) {
-                            showErrorBox("没有权限！");
-                            return;
-                        }
-                        if (sizeLimit != 0) {
-                            if (file.length() > sizeLimit) {
-                                showErrorBox("文件大小超出限制！");
-                                return;
-                            }
-                        }
-                        if (file.length() == 0) {
-                            return;
-                        }
-                        if (file.toString().contains(chhosefileType[0]) ||
-                                file.toString().contains(chhosefileType[1]) ||
-                                file.toString().contains(chhosefileType[2]) ||
-                                file.toString().contains(chhosefileType[3]) ||
-                                file.toString().contains(chhosefileType[4])) {
-                            if (delegate != null) {
-                                ArrayList<String> files = new ArrayList<String>();
-                                files.add(file.getAbsolutePath());
-                                delegate.didSelectFiles(DirectoryFragment.this, files);
-                            }
-                        } else {
-                            showErrorBox("请选择正确的文件！");
+                    history.add(he);
+                    title_ = item.title;
+                    updateName(title_);
+                    listView.setSelection(0);
+                } else {
+                    if (!file.canRead()) {
+                        showErrorBox("没有权限！");
+                        return;
+                    }
+                    if (sizeLimit != 0) {
+                        if (file.length() > sizeLimit) {
+                            showErrorBox("文件大小超出限制！");
                             return;
                         }
                     }
+                    if (file.length() == 0) {
+                        return;
+                    }
+                    if (file.toString().contains(chooseFileType[0]) ||
+                            file.toString().contains(chooseFileType[1]) ||
+                            file.toString().contains(chooseFileType[2]) ||
+                            file.toString().contains(chooseFileType[3]) ||
+                            file.toString().contains(chooseFileType[4])) {
+                        if (delegate != null) {
+                            ArrayList<String> files = new ArrayList<String>();
+                            files.add(file.getAbsolutePath());
+                            delegate.didSelectFiles(ExploreFragment.this, files);
+                        }
+                    } else {
+                        showErrorBox("请选择正确的文件！");
+                        return;
+                    }
                 }
-            });
-            changgeCheckBookNum();
-            listRoots();
-        } else {
-            ViewGroup parent = (ViewGroup) fragmentView.getParent();
-            if (parent != null) {
-                parent.removeView(fragmentView);
             }
-        }
+        });
+        changgeCheckBookNum();
+        listRoots();
+    }
 
-        return fragmentView;
+    @Override
+    public boolean isStatusBarEnabled() {
+        // 使用沉浸式状态栏
+        return !super.isStatusBarEnabled();
     }
 
     @Override
@@ -293,10 +190,11 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
         listAdapter.notifyDataSetChanged();
     }
 
+    @SingleClick
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
+    public void onClick(View view) {
+        int viewId = view.getId();
+        switch (viewId) {
             case R.id.btn_choose_all:
                 checkAll();
                 changgeCheckBookNum();
@@ -357,55 +255,14 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
         }
     }
 
-    private class SaveBookToSqlLiteTask extends AsyncTask<List<BookMeta>, Void, Integer> {
-        private static final int FAIL = 0;
-        private static final int SUCCESS = 1;
-        private static final int REPEAT = 2;
-        private BookMeta repeatBookMeta;
+    @Permissions(Permission.READ_EXTERNAL_STORAGE)
+    private void requestPermission() {
+        toast("获取存储权限成功");
+    }
 
-        @Override
-        protected Integer doInBackground(List<BookMeta>... params) {
-            List<BookMeta> bookMetas = params[0];
-            for (BookMeta bookMeta : bookMetas) {
-                List<BookMeta> books = LitePal.where("bookPath = ?", bookMeta.getBookPath()).find(BookMeta.class);
-                if (books.size() > 0) {
-                    repeatBookMeta = bookMeta;
-                    return REPEAT;
-                }
-            }
-
-            try {
-                LitePal.saveAll(bookMetas);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return FAIL;
-            }
-            return SUCCESS;
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            super.onPostExecute(result);
-            String msg = "";
-            switch (result) {
-                case FAIL:
-                    msg = "由于一些原因添加书本失败";
-                    break;
-
-                case SUCCESS:
-                    msg = "导入书本成功";
-                    checkItems.clear();
-                    bookMetas = LitePal.findAll(BookMeta.class);
-                    listAdapter.notifyDataSetChanged();
-                    changgeCheckBookNum();
-                    break;
-
-                case REPEAT:
-                    msg = "书本" + repeatBookMeta.getBookName() + "重复了";
-                    break;
-            }
-
-            Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    private void updateName(String title_) {
+        if (delegate != null) {
+            delegate.updateToolBarName(title_);
         }
     }
 
@@ -624,7 +481,6 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
     }
 
     public void showReadBox(final String path) {
-        Log.d(LOG_TAG, "showReadBox: path=" + path);
         if (getActivity() == null) {
             return;
         }
@@ -668,6 +524,75 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
 
     private void changgeCheckBookNum() {
         btn_add_file.setText("加入书架(" + checkItems.size() + ")");
+    }
+
+    public static abstract interface DocumentSelectActivityDelegate {
+        public void didSelectFiles(ExploreFragment activity, ArrayList<String> files);
+
+        public void startDocumentSelectActivity();
+
+        public void updateToolBarName(String name);
+    }
+
+    private class SaveBookToSqlLiteTask extends AsyncTask<List<BookMeta>, Void, Integer> {
+        private static final int FAIL = 0;
+        private static final int SUCCESS = 1;
+        private static final int REPEAT = 2;
+        private BookMeta repeatBookMeta;
+
+        @Override
+        protected Integer doInBackground(List<BookMeta>... params) {
+            List<BookMeta> bookMetas = params[0];
+            for (BookMeta bookMeta : bookMetas) {
+                List<BookMeta> books = LitePal.where("bookPath = ?", bookMeta.getBookPath()).find(BookMeta.class);
+                if (books.size() > 0) {
+                    repeatBookMeta = bookMeta;
+                    return REPEAT;
+                }
+            }
+
+            try {
+                LitePal.saveAll(bookMetas);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return FAIL;
+            }
+            return SUCCESS;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            super.onPostExecute(result);
+            String msg = "";
+            switch (result) {
+                case FAIL:
+                    msg = "由于一些原因添加书本失败";
+                    break;
+
+                case SUCCESS:
+                    msg = "导入书本成功";
+                    checkItems.clear();
+                    bookMetas = LitePal.findAll(BookMeta.class);
+                    listAdapter.notifyDataSetChanged();
+                    changgeCheckBookNum();
+                    break;
+
+                case REPEAT:
+                    msg = "书本" + repeatBookMeta.getBookName() + "重复了";
+                    break;
+            }
+
+            Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class ListItem {
+        int icon;
+        String title;
+        String subtitle = "";
+        String ext = "";
+        String thumb;
+        File file;
     }
 
     private class ListAdapter extends BaseFragmentAdapter {
@@ -765,9 +690,5 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
 
             return false;
         }
-    }
-
-    public void finishFragment() {
-
     }
 }

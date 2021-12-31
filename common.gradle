@@ -10,7 +10,7 @@ android {
         // 目标适配版本
         targetSdkVersion 28
 
-        versionCode 27
+        versionCode 28
         versionName '6.8.3'
     }
 

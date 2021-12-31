@@ -17,9 +17,8 @@ import com.longluo.ebookreader.app.AppFragment;
 import com.longluo.ebookreader.manager.ActivityManager;
 import com.longluo.ebookreader.other.DoubleClickHelper;
 import com.longluo.ebookreader.ui.adapter.NavigationAdapter;
-import com.longluo.ebookreader.ui.fragment.FindFragment;
-import com.longluo.ebookreader.ui.fragment.HomeFragment;
-import com.longluo.ebookreader.ui.fragment.MessageFragment;
+import com.longluo.ebookreader.ui.fragment.BookshelfFragment;
+import com.longluo.ebookreader.ui.fragment.ExploreFragment;
 import com.longluo.ebookreader.ui.fragment.MineFragment;
 
 import io.github.longluo.base.FragmentPagerAdapter;
@@ -40,7 +39,7 @@ public final class HomeActivity extends AppActivity
     private FragmentPagerAdapter<AppFragment<?>> mPagerAdapter;
 
     public static void start(Context context) {
-        start(context, HomeFragment.class);
+        start(context, BookshelfFragment.class);
     }
 
     public static void start(Context context, Class<? extends AppFragment<?>> fragmentClass) {
@@ -63,14 +62,12 @@ public final class HomeActivity extends AppActivity
         mNavigationView = findViewById(R.id.rv_home_navigation);
 
         mNavigationAdapter = new NavigationAdapter(this);
-        mNavigationAdapter.addItem(new NavigationAdapter.MenuItem(getString(R.string.home_nav_index),
-                ContextCompat.getDrawable(this, R.drawable.home_home_selector)));
+        mNavigationAdapter.addItem(new NavigationAdapter.MenuItem(getString(R.string.home_nav_bookshelf),
+                ContextCompat.getDrawable(this, R.drawable.home_bookshelf_selector)));
         mNavigationAdapter.addItem(new NavigationAdapter.MenuItem(getString(R.string.home_nav_found),
-                ContextCompat.getDrawable(this, R.drawable.home_found_selector)));
-        mNavigationAdapter.addItem(new NavigationAdapter.MenuItem(getString(R.string.home_nav_message),
-                ContextCompat.getDrawable(this, R.drawable.home_message_selector)));
+                ContextCompat.getDrawable(this, R.drawable.home_explore_selector)));
         mNavigationAdapter.addItem(new NavigationAdapter.MenuItem(getString(R.string.home_nav_me),
-                ContextCompat.getDrawable(this, R.drawable.home_me_selector)));
+                ContextCompat.getDrawable(this, R.drawable.home_my_selector)));
         mNavigationAdapter.setOnNavigationListener(this);
         mNavigationView.setAdapter(mNavigationAdapter);
     }
@@ -78,9 +75,8 @@ public final class HomeActivity extends AppActivity
     @Override
     protected void initData() {
         mPagerAdapter = new FragmentPagerAdapter<>(this);
-        mPagerAdapter.addFragment(HomeFragment.newInstance());
-        mPagerAdapter.addFragment(FindFragment.newInstance());
-        mPagerAdapter.addFragment(MessageFragment.newInstance());
+        mPagerAdapter.addFragment(BookshelfFragment.newInstance());
+        mPagerAdapter.addFragment(ExploreFragment.newInstance());
         mPagerAdapter.addFragment(MineFragment.newInstance());
         mViewPager.setAdapter(mPagerAdapter);
 

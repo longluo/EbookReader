@@ -69,7 +69,6 @@ public final class NavigationAdapter extends AppAdapter<NavigationAdapter.MenuIt
     /**
      * {@link BaseAdapter.OnItemClickListener}
      */
-
     @Override
     public void onItemClick(RecyclerView recyclerView, View itemView, int position) {
         if (mSelectedPosition == position) {

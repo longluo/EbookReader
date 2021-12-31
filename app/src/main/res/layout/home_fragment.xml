@@ -13,7 +13,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:elevation="0px">
 
-        <com.longluo.android.widget.XCollapsingToolbarLayout
+        <com.longluo.ebookreader.widget.XCollapsingToolbarLayout
             android:id="@+id/ctl_home_bar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_256"
@@ -74,7 +74,7 @@
 
             </androidx.appcompat.widget.Toolbar>
 
-        </com.longluo.android.widget.XCollapsingToolbarLayout >
+        </com.longluo.ebookreader.widget.XCollapsingToolbarLayout >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_home_tab"

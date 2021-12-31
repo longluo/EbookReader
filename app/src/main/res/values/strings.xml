@@ -154,6 +154,8 @@
     <string name="home_nav_index">首页</string>
     <string name="home_nav_found">发现</string>
     <string name="home_nav_message">消息</string>
+    <string name="home_nav_bookshelf">书架</string>
+    <string name="home_nav_folder">文件夹</string>
     <string name="home_nav_me">我的</string>
 
     <!-- 登录 -->

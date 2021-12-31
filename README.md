@@ -9,7 +9,7 @@ The EbookReader is an Android application for reading books on Android devices. 
 * 博客地址：[Long Luo's Develop Notes](https://longluo.me)
 
 
-* [点击下载 Apk 体验](https://raw.githubusercontent.com/longluo/Android_Dev_Quick/dev/releases/Android_Dev_Quick_debug.apk)，
+* [点击下载 Apk 体验](https://raw.githubusercontent.com/longluo/EbookReader/dev/releases/EbookReader_v6.5.apk)，
 
 或者扫码下载
 

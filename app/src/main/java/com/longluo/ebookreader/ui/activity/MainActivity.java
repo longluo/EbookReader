@@ -33,7 +33,7 @@ import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookMeta;
-import com.longluo.ebookreader.ui.adapter.BookshelfAdapter;
+import com.longluo.ebookreader.ui.adapter.ShelfAdapter;
 import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.util.DisplayUtils;
 import com.longluo.ebookreader.widget.view.DragGridView;
@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity
     private Typeface typeface;
 
     private List<BookMeta> bookMetas;
-    private BookshelfAdapter shelfAdapter;
+    private ShelfAdapter shelfAdapter;
 
     //点击书本的位置
     private int itemPosition;
@@ -120,8 +120,8 @@ public class MainActivity extends BaseActivity
 //        SQLiteDatabase db = Connector.getDatabase();  //初始化数据库
         typeface = readSettingManager.getTypeface();
         bookMetas = LitePal.findAll(BookMeta.class);
-        shelfAdapter = new BookshelfAdapter(MainActivity.this, bookMetas);
-//        bookShelf.setAdapter(shelfAdapter);
+        shelfAdapter = new ShelfAdapter(MainActivity.this, bookMetas);
+        bookShelf.setAdapter(shelfAdapter);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class MainActivity extends BaseActivity
                 if (bookMetas.size() > position) {
                     itemPosition = position;
                     String bookname = bookMetas.get(itemPosition).getBookName();
-//                    shelfAdapter.setItemToFirst(itemPosition);
+                    shelfAdapter.setItemToFirst(itemPosition);
                     final BookMeta bookMeta = bookMetas.get(itemPosition);
                     bookMeta.setId(bookMetas.get(0).getId());
                     final String path = bookMeta.getBookPath();
@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity
                                     public void onClick(DialogInterface dialog, int which) {
                                         LitePal.deleteAll(BookMeta.class, "bookPath = ?", path);
                                         bookMetas = LitePal.findAll(BookMeta.class);
-//                                        shelfAdapter.setBookList(bookMetas);
+                                        shelfAdapter.setBookList(bookMetas);
                                     }
                                 }).setCancelable(true).show();
                         return;
@@ -223,7 +223,7 @@ public class MainActivity extends BaseActivity
         super.onRestart();
         DragGridView.setIsShowDeleteButton(false);
         bookMetas = LitePal.findAll(BookMeta.class);
-//        shelfAdapter.setBookList(bookMetas);
+        shelfAdapter.setBookList(bookMetas);
         closeBookAnimation();
     }
 
@@ -350,7 +350,7 @@ public class MainActivity extends BaseActivity
             animationCount++;
             if (animationCount >= 2) {
                 mIsOpen = true;
-//                shelfAdapter.setItemToFirst(itemPosition);
+                shelfAdapter.setItemToFirst(itemPosition);
 //                bookLists = DataSupport.findAll(BookList.class);
                 BookMeta bookMeta = bookMetas.get(itemPosition);
                 bookMeta.setId(bookMetas.get(0).getId());

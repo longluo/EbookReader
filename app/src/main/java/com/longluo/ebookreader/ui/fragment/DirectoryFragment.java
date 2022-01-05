@@ -32,10 +32,9 @@ import androidx.fragment.app.Fragment;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.ui.adapter.BaseFragmentAdapter;
-import com.longluo.ebookreader.widget.TextDetailDocumentsCell;
 import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.util.FileUtils;
-
+import com.longluo.ebookreader.widget.TextDetailDocumentsCell;
 
 import org.litepal.LitePal;
 
@@ -564,8 +563,7 @@ public class DirectoryFragment extends Fragment implements View.OnClickListener 
                 item.ext = sp.length > 1 ? sp[sp.length - 1] : "?";
                 item.subtitle = formatFileSize(file.length());
                 fname = fname.toLowerCase();
-                if (fname.endsWith(".jpg") || fname.endsWith(".png")
-                        || fname.endsWith(".gif") || fname.endsWith(".jpeg") || fname.endsWith(".txt")) {
+                if (BookUtils.isBookFormatSupport(fname)) {
                     item.thumb = file.getAbsolutePath();
                 }
             }

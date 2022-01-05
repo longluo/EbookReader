@@ -23,15 +23,15 @@ android {
     }
 
     buildTypes {
-        // 调试版本
+        // 璋冭瘯鐗堟湰
         debug {
             minifyEnabled false
         }
 
-        // 预览版本
+        // 棰勮鐗堟湰
         preview {}
 
-        // 正式版本
+        // 姝ｅ紡鐗堟湰
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

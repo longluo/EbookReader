@@ -17,10 +17,11 @@ android {
 
         ndkVersion '21.4.7075529'
 
-        ndk {
+        /** common.gradle中设置为so存放地址为libs，会产生冲突，导致jniLibs无法打包进去。所以为了统一就全部放在libs目录。 */
+/*        ndk {
             // 设置支持的SO库架构
-            abiFilters 'armeabi-v7a', 'armeabi', 'x86'
-        }
+            abiFilters 'arm64-v8a', 'armeabi-v7a' // ,'armeabi', 'x86'
+        }*/
 
         // 混淆配置
         proguardFiles 'proguard-sdk.pro', 'proguard-app.pro'
@@ -66,7 +67,7 @@ android {
             ])
             // 调试模式下只保留一种架构的 so 库，提升打包速度
             ndk {
-                abiFilters 'armeabi-v7a'
+                abiFilters 'arm64-v8a'
             }
         }
 
@@ -100,7 +101,7 @@ android {
                 // armeabi：万金油架构平台（占用率：0%）
                 // armeabi-v7a：曾经主流的架构平台（占用率：10%）
                 // arm64-v8a：目前主流架构平台（占用率：95%）
-                abiFilters 'armeabi-v7a', 'arm64-v8a'
+                abiFilters 'arm64-v8a', 'armeabi-v7a'
             }
         }
     }
@@ -163,7 +164,7 @@ dependencies {
     // LitePal Database
     implementation 'org.litepal.guolindev:core:3.2.3'
 
-    implementation 'com.google.code.gson:gson:2.8.7'
+    implementation 'com.google.code.gson:gson:2.8.8'
 
     // EventBus
     implementation 'org.greenrobot:eventbus:3.3.1'
@@ -254,8 +255,8 @@ dependencies {
     implementation 'com.tencent:mmkv-static:1.2.10'
 
     // 内存泄漏监测框架：https://github.com/square/leakcanary
-    // debugImplementation because LeakCanary should only run in debug builds.
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    previewImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.2.1'
 

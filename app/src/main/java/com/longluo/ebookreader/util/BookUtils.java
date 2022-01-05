@@ -12,6 +12,7 @@ import android.util.Log;
 import com.longluo.ebookreader.bean.Cache;
 import com.longluo.ebookreader.db.BookContent;
 import com.longluo.ebookreader.db.BookMeta;
+import com.longluo.ebookreader.libs.LibAntiword;
 import com.longluo.ebookreader.libs.LibMobi;
 import com.longluo.ebookreader.ui.activity.ReadActivity;
 import com.longluo.viewer.DocumentActivity;
@@ -28,10 +29,13 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class BookUtils {
     private static final String LOG_TAG = "BookUtils";
 
-    private static final String cachedPath = Environment.getExternalStorageDirectory() + "/treader/";
+    private static final String cachedPath = Environment.getExternalStorageDirectory() + "/ebookreader/";
+
     //存储的字符数
     public static final int cachedSize = 30000;
 //    protected final ArrayList<WeakReference<char[]>> myArray = new ArrayList<>();
@@ -54,6 +58,15 @@ public class BookUtils {
         }
     }
 
+    public static boolean isBookFormatSupport(String fileName) {
+        if (fileName.endsWith(".txt") || fileName.endsWith(".epub") || fileName.endsWith(".mobi")
+        || fileName.endsWith(".azw") || fileName.endsWith(".azw3")) {
+            return true;
+        }
+
+        return false;
+    }
+
     public synchronized void openBook(BookMeta bookMeta) throws IOException {
         this.bookMeta = bookMeta;
         //如果当前缓存不是要打开的书本就缓存书本同时删除缓存
@@ -71,7 +84,7 @@ public class BookUtils {
         File file = new File(filePath);
         String suffix = FileUtils.getSuffix(filePath);
 
-        Log.d(LOG_TAG, "openBook: filePath=" + filePath + ", suffix=" + suffix);
+        Timber.d("openBook: filePath=" + filePath + ", suffix=" + suffix);
 
         if (suffix.equals("txt")) {
             ReadActivity.openBook(activity, bookMeta);
@@ -97,7 +110,7 @@ public class BookUtils {
 
         String hashCodeStr = path.hashCode() + "";
         String convertFilePath = folderPath + File.separator + hashCodeStr + ".epub";
-        Log.d(LOG_TAG, "openMobiAzwBook: file=" + path + ", folder=" + folderPath
+        Timber.d("openMobiAzwBook: file=" + path + ", folder=" + folderPath
                 + ",convertFilePath=" + convertFilePath);
         File convertFile = new File(convertFilePath);
         if (!convertFile.exists()) {
@@ -116,11 +129,11 @@ public class BookUtils {
 
         String hashCodeStr = path.hashCode() + "";
         String convertFilePath = folderPath + File.separator + hashCodeStr + ".epub";
-        Log.d(LOG_TAG, "openMobiAzwBook: file=" + path + ", folder=" + folderPath
+        Timber.d("openMobiAzwBook: file=" + path + ", folder=" + folderPath
                 + ",convertFilePath=" + convertFilePath);
         File convertFile = new File(convertFilePath);
         if (!convertFile.exists()) {
-            LibMobi.convertDocToHtml(path, new File(folderPath, hashCodeStr).getPath());
+            LibAntiword.convertDocToHtml(path, new File(folderPath, hashCodeStr).getPath());
         }
         File firstConvertFile = new File(folderPath + File.separator + hashCodeStr + hashCodeStr + ".epub");
         if (firstConvertFile.exists()) {
@@ -265,11 +278,7 @@ public class BookUtils {
             }
 
             String bufStr = new String(buf);
-//            bufStr = bufStr.replaceAll("\r\n","\r\n\u3000\u3000");
-//            bufStr = bufStr.replaceAll("\u3000\u3000+[ ]*","\u3000\u3000");
             bufStr = bufStr.replaceAll("\r\n+\\s*", "\r\n\u3000\u3000");
-//            bufStr = bufStr.replaceAll("\r\n[ {0,}]","\r\n\u3000\u3000");
-//            bufStr = bufStr.replaceAll(" ","");
             bufStr = bufStr.replaceAll("\u0000", "");
             buf = bufStr.toCharArray();
             bookLen += buf.length;
@@ -278,10 +287,7 @@ public class BookUtils {
             cache.setSize(buf.length);
             cache.setData(new WeakReference<char[]>(buf));
 
-//            bookLen += result;
             myArray.add(cache);
-//            myArray.add(new WeakReference<char[]>(buf));
-//            myArray.set(index,);
             try {
                 File cacheBook = new File(fileName(index));
                 if (!cacheBook.exists()) {
@@ -374,7 +380,6 @@ public class BookUtils {
             }
             Cache cache = myArray.get(index);
             cache.setData(new WeakReference<char[]>(block));
-//            myArray.set(index, new WeakReference<char[]>(block));
         }
 
         return block;

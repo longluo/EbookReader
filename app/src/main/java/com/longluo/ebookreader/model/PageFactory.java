@@ -1,5 +1,6 @@
 package com.longluo.ebookreader.model;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +38,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 
 public class PageFactory {
@@ -260,6 +263,7 @@ public class PageFactory {
     }
 
     private void drawStatus(Bitmap bitmap) {
+        Timber.d("drawStatus mStatus = " + mStatus);
         String status = "";
         switch (mStatus) {
             case OPENING:
@@ -447,16 +451,16 @@ public class PageFactory {
     private class BookTask extends AsyncTask<Long, java.lang.Void, Boolean> {
         private long begin = 0;
 
+        @SuppressLint("TimberArgCount")
         @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            Log.e("onPostExecute", isCancelled() + "");
+            Timber.d("BookTask onPostExecute", isCancelled() + "");
             if (isCancelled()) {
                 return;
             }
             if (result) {
                 PageFactory.mStatus = PageFactory.Status.FINISH;
-//                m_mbBufLen = mBookUtil.getBookLen();
                 currentPage = getPageForBegin(begin);
                 if (mBookPageView != null) {
                     currentPage(true);

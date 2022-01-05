@@ -45,7 +45,6 @@ import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.ui.dialog.ReadSettingDialog;
 import com.longluo.ebookreader.util.BrightnessUtils;
 import com.longluo.ebookreader.model.PageFactory;
-import com.longluo.ebookreader.util.StringUtils;
 import com.longluo.ebookreader.widget.page.PageView;
 import com.longluo.ebookreader.widget.page.PageMode;
 import com.longluo.ebookreader.widget.page.PageStyle;
@@ -62,6 +61,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.github.longluo.util.StringUtils;
 
 
 public class ReadActivity extends BaseActivity implements SpeechSynthesizerListener {
@@ -541,11 +541,11 @@ public class ReadActivity extends BaseActivity implements SpeechSynthesizerListe
 
     private void toggleNightMode() {
         if (isNightMode) {
-            mTvDayNightMode.setText(StringUtils.getString(R.string.nb_mode_morning));
+            mTvDayNightMode.setText(StringUtils.getString(this, R.string.mode_day));
             Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_read_menu_morning);
             mTvDayNightMode.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
         } else {
-            mTvDayNightMode.setText(StringUtils.getString(R.string.nb_mode_night));
+            mTvDayNightMode.setText(StringUtils.getString(this, R.string.mode_night));
             Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_read_menu_night);
             mTvDayNightMode.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
         }

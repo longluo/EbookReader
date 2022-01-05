@@ -2,83 +2,8 @@
     <string name="app_name">EbookReader</string>
     <string name="action_settings">Settings</string>
 
-    <!-- 通用的 -->
-    <string name="common_loading">加载中&#8230;</string>
-    <string name="common_unknown_error">未知错误</string>
-
-    <string name="common_confirm">确定</string>
-    <string name="common_cancel">取消</string>
-
-    <string name="common_year">年</string>
-    <string name="common_month">月</string>
-    <string name="common_day">日</string>
-
-    <string name="common_hour">时</string>
-    <string name="common_minute">分</string>
-    <string name="common_second">秒</string>
-
-    <string name="common_crash_hint">应用出了点小意外，正在重新启动</string>
-
-    <string name="common_network_error">当前网络不可用，请检查网络设置</string>
-
-    <string name="common_video_error_not_support">该视频不适合在此设备上播放</string>
-    <string name="common_video_error_unknown">无法播放此视频</string>
-    <string name="common_video_error_supplement">错误类型：%d，错误代码：%d</string>
-
-    <string name="common_phone_input_hint">请输入手机号码</string>
-    <string name="common_phone_input_error">手机号输入不正确</string>
-
-    <string name="common_password_input_error">请输入密码</string>
-    <string name="common_password_input_unlike">两次密码输入不一致，请重新输入</string>
-
-    <string name="common_code_input_hint">请输入验证码</string>
-    <string name="common_code_send">发送验证码</string>
-    <string name="common_code_send_hint">验证码已发送，请注意查收</string>
-    <string name="common_code_error_hint">验证码错误，请检查输入</string>
-
-    <string name="common_step_next">下一步</string>
-    <string name="common_step_complete">完成</string>
-    <string name="common_step_commit">提交</string>
-
-    <string name="common_permission_alert">授权提醒</string>
-    <string name="common_permission_fail_1">授权失败，请正确授予权限</string>
-    <string name="common_permission_fail_2">获取权限失败，请手动授予权限</string>
-    <string name="common_permission_fail_3">获取权限失败，请手动授予%s</string>
-    <string name="common_permission_fail_4">没有授予后台定位权限，请您选择"始终允许"</string>
-    <string name="common_permission_goto">前往授权</string>
-
-    <string name="common_permission_calendar">日历权限</string>
-    <string name="common_permission_camera">相机权限</string>
-    <string name="common_permission_contacts">通讯录权限</string>
-    <string name="common_permission_location">定位权限</string>
-    <string name="common_permission_location_background">后台定位权限</string>
-    <string name="common_permission_microphone">麦克风权限</string>
-    <string name="common_permission_phone">电话权限</string>
-    <string name="common_permission_call_log">通话记录权限</string>
-    <string name="common_permission_sensors">身体传感器权限</string>
-    <string name="common_permission_activity_recognition">健身运动权限</string>
-    <string name="common_permission_sms">短信权限</string>
-    <string name="common_permission_storage">存储权限</string>
-
-    <string name="common_permission_install">安装应用权限</string>
-    <string name="common_permission_notification">通知栏权限</string>
-    <string name="common_permission_window">悬浮窗权限</string>
-    <string name="common_permission_setting">系统设置权限</string>
-
-    <string name="common_network_hint">当前没有网络连接，请检查网络设置</string>
-    <string name="common_no_more_data">没有更多数据了</string>
-
-    <string name="common_web_ssl_error_title">当前网站安全证书已过期或不可信\n是否继续浏览</string>
-    <string name="common_web_ssl_error_allow">继续浏览</string>
-    <string name="common_web_ssl_error_reject">返回上一页</string>
-
-    <string name="common_web_location_permission_title">当前网站需要获取您的地理位置</string>
-    <string name="common_web_location_permission_allow">授予</string>
-    <string name="common_web_location_permission_reject">拒绝</string>
-
-    <string name="common_web_call_phone_title">当前号码 %s</string>
-    <string name="common_web_call_phone_allow">拨打</string>
-    <string name="common_web_call_phone_reject">取消</string>
+    <string name="about_description">\u3000\u3000这是一款开源的阅读软件，你可以fork我们的代码自己编译APK。欢迎提交代码帮助改善应用。\n\u3000\u3000公众号[开源阅读]！</string>
+    <string name="version_name">Version %s</string>
 
     <!-- 网络请求 -->
     <string name="http_loading">加载中&#8230;</string>
@@ -517,9 +442,6 @@
     <string name="nb.download.complete">已完成</string>
     <string name="nb.download.source_error">资源或网络错误</string>
 
-    <!--mode-->
-    <string name="nb.mode.night">夜间</string>
-    <string name="nb.mode.morning">日间</string>
 
     <!--read-->
     <string name="book_content">目录</string>
@@ -726,11 +648,10 @@
     <string name="vertical">Vertical</string>
     <string name="minutes">Minutes</string>
     <string name="close_book">Close Book</string>
-    <string name="background">Background</string>
+
     <string name="dialog_color_picker">Color Picker</string>
     <string name="invalid_color_value">Invalid value</string>
-    <string name="add">Add</string>
-    <string name="search">Find</string>
+
     <string name="export_bookmarks">Export</string>
     <string name="simple_scroll_animation">Animate page transition (scroll)</string>
     <string name="___TABS___SECTION___"></string>
@@ -751,10 +672,7 @@
     <string name="prev_keys">Prev buttons:</string>
     <string name="starred">Favorites</string>
     <string name="bookmarks">Bookmarks</string>
-    <string name="back">Back</string>
     <string name="import_bookmarks">Import</string>
-    <string name="email">Email</string>
-    <string name="file">File</string>
     <string name="filter">Filter</string>
     <string name="bookmark_by_date">Date</string>
     <string name="bookmark_by_book">Title</string>
@@ -791,7 +709,6 @@
     <string name="restore_defaults_full">Restore default settings?</string>
     <string name="send_file_to">Send file to</string>
     <string name="apply_a_new_screen_orientation_">Apply new screen orientation?</string>
-    <string name="send_mail">Send email</string>
     <string name="do_you_want_to_clear_everything_">Clear everything?</string>
     <string name="new_beta_version_available">New Beta version is available</string>
     <string name="___NOTIFICATION___SECTION___"></string>
@@ -837,13 +754,7 @@
     <string name="by_title">Title</string>
     <string name="by_author">Author</string>
     <string name="by_series">Series</string>
-    <string name="list">List</string>
-    <string name="compact">Condensed</string>
-    <string name="grid">Grid</string>
-    <string name="cover">Book Cover</string>
-    <string name="author">Author</string>
-    <string name="genre">Genre</string>
-    <string name="serie">Series</string>
+
     <string name="___READING___SCREEN___SECTION___"></string>
     <string name="enter_password">Enter Password</string>
     <string name="page_position">Move and Resize</string>
@@ -893,16 +804,6 @@
     <string name="strikethrough_of_text">Strikethrough</string>
     <string name="text">Text</string>
     <string name="bookmark_on_page_">Bookmark to page</string>
-    <string name="share">Share</string>
-    <string name="copy">Copy</string>
-    <string name="search_in_google">Google Search</string>
-    <string name="search_in_document">Find in Document</string>
-    <string name="web_dict">Web Dictionary Lookup</string>
-    <string name="___TO___CHECK___SECTION___"></string>
-    <string name="font">Font</string>
-    <string name="font_name">Font</string>
-    <string name="text_page">Page</string>
-    <string name="page">Page</string>
     <string name="___INDEFINITE___SECTION___"></string>
     <string name="choose_">Choose …</string>
     <string name="crop_white_borders">Crop White Space</string>
@@ -930,7 +831,6 @@
     <string name="clear_all_recent">Clear all recent documents?</string>
     <string name="clear_all_bookmars">Clear all bookmarks?</string>
     <string name="this_function_will_works_in_modern_android">This function is for newer Android devices</string>
-    <string name="menu">Menu</string>
     <string name="search_not_supported_formats">Search in non-supported formats</string>
     <string name="add_bookmark">New bookmark</string>
     <string name="performance_settings">Performance settings</string>
@@ -1029,7 +929,6 @@
     <string name="meta_tags">Meta tags</string>
     <string name="librera_pro_program_for_reading_books_without_advertising_installing_it_removes_advertising_in_this_application">Librera PRO: Install to remove ads</string>
     <string name="annotation">Annotation</string>
-    <string name="book">Book</string>
     <string name="information">File Info</string>
     <string name="file_path">Path</string>
     <string name="year">Year</string>

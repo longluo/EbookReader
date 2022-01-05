@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.longluo.ebookreader.R;
@@ -18,10 +19,11 @@ import com.longluo.ebookreader.manager.ActivityManager;
 import com.longluo.ebookreader.other.DoubleClickHelper;
 import com.longluo.ebookreader.ui.adapter.NavigationAdapter;
 import com.longluo.ebookreader.ui.fragment.BookshelfFragment;
-import com.longluo.ebookreader.ui.fragment.ExploreFragment;
+import com.longluo.ebookreader.ui.fragment.FileExplorerFragment;
 import com.longluo.ebookreader.ui.fragment.MineFragment;
 
 import io.github.longluo.base.FragmentPagerAdapter;
+import io.github.longluo.base.FragmentStateAdapter;
 
 /**
  * 首页界面
@@ -74,9 +76,9 @@ public final class HomeActivity extends AppActivity
 
     @Override
     protected void initData() {
-        mPagerAdapter = new FragmentPagerAdapter<>(this);
+        mPagerAdapter = new FragmentPagerAdapter<AppFragment<?>>(this);
         mPagerAdapter.addFragment(BookshelfFragment.newInstance());
-        mPagerAdapter.addFragment(ExploreFragment.newInstance());
+        mPagerAdapter.addFragment(FileExplorerFragment.newInstance());
         mPagerAdapter.addFragment(MineFragment.newInstance());
         mViewPager.setAdapter(mPagerAdapter);
 
@@ -112,10 +114,10 @@ public final class HomeActivity extends AppActivity
             case 0:
             case 1:
             case 2:
-            case 3:
                 mViewPager.setCurrentItem(fragmentIndex);
                 mNavigationAdapter.setSelectedPosition(fragmentIndex);
                 break;
+
             default:
                 break;
         }
@@ -130,9 +132,9 @@ public final class HomeActivity extends AppActivity
             case 0:
             case 1:
             case 2:
-            case 3:
                 mViewPager.setCurrentItem(position);
                 return true;
+
             default:
                 return false;
         }

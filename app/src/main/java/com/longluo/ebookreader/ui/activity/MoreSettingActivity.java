@@ -64,6 +64,7 @@ public class MoreSettingActivity extends BaseActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

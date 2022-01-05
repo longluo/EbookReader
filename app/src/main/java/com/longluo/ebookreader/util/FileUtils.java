@@ -27,14 +27,156 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.longluo.util.IOUtils;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
 
-
 public class FileUtils {
     public static String name;
     public static int folderNum = 0;
+
+    public static final byte BLANK = 0x0a;
+
+    //采用自己的格式去设置文件，防止文件被系统文件查询到
+    public static final String SUFFIX_NB = ".nb";
+    public static final String SUFFIX_TXT = ".txt";
+    public static final String SUFFIX_EPUB = ".epub";
+    public static final String SUFFIX_PDF = ".pdf";
+
+    //获取文件夹
+    public static File getFolder(String filePath) {
+        File file = new File(filePath);
+        //如果文件夹不存在，就创建它
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
+    }
+
+    //获取文件
+    public static synchronized File createFileIfNotExist(String filePath) {
+        File file = new File(filePath);
+        try {
+            if (!file.exists()) {
+                //创建父类文件夹
+                getFolder(file.getParent());
+                //创建文件
+                file.createNewFile();
+            }
+        } catch (IOException e) {
+        }
+        return file;
+    }
+
+    //获取Cache文件夹
+    public static String getFilesPath() {
+        if (isSdCardExist()) {
+            try {
+                return App.getContext()
+                        .getExternalFilesDir(null)
+                        .getAbsolutePath();
+            } catch (Exception ignored) {
+            }
+        }
+        return App.getContext()
+                .getFilesDir()
+                .getAbsolutePath();
+    }
+
+    //获取Cache文件夹
+    public static String getCachePath() {
+        if (isSdCardExist()) {
+            try {
+                return App.getContext()
+                        .getExternalCacheDir()
+                        .getAbsolutePath();
+            } catch (Exception ignored) {
+            }
+        }
+
+        return App.getContext()
+                .getCacheDir()
+                .getAbsolutePath();
+    }
+
+    public static String getFileSize(long size) {
+        if (size <= 0) return "0";
+        final String[] units = new String[]{"b", "kb", "M", "G", "T"};
+        //计算单位的，原理是利用lg,公式是 lg(1024^n) = nlg(1024)，最后 nlg(1024)/lg(1024) = n。
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        //计算原理是，size/单位值。单位值指的是:比如说b = 1024,KB = 1024^2
+        return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
+    /**
+     * 本来是获取File的内容的。但是为了解决文本缩进、换行的问题
+     * 这个方法就是专门用来获取书籍的...
+     * <p>
+     * 应该放在BookRepository中。。。
+     *
+     * @param file
+     * @return
+     */
+    public static String getFileContent(File file) {
+        Reader reader = null;
+        String str = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            reader = new FileReader(file);
+            BufferedReader br = new BufferedReader(reader);
+            while ((str = br.readLine()) != null) {
+                //过滤空语句
+                if (!str.equals("")) {
+                    //由于sb会自动过滤\n,所以需要加上去
+                    sb.append("    " + str + "\n");
+                }
+            }
+        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
+        } finally {
+            IOUtils.close(reader);
+        }
+        return sb.toString();
+    }
+
+    //递归删除文件夹下的数据
+    public static synchronized void deleteFile(String filePath) {
+        File file = new File(filePath);
+        if (!file.exists()) return;
+
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (File subFile : files) {
+                String path = subFile.getPath();
+                deleteFile(path);
+            }
+        }
+        //删除文件
+        file.delete();
+    }
+
+    public static String getFileSuffix(String filePath) {
+        File file = new File(filePath);
+        return getFileSuffix(file);
+    }
+
+    public static String getFileSuffix(File file) {
+        if (file == null || !file.exists() || file.isDirectory()) {
+            return "";
+        }
+        String fileName = file.getName();
+        int dotIndex = fileName.lastIndexOf(".");
+        return dotIndex > 0 ? fileName.substring(dotIndex) : "";
+    }
+
+    public static void createFolderIfNotExists(String path) {
+        File folder = new File(path);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+    }
+
 
     /**
      * 计算目录大小
@@ -528,83 +670,12 @@ public class FileUtils {
         return files;
     }
 
-    //获取Cache文件夹
-    public static String getCachePath(){
-        if (isSdCardExist()){
-            return App.getContext()
-                    .getExternalCacheDir()
-                    .getAbsolutePath();
-        }
-        else{
-            return App.getContext()
-                    .getCacheDir()
-                    .getAbsolutePath();
-        }
-    }
-
-    public static String getFileSize(long size) {
-        if (size <= 0) return "0";
-        final String[] units = new String[]{"b", "kb", "M", "G", "T"};
-        //计算单位的，原理是利用lg,公式是 lg(1024^n) = nlg(1024)，最后 nlg(1024)/lg(1024) = n。
-        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
-        //计算原理是，size/单位值。单位值指的是:比如说b = 1024,KB = 1024^2
-        return new DecimalFormat("#,##0.##").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
-    }
-
-    /**
-     * 本来是获取File的内容的。但是为了解决文本缩进、换行的问题
-     * 这个方法就是专门用来获取书籍的...
-     *
-     * 应该放在BookRepository中。。。
-     * @param file
-     * @return
-     */
-    public static String getFileContent(File file){
-        Reader reader = null;
-        String str = null;
-        StringBuilder sb = new StringBuilder();
-        try {
-            reader = new FileReader(file);
-            BufferedReader br = new BufferedReader(reader);
-            while ((str = br.readLine()) != null){
-                //过滤空语句
-                if (!str.equals("")){
-                    //由于sb会自动过滤\n,所以需要加上去
-                    sb.append("    "+str+"\n");
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            IOUtils.close(reader);
-        }
-        return sb.toString();
-    }
-
     //判断是否挂载了SD卡
     public static boolean isSdCardExist(){
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())){
             return true;
         }
         return false;
-    }
-
-    //递归删除文件夹下的数据
-    public static synchronized void deleteFile(String filePath){
-        File file = new File(filePath);
-        if (!file.exists()) return;
-
-        if (file.isDirectory()){
-            File[] files = file.listFiles();
-            for (File subFile : files){
-                String path = subFile.getPath();
-                deleteFile(path);
-            }
-        }
-        //删除文件
-        file.delete();
     }
 
     //由于递归的耗时问题，取巧只遍历内部三层

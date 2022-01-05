@@ -39,8 +39,6 @@ import android.widget.ViewAnimator;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.longluo.viewer.R;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;

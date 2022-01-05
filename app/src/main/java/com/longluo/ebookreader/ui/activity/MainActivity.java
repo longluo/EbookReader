@@ -85,6 +85,7 @@ public class MainActivity extends BaseActivity
 
     private static TextView cover;
     private static ImageView content;
+
     //书本打开动画缩放比例
     private float scaleTimes;
     //书本打开缩放动画
@@ -109,7 +110,6 @@ public class MainActivity extends BaseActivity
     @Override
     protected void initData(Bundle savedInstanceState) {
         setSupportActionBar(toolbar);
-//        toolbar.setNavigationIcon(R.drawable.ic_menu_white_24dp);//设置导航图标
 
         readSettingManager = ReadSettingManager.getInstance();
         // 删除窗口背景
@@ -117,7 +117,6 @@ public class MainActivity extends BaseActivity
         mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         wmRootView = new AbsoluteLayout(this);
         rootView = getWindow().getDecorView();
-//        SQLiteDatabase db = Connector.getDatabase();  //初始化数据库
         typeface = readSettingManager.getTypeface();
         bookMetas = LitePal.findAll(BookMeta.class);
         shelfAdapter = new ShelfAdapter(MainActivity.this, bookMetas);
@@ -129,8 +128,6 @@ public class MainActivity extends BaseActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
                 Intent intent = new Intent(MainActivity.this, FileChooserActivity.class);
                 MainActivity.this.startActivity(intent);
             }
@@ -170,49 +167,6 @@ public class MainActivity extends BaseActivity
                     }
 
                     BookUtils.openBook(MainActivity.this, bookMeta);
-
-//                    if (!isOpen){
-//                        bookLists = DataSupport.findAll(BookList.class);
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                    itemTextView = (TextView) view.findViewById(R.id.tv_name);
-//                    //获取item在屏幕中的x，y坐标
-//                    itemTextView.getLocationInWindow(location);
-//
-//                    //初始化dialog
-//                    mWindowManager.addView(wmRootView, getDefaultWindowParams());
-//                    cover = new TextView(getApplicationContext());
-//                    cover.setBackgroundDrawable(getResources().getDrawable(R.mipmap.cover_default_new));
-//                    cover.setCompoundDrawablesWithIntrinsicBounds(null,null,null,getResources().getDrawable(R.mipmap.cover_type_txt));
-//                    cover.setText(bookname);
-//                    cover.setTextColor(getResources().getColor(R.color.read_textColor));
-//                    cover.setTypeface(typeface);
-//                    int coverPadding = (int) CommonUtil.convertDpToPixel(getApplicationContext(), 10);
-//                    cover.setPadding(coverPadding, coverPadding, coverPadding, coverPadding);
-//
-//                    content = new ImageView(getApplicationContext());
-//                    Bitmap contentBitmap = Bitmap.createBitmap(itemTextView.getMeasuredWidth(),itemTextView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-//                    contentBitmap.eraseColor(getResources().getColor(R.color.read_background_paperYellow));
-//                    content.setImageBitmap(contentBitmap);
-//
-//                    AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(
-//                            itemTextView.getLayoutParams());
-//                    params.x = location[0];
-//                    params.y = location[1];
-//                    wmRootView.addView(content, params);
-//                    wmRootView.addView(cover, params);
-//
-//                    initAnimation();
-//                    if (contentAnimation.getMReverse()) {
-//                        contentAnimation.reverse();
-//                    }
-//                    if (coverAnimation.getMReverse()) {
-//                        coverAnimation.reverse();
-//                    }
-//                    cover.clearAnimation();
-//                    cover.startAnimation(coverAnimation);
-//                    content.clearAnimation();
-//                    content.startAnimation(contentAnimation);
                 }
             }
         });
@@ -351,10 +305,8 @@ public class MainActivity extends BaseActivity
             if (animationCount >= 2) {
                 mIsOpen = true;
                 shelfAdapter.setItemToFirst(itemPosition);
-//                bookLists = DataSupport.findAll(BookList.class);
                 BookMeta bookMeta = bookMetas.get(itemPosition);
                 bookMeta.setId(bookMetas.get(0).getId());
-
                 BookUtils.openBook(MainActivity.this, bookMeta);
             }
 
@@ -410,15 +362,6 @@ public class MainActivity extends BaseActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }else if (id == R.id.action_select_file){
-//            Intent intent = new Intent(MainActivity.this, FileChooserActivity.class);
-//            startActivity(intent);
-//        }
-
         if (id == R.id.action_select_file) {
             Intent intent = new Intent(MainActivity.this, FileChooserActivity.class);
             startActivity(intent);
@@ -442,49 +385,11 @@ public class MainActivity extends BaseActivity
             Intent intent = new Intent(MainActivity.this, AboutActivity.class);
             startActivity(intent);
         }
-
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
     public void checkUpdate(final boolean showMessage) {
         String url = "http://api.fir.im/apps/latest/57be8d56959d6960d5000327";
-//        OkHttpUtils
-//                .get()
-//                .url(url)
-//                .addParams("api_token", "a48b9bbcef61f34c51160bfed26aa6b2")
-//                .build()
-//                .execute(new StringCallback() {
-//                    @Override
-//                    public void onError(Call call, Exception e, int id) {
-//                        if (showMessage) {
-//                            Toast.makeText(MainActivity.this, "检查更新失败！", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onResponse(String response, int id) {
-//                        try {
-//                            JSONObject jsonObject = new JSONObject(response);
-//                            String version = jsonObject.getString("version");
-//                            String versionCode = CommonUtil.getVersionCode(MainActivity.this) + "";
-//                            if (versionCode.compareTo(version) < 0) {
-//                                showUpdateDialog(jsonObject.getString("name"), jsonObject.getString("versionShort"), jsonObject.getString("changelog"), jsonObject.getString("update_url"), MainActivity.this);
-//                            } else {
-//                                if (showMessage) {
-//                                    Toast.makeText(MainActivity.this, "已经是最新版本！", Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//                        } catch (JSONException e) {
-//                            if (showMessage) {
-//                                Toast.makeText(MainActivity.this, "检查更新失败", Toast.LENGTH_SHORT).show();
-//                            }
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                });
     }
 
     public static void showUpdateDialog(final String name, String version, String changelog, final String updateUrl, final Context context) {

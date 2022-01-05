@@ -209,8 +209,6 @@ public class BookUtils {
     }
 
     public char current() {
-//        int pos = (int) (position % cachedSize);
-//        int cachePos = (int) (position / cachedSize);
         int cachePos = 0;
         int pos = 0;
         int len = 0;

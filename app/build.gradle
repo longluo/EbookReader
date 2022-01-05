@@ -20,7 +20,7 @@ android {
         /** common.gradle中设置为so存放地址为libs，会产生冲突，导致jniLibs无法打包进去。所以为了统一就全部放在libs目录。 */
 /*        ndk {
             // 设置支持的SO库架构
-            abiFilters 'arm64-v8a', 'armeabi-v7a' // ,'armeabi', 'x86'
+            abiFilters 'arm64-v8a', 'armeabi-v7a', 'armeabi', 'x86'
         }*/
 
         // 混淆配置
@@ -267,7 +267,7 @@ dependencies {
     implementation 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
     // OpenCC to convert Simp. Chinese to Trad. Chinese
-    implementation 'com.zqc.opencc.android.lib:lib-opencc-android:0.8.0@aar'
+    implementation 'com.github.qichuan:android-opencc:1.2.0'
 
     //implementation 'com.google.android.gms:play-services-ads:20.5.0'
 

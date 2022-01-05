@@ -273,25 +273,4 @@ public class FileActivity extends BaseActivity {
             }
         }
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case EXTERNAL_STORAGE_REQ_CODE:
-                // 如果请求被拒绝，那么通常grantResults数组为空
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //申请成功，进行相应操作
-                    root = Environment.getExternalStorageDirectory();
-                    searchFile();
-                } else {
-                    //申请失败，可以继续向用户解释。
-                }
-                break;
-
-            default:
-                break;
-        }
-    }
 }

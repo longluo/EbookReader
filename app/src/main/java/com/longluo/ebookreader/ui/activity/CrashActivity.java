@@ -49,6 +49,12 @@ public final class CrashActivity extends AppActivity {
 
     private static final String INTENT_KEY_IN_THROWABLE = "throwable";
 
+    private TextView mTitleView;
+    private DrawerLayout mDrawerLayout;
+    private TextView mInfoView;
+    private TextView mMessageView;
+    private String mStackTrace;
+
     /**
      * 系统包前缀列表
      */
@@ -69,12 +75,6 @@ public final class CrashActivity extends AppActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         application.startActivity(intent);
     }
-
-    private TextView mTitleView;
-    private DrawerLayout mDrawerLayout;
-    private TextView mInfoView;
-    private TextView mMessageView;
-    private String mStackTrace;
 
     @Override
     protected int getLayoutId() {

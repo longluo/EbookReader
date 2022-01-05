@@ -144,7 +144,7 @@
                         android:id="@+id/read_tv_day_night_mode"
                         style="@style/NB.Theme.TextAppearance.Read.BottomMenu.Button"
                         android:drawableTop="@drawable/ic_read_menu_night"
-                        android:text="@string/nb.mode.night" />
+                        android:text="@string/mode_night" />
 
                     <TextView
                         android:id="@+id/read_tv_setting"

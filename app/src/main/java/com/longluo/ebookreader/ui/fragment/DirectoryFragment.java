@@ -47,7 +47,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class DirectoryFragment extends Fragment implements View.OnClickListener {
     private static final String LOG_TAG = DirectoryFragment.class.getSimpleName();
 

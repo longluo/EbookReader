@@ -9,11 +9,20 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.provider.Settings;
 
+import java.util.regex.Pattern;
+
 /**
  * requires android.permission.ACCESS_NETWORK_STATE
  */
 @SuppressLint("MissingPermission")
 public class NetworkUtils {
+    public static final Pattern headerPattern = Pattern.compile("@Header:\\{.+?\\}", Pattern.CASE_INSENSITIVE);
+
+    public static final int SUCCESS = 10000;
+    public static final int ERROR_CODE_NONET = 10001;
+    public static final int ERROR_CODE_OUTTIME = 10002;
+    public static final int ERROR_CODE_ANALY = 10003;
+
     public static final int TYPE_UNKNOWN = -1;
 
     /**

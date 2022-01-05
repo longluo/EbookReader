@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName '1.0'
+        versionCode 2
+        versionName '1.1'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -86,7 +86,7 @@ android.libraryVariants.findAll { variant -> variant.name == 'Release' } each { 
 
     task("bundle${variant.name}Javadoc", type: Zip) {
         description "Bundles Javadoc into zip for $variant.name."
-        classifier = "javadoc"
+        getArchiveClassifier = "javadoc"
         from tasks["generate${variant.name}Javadoc"]
     }
 }

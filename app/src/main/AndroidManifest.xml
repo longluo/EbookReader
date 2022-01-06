@@ -83,12 +83,6 @@
 
         </activity>
 
-        <activity
-            android:name=".ui.activity.MainActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <!-- 首页 -->
         <activity
             android:name=".ui.activity.HomeActivity"
@@ -132,10 +126,6 @@
 
         <activity
             android:name=".ui.activity.BookMarkActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".ui.activity.FileChooserActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity

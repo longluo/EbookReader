@@ -56,27 +56,20 @@
             android:text="删除" />
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/listView"
+    <com.longluo.ebookreader.widget.refresh.RefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/titlebar"
-        android:layout_above="@id/rl_bottom"
-        android:cacheColorHint="#ffffffff"
-        android:clipToPadding="false"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:fadingEdge="none"
-        android:fadingEdgeLength="0dp" />
+        android:layout_below="@id/titlebar">
 
-    <TextView
-        android:id="@+id/searchEmptyView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="top"
-        android:gravity="center"
-        android:textColor="#808080"
-        android:textSize="20dp"
-        android:visibility="gone" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/local_book_rv_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.longluo.ebookreader.widget.refresh.RefreshLayout>
 
+    <View
+        android:id="@+id/v_shadow"
+        style="@style/Style.Shadow.Bottom"
+        android:layout_above="@+id/rl_bottom" />
 </RelativeLayout>

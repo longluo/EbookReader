@@ -32,7 +32,6 @@ import java.util.List;
 
 import butterknife.BindView;
 
-
 public class FileActivity extends BaseActivity {
     private static final String LOG_TAG = FileActivity.class.getSimpleName();
 

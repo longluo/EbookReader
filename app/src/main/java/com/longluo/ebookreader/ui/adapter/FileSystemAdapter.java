@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 public class FileSystemAdapter extends BaseListAdapter<File> {
     //记录item是否被选中的Map
     private HashMap<File, Boolean> mCheckMap = new HashMap<>();
@@ -29,6 +28,7 @@ public class FileSystemAdapter extends BaseListAdapter<File> {
         for (File file : list) {
             mCheckMap.put(file, false);
         }
+
         super.refreshItems(list);
     }
 
@@ -83,7 +83,6 @@ public class FileSystemAdapter extends BaseListAdapter<File> {
             mCheckMap.put(file, true);
             ++mCheckedCount;
         }
-        notifyDataSetChanged();
     }
 
     public void setCheckedAll(boolean isChecked) {
@@ -99,7 +98,6 @@ public class FileSystemAdapter extends BaseListAdapter<File> {
                 }
             }
         }
-        notifyDataSetChanged();
     }
 
     private boolean isFileLoaded(String id) {
@@ -130,6 +128,7 @@ public class FileSystemAdapter extends BaseListAdapter<File> {
                 files.add(entry.getKey());
             }
         }
+
         return files;
     }
 

@@ -1,90 +1,72 @@
 package com.longluo.ebookreader.ui.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Environment;
-import android.os.StatFs;
-import android.text.TextUtils;
-import android.util.Log;
-import android.util.StateSet;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.hjq.permissions.Permission;
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.aop.Permissions;
 import com.longluo.ebookreader.app.TitleBarFragment;
 import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.ui.activity.HomeActivity;
-import com.longluo.ebookreader.ui.adapter.BaseFragmentAdapter;
-import com.longluo.ebookreader.util.BookUtils;
+import com.longluo.ebookreader.ui.adapter.FileSystemAdapter;
+import com.longluo.ebookreader.util.BookshelfUtils;
 import com.longluo.ebookreader.util.FileUtils;
-import com.longluo.ebookreader.widget.TextDetailDocumentsCell;
+import com.longluo.ebookreader.widget.refresh.RefreshLayout;
 
 import org.litepal.LitePal;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 import timber.log.Timber;
 
 public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
 
-    private File currentDir;
+    private RefreshLayout mRefreshLayout;
+    private RecyclerView mRvFiles;
 
-    private ListView listView;
-    private ListAdapter listAdapter;
-    private TextView emptyView;
+    private CheckBox mCbFileSystemSelectedAll;
+    private TextView mFileSystemBtnAdd;
+    private TextView mFileSystemBtnDelete;
 
-    private CheckBox mBtnChooseAll;
-    private TextView mBtnDelete;
-    private TextView mBtnAddBook;
+    private FileSystemAdapter mAdapter;
+    private boolean isCheckedAll;
 
-    private DocumentSelectActivityDelegate delegate;
+    private OnFileCheckedListener mListener = new OnFileCheckedListener() {
+        @Override
+        public void onItemCheckedChange(boolean isChecked) {
+            changeMenuStatus();
+        }
 
-    private static String title_ = "";
-    private ArrayList<ListItem> items = new ArrayList<ListItem>();
-    private ArrayList<ListItem> checkItems = new ArrayList<ListItem>();
-    private ArrayList<HistoryEntry> history = new ArrayList<HistoryEntry>();
-    private List<BookMeta> bookMetas;
-    private long sizeLimit = 1024 * 1024 * 1024;
+        @Override
+        public void onCategoryChanged() {
+            //状态归零
+            setCheckedAll(false);
+            //改变菜单
+            changeMenuStatus();
+            //改变是否能够全选
+            changeCheckedAllStatus();
+        }
+    };
 
-    private String[] chhosefileType = {".txt", ".epub", ".mobi", ".azw", ".azw3"};
-
-    private class HistoryEntry {
-        int scrollItem, scrollOffset;
-        File dir;
-        String title;
+    //设置文件点击监听事件
+    public void setOnFileCheckedListener(OnFileCheckedListener listener) {
+        mListener = listener;
     }
 
-    public interface DocumentSelectActivityDelegate {
-        void didSelectFiles(FileExplorerFragment activity, ArrayList<String> files);
+    //文件点击监听
+    public interface OnFileCheckedListener {
+        void onItemCheckedChange(boolean isChecked);
 
-        void startDocumentSelectActivity();
-
-        void updateToolBarName(String name);
+        void onCategoryChanged();
     }
 
     public static FileExplorerFragment newInstance() {
@@ -98,118 +80,19 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
 
     @Override
     protected void initView() {
-        mBtnChooseAll = (CheckBox) findViewById(R.id.file_system_cb_selected_all);
-        mBtnDelete = (TextView) findViewById(R.id.file_system_btn_delete);
-        mBtnAddBook = (TextView) findViewById(R.id.file_system_btn_add_book);
-
-        listAdapter = new ListAdapter(getActivity());
-        emptyView = (TextView) findViewById(R.id.searchEmptyView);
-        emptyView.setOnTouchListener((v, event) -> true);
-
-        listView = (ListView) findViewById(R.id.listView);
-        listView.setEmptyView(emptyView);
-        listView.setAdapter(listAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view,
-                                    int i, long l) {
-                if (i < 0 || i >= items.size()) {
-                    return;
-                }
-                ListItem item = items.get(i);
-                File file = item.file;
-                if (file == null) {
-                    HistoryEntry he = history.remove(history.size() - 1);
-                    title_ = he.title;
-                    updateName(title_);
-                    if (he.dir != null) {
-                        listFiles(he.dir);
-                    } else {
-                        listRoots();
-                    }
-                    listView.setSelectionFromTop(he.scrollItem,
-                            he.scrollOffset);
-                } else if (file.isDirectory()) {
-                    HistoryEntry he = new HistoryEntry();
-                    he.scrollItem = listView.getFirstVisiblePosition();
-                    he.scrollOffset = listView.getChildAt(0).getTop();
-                    he.dir = currentDir;
-                    he.title = title_.toString();
-                    updateName(title_);
-                    if (!listFiles(file)) {
-                        return;
-                    }
-                    history.add(he);
-                    title_ = item.title;
-                    updateName(title_);
-                    listView.setSelection(0);
-                } else {
-                    if (!file.canRead()) {
-                        showErrorBox("没有权限！");
-                        return;
-                    }
-                    if (sizeLimit != 0) {
-                        if (file.length() > sizeLimit) {
-                            showErrorBox("文件大小超出限制！");
-                            return;
-                        }
-                    }
-                    if (file.length() == 0) {
-                        return;
-                    }
-                    if (file.toString().contains(chhosefileType[0]) ||
-                            file.toString().contains(chhosefileType[1]) ||
-                            file.toString().contains(chhosefileType[2]) ||
-                            file.toString().contains(chhosefileType[3]) ||
-                            file.toString().contains(chhosefileType[4])) {
-                        if (delegate != null) {
-                            ArrayList<String> files = new ArrayList<String>();
-                            files.add(file.getAbsolutePath());
-                            delegate.didSelectFiles(FileExplorerFragment.this, files);
-                        }
-                    } else {
-                        showErrorBox("请选择正确的文件！");
-                        return;
-                    }
-                }
-            }
-        });
-
-        changgeCheckBookNum();
-        listRoots();
+        mRefreshLayout = findViewById(R.id.refresh_layout);
+        mRvFiles = findViewById(R.id.local_book_rv_content);
+        mCbFileSystemSelectedAll = findViewById(R.id.file_system_cb_selected_all);
+        mFileSystemBtnAdd = findViewById(R.id.file_system_btn_add_book);
+        mFileSystemBtnDelete = findViewById(R.id.file_system_btn_delete);
     }
 
     @Override
     protected void initData() {
-        registerReceiver();
-        requestPermission();
+        setUpAdapter();
 
-        mBtnChooseAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkAll();
-                changgeCheckBookNum();
-                listAdapter.notifyDataSetChanged();
-                changgeCheckBookNum();
-            }
-        });
-
-        mBtnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkItems.clear();
-                listAdapter.notifyDataSetChanged();
-                changgeCheckBookNum();
-            }
-        });
-
-        mBtnAddBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addCheckBook();
-            }
-        });
+        mRefreshLayout.showFinish();
+        initListener();
     }
 
     @Override
@@ -218,141 +101,220 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
         return !super.isStatusBarEnabled();
     }
 
-    @Permissions({Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE})
-    private void requestPermission() {
-        toast("获取存储权限成功");
-    }
-
-    public boolean onBackPressed_() {
-        if (history.size() > 0) {
-            HistoryEntry he = history.remove(history.size() - 1);
-            title_ = he.title;
-            updateName(title_);
-            if (he.dir != null) {
-                listFiles(he.dir);
-            } else {
-                listRoots();
-            }
-            listView.setSelectionFromTop(he.scrollItem, he.scrollOffset);
-            return false;
-        } else {
-            return true;
+    private void setUpAdapter() {
+        mAdapter = new FileSystemAdapter();
+        if (getContext() != null) {
+            mRvFiles.setLayoutManager(new LinearLayoutManager(getContext()));
+            mRvFiles.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+            mRvFiles.setAdapter(mAdapter);
         }
     }
 
-    private void updateName(String title_) {
-        if (delegate != null) {
-            delegate.updateToolBarName(title_);
-        }
-    }
+    private void initListener() {
+        mAdapter.setOnItemClickListener(
+                (view, pos) -> {
+                    //如果是已加载的文件，则点击事件无效。
+                    String id = mAdapter.getItem(pos).getAbsolutePath();
+                    if (BookshelfUtils.getBook(id) != null) {
+                        return;
+                    }
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Runnable r = new Runnable() {
-                public void run() {
-                    try {
-                        if (currentDir == null) {
-                            listRoots();
-                        } else {
-                            listFiles(currentDir);
-                        }
-                    } catch (Exception e) {
-                        Timber.e("msg " + e.toString());
+                    //点击选中
+                    mAdapter.setCheckedItem(pos);
+
+                    //反馈
+                    if (mListener != null) {
+                        mListener.onItemCheckedChange(mAdapter.getItemIsChecked(pos));
                     }
                 }
-            };
-            if (Intent.ACTION_MEDIA_UNMOUNTED.equals(intent.getAction())) {
-                listView.postDelayed(r, 1000);
-            } else {
-                r.run();
-            }
-        }
-    };
+        );
 
-    public void setDelegate(DocumentSelectActivityDelegate delegate) {
-        this.delegate = delegate;
+        mCbFileSystemSelectedAll.setOnClickListener(
+                (view) -> {
+                    //设置全选状态
+                    boolean isChecked = mCbFileSystemSelectedAll.isChecked();
+                    setCheckedAll(isChecked);
+                    //改变菜单状态
+                    changeMenuStatus();
+                }
+        );
+
+        mFileSystemBtnAdd.setOnClickListener(
+                (v) -> {
+                    //获取选中的文件
+                    List<File> files = getCheckedFiles();
+                    importBooks(files);
+                }
+        );
+
+        mFileSystemBtnDelete.setOnClickListener(
+                (v) -> {
+                    //弹出，确定删除文件吗。
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle(getString(R.string.delete_file))
+                            .setMessage(getString(R.string.delete_file_confirm))
+                            .setPositiveButton(getResources().getString(R.string.ok), (dialog, which) -> {
+                                //删除选中的文件
+                                deleteCheckedFiles();
+                                //提示删除文件成功
+                                toast(R.string.delete_file_success);
+                            })
+                            .setNegativeButton(getResources().getString(R.string.cancel), null)
+                            .show();
+                }
+        );
+
+        setOnFileCheckedListener(mListener);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    private void importBooks(List<File> bookFiles) {
+        Timber.d("importBooks");
 
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getActivity().unregisterReceiver(receiver);
-    }
-
-    private void registerReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_MEDIA_BAD_REMOVAL);
-        filter.addAction(Intent.ACTION_MEDIA_CHECKING);
-        filter.addAction(Intent.ACTION_MEDIA_EJECT);
-        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
-        filter.addAction(Intent.ACTION_MEDIA_NOFS);
-        filter.addAction(Intent.ACTION_MEDIA_REMOVED);
-        filter.addAction(Intent.ACTION_MEDIA_SHARED);
-        filter.addAction(Intent.ACTION_MEDIA_UNMOUNTABLE);
-        filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-        filter.addDataScheme("file");
-        getActivity().registerReceiver(receiver, filter);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        bookMetas = LitePal.findAll(BookMeta.class);
-        listAdapter.notifyDataSetChanged();
-    }
-
-    private void addCheckBook() {
-        if (checkItems.size() > 0) {
+        if (bookFiles.size() > 0) {
             List<BookMeta> bookMetas = new ArrayList<BookMeta>();
-            for (ListItem item : checkItems) {
+            for (File book : bookFiles) {
+                String bookPath = book.getAbsolutePath();
+
                 BookMeta bookMeta = new BookMeta();
-                String bookName = FileUtils.getFileName(item.thumb);
+                String bookName = FileUtils.getFileName(bookPath);
                 bookMeta.setBookName(bookName);
-                bookMeta.setBookPath(item.thumb);
+                bookMeta.setBookPath(bookPath);
                 bookMetas.add(bookMeta);
             }
+
             SaveBookToSqlLiteTask mSaveBookToSqlLiteTask = new SaveBookToSqlLiteTask();
             mSaveBookToSqlLiteTask.execute(bookMetas);
         }
     }
 
-    private void checkAll() {
-        for (ListItem listItem : items) {
-            if (!TextUtils.isEmpty(listItem.thumb)) {
-                boolean isCheck = false;
-                for (ListItem item : checkItems) {
-                    if (item.thumb.equals(listItem.thumb)) {
-                        isCheck = true;
-                        break;
-                    }
-                }
-                for (BookMeta list : bookMetas) {
-                    if (list.getBookPath().equals(listItem.thumb)) {
-                        isCheck = true;
-                        break;
-                    }
-                }
-                if (!isCheck) {
-                    checkItems.add(listItem);
-                }
+    public void setChecked(boolean checked) {
+        isCheckedAll = checked;
+    }
+
+    //当前fragment是否全选
+    public boolean isCheckedAll() {
+        return isCheckedAll;
+    }
+
+    //设置当前列表为全选
+    public void setCheckedAll(boolean checkedAll) {
+        if (mAdapter == null) return;
+
+        isCheckedAll = checkedAll;
+        mAdapter.setCheckedAll(checkedAll);
+    }
+
+    //获取被选中的数量
+    public int getCheckedCount() {
+        if (mAdapter == null) {
+            return 0;
+        }
+
+        return mAdapter.getCheckedCount();
+    }
+
+    //获取被选中的文件列表
+    public List<File> getCheckedFiles() {
+        return mAdapter != null ? mAdapter.getCheckedFiles() : null;
+    }
+
+    //获取文件的总数
+    public int getFileCount() {
+        return mAdapter != null ? mAdapter.getItemCount() : 0;
+    }
+
+    //获取可点击的文件的数量
+    public int getCheckableCount() {
+        if (mAdapter == null) {
+            return 0;
+        }
+
+        return mAdapter.getCheckableCount();
+    }
+
+    /**
+     * 删除选中的文件
+     */
+    public void deleteCheckedFiles() {
+        //删除选中的文件
+        List<File> files = getCheckedFiles();
+        //删除显示的文件列表
+        mAdapter.removeItems(files);
+        //删除选中的文件
+        for (File file : files) {
+            if (file.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                file.delete();
             }
         }
     }
 
-    private class ListItem {
-        int icon;
-        String title;
-        String subtitle = "";
-        String ext = "";
-        String thumb;
-        File file;
+    /**
+     * 改变底部选择栏的状态
+     */
+    private void changeMenuStatus() {
+        //点击、删除状态的设置
+        if (getCheckedCount() == 0) {
+            mFileSystemBtnAdd.setText(getString(R.string.nb_file_add_shelf));
+            //设置某些按钮的是否可点击
+            setMenuClickable(false);
+
+            if (mCbFileSystemSelectedAll.isChecked()) {
+                setChecked(false);
+                mCbFileSystemSelectedAll.setChecked(isCheckedAll());
+            }
+        } else {
+            mFileSystemBtnAdd.setText(getString(R.string.nb_file_add_shelves, getCheckedCount()));
+            setMenuClickable(true);
+
+            //全选状态的设置
+
+            //如果选中的全部的数据，则判断为全选
+            if (getCheckedCount() == getCheckableCount()) {
+                //设置为全选
+                setChecked(true);
+                mCbFileSystemSelectedAll.setChecked(isCheckedAll());
+            }
+            //如果曾今是全选则替换
+            else if (isCheckedAll()) {
+                setChecked(false);
+                mCbFileSystemSelectedAll.setChecked(isCheckedAll());
+            }
+        }
+
+        //重置全选的文字
+        if (isCheckedAll()) {
+            mCbFileSystemSelectedAll.setText(R.string.cancel);
+        } else {
+            mCbFileSystemSelectedAll.setText(getString(R.string.select_all));
+        }
+    }
+
+    private void setMenuClickable(boolean isClickable) {
+        //设置是否可删除
+        mFileSystemBtnDelete.setEnabled(isClickable);
+        mFileSystemBtnDelete.setClickable(isClickable);
+
+        //设置是否可添加书籍
+        mFileSystemBtnAdd.setEnabled(isClickable);
+        mFileSystemBtnAdd.setClickable(isClickable);
+    }
+
+    /**
+     * 改变全选按钮的状态
+     */
+    private void changeCheckedAllStatus() {
+        //获取可选择的文件数量
+        int count = getCheckableCount();
+
+        //设置是否能够全选
+        if (count > 0) {
+            mCbFileSystemSelectedAll.setClickable(true);
+            mCbFileSystemSelectedAll.setEnabled(true);
+        } else {
+            mCbFileSystemSelectedAll.setClickable(false);
+            mCbFileSystemSelectedAll.setEnabled(false);
+        }
     }
 
     private class SaveBookToSqlLiteTask extends AsyncTask<List<BookMeta>, Void, Integer> {
@@ -378,6 +340,7 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
                 e.printStackTrace();
                 return FAIL;
             }
+
             return SUCCESS;
         }
 
@@ -392,375 +355,18 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
 
                 case SUCCESS:
                     msg = "导入书本成功";
-                    checkItems.clear();
-                    bookMetas = LitePal.findAll(BookMeta.class);
-                    listAdapter.notifyDataSetChanged();
-                    changgeCheckBookNum();
+                    mAdapter.notifyDataSetChanged();
                     break;
 
                 case REPEAT:
                     msg = "书本" + repeatBookMeta.getBookName() + "重复了";
                     break;
-            }
 
-            Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void listRoots() {
-        currentDir = null;
-        items.clear();
-        String extStorage = Environment.getExternalStorageDirectory()
-                .getAbsolutePath();
-        ListItem ext = new ListItem();
-
-        if (Build.VERSION.SDK_INT < 9
-                || Environment.isExternalStorageRemovable()) {
-            ext.title = "SdCard";
-        } else {
-            ext.title = "InternalStorage";
-        }
-
-        ext.icon = Build.VERSION.SDK_INT < 9
-                || Environment.isExternalStorageRemovable() ? R.mipmap.ic_external_storage
-                : R.mipmap.ic_storage;
-        ext.subtitle = getRootSubtitle(extStorage);
-        ext.file = Environment.getExternalStorageDirectory();
-        items.add(ext);
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(
-                    "/proc/mounts"));
-            String line;
-            HashMap<String, ArrayList<String>> aliases = new HashMap<String, ArrayList<String>>();
-            ArrayList<String> result = new ArrayList<String>();
-            String extDevice = null;
-            while ((line = reader.readLine()) != null) {
-                if ((!line.contains("/mnt") && !line.contains("/storage") && !line
-                        .contains("/sdcard"))
-                        || line.contains("asec")
-                        || line.contains("tmpfs") || line.contains("none")) {
-                    continue;
-                }
-                String[] info = line.split(" ");
-                if (!aliases.containsKey(info[0])) {
-                    aliases.put(info[0], new ArrayList<String>());
-                }
-                aliases.get(info[0]).add(info[1]);
-                if (info[1].equals(extStorage)) {
-                    extDevice = info[0];
-                }
-                result.add(info[1]);
-            }
-            reader.close();
-            if (extDevice != null) {
-                result.removeAll(aliases.get(extDevice));
-                for (String path : result) {
-                    try {
-                        ListItem item = new ListItem();
-                        if (path.toLowerCase().contains("sd")) {
-                            ext.title = "SdCard";
-                        } else {
-                            ext.title = "外部存储";
-                        }
-                        item.icon = R.mipmap.ic_external_storage;
-                        item.subtitle = getRootSubtitle(path);
-                        item.file = new File(path);
-                        items.add(item);
-                    } catch (Exception e) {
-                        Log.e("tmessages", e.toString());
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Log.e("tmessages", e.toString());
-        }
-
-        ListItem fs = new ListItem();
-        fs.title = "/";
-        fs.subtitle = "系统目录";
-        fs.icon = R.mipmap.ic_directory;
-        fs.file = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
-        items.add(fs);
-
-        listAdapter.notifyDataSetChanged();
-    }
-
-    private boolean listFiles(File dir) {
-        if (!dir.canRead()) {
-            if (dir.getAbsolutePath().startsWith(
-                    Environment.getExternalStorageDirectory().toString())
-                    || dir.getAbsolutePath().startsWith("/sdcard")
-                    || dir.getAbsolutePath().startsWith("/mnt/sdcard")) {
-                if (!Environment.getExternalStorageState().equals(
-                        Environment.MEDIA_MOUNTED)
-                        && !Environment.getExternalStorageState().equals(
-                        Environment.MEDIA_MOUNTED_READ_ONLY)) {
-                    currentDir = dir;
-                    items.clear();
-                    String state = Environment.getExternalStorageState();
-                    if (Environment.MEDIA_SHARED.equals(state)) {
-                        emptyView.setText("UsbActive");
-                    } else {
-                        emptyView.setText("NotMounted");
-                    }
-                    clearDrawableAnimation(listView);
-                    // scrolling = true;
-                    listAdapter.notifyDataSetChanged();
-                    return true;
-                }
-            }
-            showErrorBox("没有权限!");
-            return false;
-        }
-
-        emptyView.setText("没有文件!");
-        File[] files = null;
-        try {
-            files = dir.listFiles();
-        } catch (Exception e) {
-            showErrorBox(e.getLocalizedMessage());
-            return false;
-        }
-        if (files == null) {
-            showErrorBox("未知错误!");
-            return false;
-        }
-        currentDir = dir;
-        items.clear();
-        Arrays.sort(files, new Comparator<File>() {
-            @Override
-            public int compare(File lhs, File rhs) {
-                if (lhs.isDirectory() != rhs.isDirectory()) {
-                    return lhs.isDirectory() ? -1 : 1;
-                }
-                return lhs.getName().compareToIgnoreCase(rhs.getName());
-                /*
-                 * long lm = lhs.lastModified(); long rm = lhs.lastModified();
-                 * if (lm == rm) { return 0; } else if (lm > rm) { return -1; }
-                 * else { return 1; }
-                 */
-            }
-        });
-        for (File file : files) {
-            if (file.getName().startsWith(".") || (!file.isDirectory()
-                    && !file.getName().endsWith(".txt")
-                    && !file.getName().endsWith(".epub")
-                    && !file.getName().endsWith(".mobi")
-                    && !file.getName().endsWith(".azw")
-                    && !file.getName().endsWith(".azw3"))) {
-                continue;
-            }
-            ListItem item = new ListItem();
-            item.title = file.getName();
-            item.file = file;
-            if (file.isDirectory()) {
-                item.icon = R.mipmap.ic_directory;
-                item.subtitle = "文件夹";
-            } else {
-                String fname = file.getName();
-                String[] sp = fname.split("\\.");
-                item.ext = sp.length > 1 ? sp[sp.length - 1] : "?";
-                item.subtitle = formatFileSize(file.length());
-                fname = fname.toLowerCase();
-                if (BookUtils.isBookFormatSupport(fname)) {
-                    item.thumb = file.getAbsolutePath();
-                }
-            }
-            items.add(item);
-        }
-        ListItem item = new ListItem();
-        item.title = "..";
-        item.subtitle = "文件夹";
-        item.icon = R.mipmap.ic_directory;
-        item.file = null;
-        items.add(0, item);
-        clearDrawableAnimation(listView);
-        // scrolling = true;
-        listAdapter.notifyDataSetChanged();
-        return true;
-    }
-
-    public static String formatFileSize(long size) {
-        if (size < 1024) {
-            return String.format("%d B", size);
-        } else if (size < 1024 * 1024) {
-            return String.format("%.1f KB", size / 1024.0f);
-        } else if (size < 1024 * 1024 * 1024) {
-            return String.format("%.1f MB", size / 1024.0f / 1024.0f);
-        } else {
-            return String.format("%.1f GB", size / 1024.0f / 1024.0f / 1024.0f);
-        }
-    }
-
-    public static void clearDrawableAnimation(View view) {
-        if (Build.VERSION.SDK_INT < 21 || view == null) {
-            return;
-        }
-        Drawable drawable = null;
-        if (view instanceof ListView) {
-            drawable = ((ListView) view).getSelector();
-            if (drawable != null) {
-                drawable.setState(StateSet.NOTHING);
-            }
-        } else {
-            drawable = view.getBackground();
-            if (drawable != null) {
-                drawable.setState(StateSet.NOTHING);
-                drawable.jumpToCurrentState();
-            }
-        }
-    }
-
-    public void showErrorBox(String error) {
-        if (getActivity() == null) {
-            return;
-        }
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getActivity().getString(R.string.app_name))
-                .setMessage(error).setPositiveButton("OK", null).show();
-    }
-
-    public void showReadBox(final String path) {
-        Timber.d("showReadBox: path=" + path);
-        if (getActivity() == null) {
-            return;
-        }
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getActivity().getString(R.string.app_name))
-                .setMessage(path).setPositiveButton("阅读", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                BookMeta bookMeta = new BookMeta();
-                String bookName = FileUtils.getFileName(path);
-                String suffix = FileUtils.getSuffix(path);
-                bookMeta.setBookName(bookName);
-                bookMeta.setBookPath(path);
-                bookMeta.setFormat(suffix);
-                boolean isSave = false;
-                for (BookMeta book : bookMetas) {
-                    if (book.getBookPath().equals(bookMeta.getBookPath())) {
-                        isSave = true;
-                    }
-                }
-
-                if (!isSave) {
-                    bookMeta.save();
-                }
-
-                BookUtils.openBook(getActivity(), bookMeta);
-            }
-        }).show();
-    }
-
-    private String getRootSubtitle(String path) {
-        StatFs stat = new StatFs(path);
-        long total = (long) stat.getBlockCount() * (long) stat.getBlockSize();
-        long free = (long) stat.getAvailableBlocks()
-                * (long) stat.getBlockSize();
-        if (total == 0) {
-            return "";
-        }
-        return "Free " + formatFileSize(free) + " of " + formatFileSize(total);
-    }
-
-    private void changgeCheckBookNum() {
-        mBtnAddBook.setText("加入书架(" + checkItems.size() + ")");
-    }
-
-    private class ListAdapter extends BaseFragmentAdapter {
-        private Context mContext;
-
-        public ListAdapter(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public int getCount() {
-            return items.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return items.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        public int getViewTypeCount() {
-            return 2;
-        }
-
-        public int getItemViewType(int pos) {
-            return items.get(pos).subtitle.length() > 0 ? 0 : 1;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = new TextDetailDocumentsCell(mContext);
-            }
-            TextDetailDocumentsCell textDetailCell = (TextDetailDocumentsCell) convertView;
-            final ListItem item = items.get(position);
-            if (item.icon != 0) {
-                ((TextDetailDocumentsCell) convertView)
-                        .setTextAndValueAndTypeAndThumb(item.title,
-                                item.subtitle, null, null, item.icon, false);
-            } else {
-                String type = item.ext.toUpperCase().substring(0,
-                        Math.min(item.ext.length(), 4));
-
-                ((TextDetailDocumentsCell) convertView)
-                        .setTextAndValueAndTypeAndThumb(item.title,
-                                item.subtitle, type, item.thumb, 0, isStorage(item.thumb));
-            }
-
-            textDetailCell.getCheckBox().setOnCheckedChangeListener(null);
-            textDetailCell.setChecked(isCheck(item.thumb));
-            textDetailCell.getCheckBox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        checkItems.add(item);
-                    } else {
-                        removeCheckItem(item.thumb);
-                    }
-                    changgeCheckBookNum();
-                }
-            });
-
-            return convertView;
-        }
-
-        private boolean isCheck(String path) {
-            for (ListItem item : checkItems) {
-                if (item.thumb.equals(path)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private void removeCheckItem(String path) {
-            for (ListItem item : checkItems) {
-                if (item.thumb.equals(path)) {
-                    checkItems.remove(item);
+                default:
                     break;
-                }
-            }
-        }
-
-        private boolean isStorage(String path) {
-            boolean isStore = false;
-            for (BookMeta bookMeta : bookMetas) {
-                if (bookMeta.getBookPath().equals(path)) {
-                    return true;
-                }
             }
 
-            return false;
+            Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
         }
     }
 }

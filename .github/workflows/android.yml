@@ -85,10 +85,6 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: apk
-      run: |
-        echo -e "\n Download APK and show path \n"
-        ls -l
-        pwd
 
     - name: Create Release
       id: create_release
@@ -109,8 +105,4 @@ jobs:
         asset_path: apk/*.apk
         asset_name: ${{ github.event.repository.name }}  ${{ steps.branch-name.outputs.current_branch }} v${{ github.run_number }}.${{ github.run_attempt }}.apk
         asset_content_type: application/zip
-      run: |
-        echo -e "\n Upload Release APK and show path \n"
-        ls -l
-        pwd
 

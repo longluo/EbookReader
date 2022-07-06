@@ -16,11 +16,9 @@ import android.util.StateSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,14 +62,15 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
 
     private DocumentSelectActivityDelegate delegate;
 
-    private static String title_ = "";
+    private static String title = "";
+
     private ArrayList<ListItem> items = new ArrayList<ListItem>();
     private ArrayList<ListItem> checkItems = new ArrayList<ListItem>();
     private ArrayList<HistoryEntry> history = new ArrayList<HistoryEntry>();
     private List<BookMeta> bookMetas;
     private long sizeLimit = 1024 * 1024 * 1024;
 
-    private String[] chhosefileType = {".txt", ".epub", ".mobi", ".azw", ".azw3"};
+    private String[] chooseFileType = {".txt", ".epub", ".mobi", ".azw", ".azw3"};
 
     private class HistoryEntry {
         int scrollItem, scrollOffset;
@@ -98,15 +97,15 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
 
     @Override
     protected void initView() {
-        mBtnChooseAll = (CheckBox) findViewById(R.id.file_system_cb_selected_all);
-        mBtnDelete = (TextView) findViewById(R.id.file_system_btn_delete);
-        mBtnAddBook = (TextView) findViewById(R.id.file_system_btn_add_book);
+        mBtnChooseAll = findViewById(R.id.file_system_cb_selected_all);
+        mBtnDelete = findViewById(R.id.file_system_btn_delete);
+        mBtnAddBook = findViewById(R.id.file_system_btn_add_book);
 
         listAdapter = new ListAdapter(getActivity());
-        emptyView = (TextView) findViewById(R.id.searchEmptyView);
+        emptyView = findViewById(R.id.searchEmptyView);
         emptyView.setOnTouchListener((v, event) -> true);
 
-        listView = (ListView) findViewById(R.id.listView);
+        listView = findViewById(R.id.listView);
         listView.setEmptyView(emptyView);
         listView.setAdapter(listAdapter);
 
@@ -121,8 +120,8 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
                 File file = item.file;
                 if (file == null) {
                     HistoryEntry he = history.remove(history.size() - 1);
-                    title_ = he.title;
-                    updateName(title_);
+                    title = he.title;
+                    updateName(title);
                     if (he.dir != null) {
                         listFiles(he.dir);
                     } else {
@@ -135,14 +134,14 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
                     he.scrollItem = listView.getFirstVisiblePosition();
                     he.scrollOffset = listView.getChildAt(0).getTop();
                     he.dir = currentDir;
-                    he.title = title_.toString();
-                    updateName(title_);
+                    he.title = title.toString();
+                    updateName(title);
                     if (!listFiles(file)) {
                         return;
                     }
                     history.add(he);
-                    title_ = item.title;
-                    updateName(title_);
+                    title = item.title;
+                    updateName(title);
                     listView.setSelection(0);
                 } else {
                     if (!file.canRead()) {
@@ -158,11 +157,11 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
                     if (file.length() == 0) {
                         return;
                     }
-                    if (file.toString().contains(chhosefileType[0]) ||
-                            file.toString().contains(chhosefileType[1]) ||
-                            file.toString().contains(chhosefileType[2]) ||
-                            file.toString().contains(chhosefileType[3]) ||
-                            file.toString().contains(chhosefileType[4])) {
+                    if (file.toString().contains(chooseFileType[0]) ||
+                            file.toString().contains(chooseFileType[1]) ||
+                            file.toString().contains(chooseFileType[2]) ||
+                            file.toString().contains(chooseFileType[3]) ||
+                            file.toString().contains(chooseFileType[4])) {
                         if (delegate != null) {
                             ArrayList<String> files = new ArrayList<String>();
                             files.add(file.getAbsolutePath());
@@ -204,12 +203,7 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
             }
         });
 
-        mBtnAddBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addCheckBook();
-            }
-        });
+        mBtnAddBook.setOnClickListener(v -> addCheckBook());
     }
 
     @Override
@@ -226,8 +220,8 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
     public boolean onBackPressed_() {
         if (history.size() > 0) {
             HistoryEntry he = history.remove(history.size() - 1);
-            title_ = he.title;
-            updateName(title_);
+            title = he.title;
+            updateName(title);
             if (he.dir != null) {
                 listFiles(he.dir);
             } else {

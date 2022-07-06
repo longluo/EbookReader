@@ -15,9 +15,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.bumptech.glide.Glide;
 import com.hjq.bar.TitleBar;
 import com.hjq.gson.factory.GsonFactory;
-import com.hjq.http.EasyConfig;
 import com.hjq.toast.ToastUtils;
-import com.longluo.ebookreader.http.model.RequestServer;
 import com.longluo.ebookreader.manager.ActivityManager;
 import com.longluo.ebookreader.model.PageFactory;
 import com.longluo.ebookreader.other.AppConfig;
@@ -35,7 +33,6 @@ import com.tencent.mmkv.MMKV;
 import org.litepal.LitePal;
 
 import io.github.longluo.droidlib.umeng.UmengClient;
-import leakcanary.LeakCanary;
 import okhttp3.OkHttpClient;
 import timber.log.Timber;
 

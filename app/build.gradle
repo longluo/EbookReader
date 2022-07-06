@@ -262,7 +262,6 @@ dependencies {
 
     // Android Leak Analysis
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
 
     implementation 'com.astuetz:pagerslidingtabstrip:1.0.1'
 

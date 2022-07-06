@@ -62,10 +62,6 @@ jobs:
       with:
         name: apk
         path: ${{github.workspace}}/build/app/outputs/apk/release/*.apk
-      run: |
-        echo -e "\n Upload Apk and show path \n"
-        ls -l
-        pwd
 
   release:
     name: Release APK

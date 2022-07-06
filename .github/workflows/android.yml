@@ -67,14 +67,6 @@ jobs:
           ls -l
           ${{github.workspace}}/build/app/outputs/apk/release/*.apk
 
-    - name: Upload File to Pgyer
-      id: upload
-      uses: JantHsueh/upload-file-action@master
-      with:
-        url: https://www.pgyer.com/apiv2/app/upload
-        forms: '{"_api_key":"${{ secrets.pgyer_key }}","buildInstallType":3}'
-        fileForms: '{"file":"releases/EbookReader_release.apk"}'
-
   release:
     name: Release APK
     needs: build

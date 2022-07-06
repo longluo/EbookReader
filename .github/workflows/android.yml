@@ -10,25 +10,27 @@ on:
       - 'v*'
 
   pull_request:
-    branches: [ master ]
+    branches: 
+      - master
+      - dev   
 
 jobs:
   build:
-
+    name: Build Apk
     runs-on: ubuntu-latest
 
     steps:
-    - name: checkout code
+    - name: Checkout Code
       uses: actions/checkout@v2
 
-    - name: set up JDK 11
+    - name: Setup JDK
       uses: actions/setup-java@v2
       with:
         java-version: '14'
         distribution: 'adopt'
         cache: gradle
 
-    - name: Build with Gradle
+    - name: Build Apk with Gradle
       id: build
       run: |
         pwd
@@ -54,7 +56,7 @@ jobs:
       with:
         tag: release
 
-    - name: upload apk
+    - name: Upload Apk
       uses: actions/upload-artifact@v2
       if: always()
       with:
@@ -72,3 +74,43 @@ jobs:
         url: https://www.pgyer.com/apiv2/app/upload
         forms: '{"_api_key":"${{ secrets.pgyer_key }}","buildInstallType":3}'
         fileForms: '{"file":"releases/EbookReader_release.apk"}'
+	
+  release:
+    name: Release APK
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: Get branch name
+      id: branch-name
+      uses: tj-actions/branch-names@v5.1
+       
+    - name: Print branch    
+      run: |
+        echo "Running on default: ${{ steps.branch-name.outputs.current_branch }}"
+       
+    - name: Download APK from build
+      uses: actions/download-artifact@v1
+      with:
+        name: apk
+         
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.run_number }}
+        release_name: ${{ github.event.repository.name }}  ${{ steps.branch-name.outputs.current_branch }} v${{ github.run_number }}.${{ github.run_attempt }}
+         
+    - name: Upload Release APK
+      id: upload_release_asset
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: apk/app-debug.apk
+        asset_name: ${{ github.event.repository.name }}  ${{ steps.branch-name.outputs.current_branch }} v${{ github.run_number }}.${{ github.run_attempt }}.apk
+        asset_content_type: application/zip
+

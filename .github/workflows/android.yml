@@ -60,12 +60,12 @@ jobs:
       uses: actions/upload-artifact@v2
       if: always()
       with:
-        name: EbookReader
-        path: |
-          echo -e "\n show path \n"
-          pwd
-          ls -l
-          ${{github.workspace}}/build/app/outputs/apk/release/*.apk
+        name: apk
+        path: ${{github.workspace}}/build/app/outputs/apk/release/*.apk
+      run: |
+        echo -e "\n Upload Apk and show path \n"
+        ls -l
+        pwd
 
   release:
     name: Release APK
@@ -84,7 +84,11 @@ jobs:
     - name: Download APK from build
       uses: actions/download-artifact@v2
       with:
-        name: EbookReader
+        name: apk
+      run: |
+        echo -e "\n Download APK and show path \n"
+        ls -l
+        pwd
 
     - name: Create Release
       id: create_release
@@ -102,7 +106,11 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: EbookReader/*.apk
+        asset_path: apk/*.apk
         asset_name: ${{ github.event.repository.name }}  ${{ steps.branch-name.outputs.current_branch }} v${{ github.run_number }}.${{ github.run_attempt }}.apk
         asset_content_type: application/zip
+      run: |
+        echo -e "\n Upload Release APK and show path \n"
+        ls -l
+        pwd
 

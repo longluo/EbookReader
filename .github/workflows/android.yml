@@ -37,6 +37,8 @@ jobs:
         echo -e "\n gradlew assembleRelease \n"
         chmod a+x gradlew
         ./gradlew assembleRelease
+        echo -e "\n\n"
+        echo "Rename EbookReader apk..."
 
     - name: Get Time
       id: time
@@ -57,11 +59,11 @@ jobs:
         tag: release
 
     - name: Upload Apk
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: always()
       with:
-        name: apk
-        path: ${{github.workspace}}/build/app/outputs/apk/release/*.apk
+        name: EbookReader
+        path: ${{github.workspace}}/build/app/outputs/apk/release/
 
   release:
     name: Release APK
@@ -78,9 +80,10 @@ jobs:
         echo "Running on default: ${{ steps.branch-name.outputs.current_branch }}"
 
     - name: Download APK from build
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
-        name: apk
+        name: EbookReader
+        path: ${{github.workspace}}/build/app/outputs/apk/release/
 
     - name: Create Release
       id: create_release
@@ -98,7 +101,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: apk/*.apk
+        asset_path: ${{github.workspace}}/build/app/outputs/apk/release/
         asset_name: ${{ github.event.repository.name }}  ${{ steps.branch-name.outputs.current_branch }} v${{ github.run_number }}.${{ github.run_attempt }}.apk
         asset_content_type: application/zip
 

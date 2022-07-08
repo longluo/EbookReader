@@ -22,6 +22,7 @@
             android:padding="10dp"
             android:text=""
             android:textColor="@color/read_textColor" />
+
     </LinearLayout>
 
 </FrameLayout>

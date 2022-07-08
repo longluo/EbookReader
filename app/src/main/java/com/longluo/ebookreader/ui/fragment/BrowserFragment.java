@@ -1,9 +1,16 @@
 package com.longluo.ebookreader.ui.fragment;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 
@@ -11,9 +18,9 @@ import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.action.StatusAction;
 import com.longluo.ebookreader.aop.CheckNet;
 import com.longluo.ebookreader.aop.Log;
-import com.longluo.ebookreader.app.AppActivity;
-import com.longluo.ebookreader.app.AppFragment;
+import com.longluo.ebookreader.app.TitleBarFragment;
 import com.longluo.ebookreader.ui.activity.BrowserActivity;
+import com.longluo.ebookreader.ui.activity.HomeActivity;
 import com.longluo.ebookreader.widget.BrowserView;
 import com.longluo.ebookreader.widget.StatusLayout;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -23,10 +30,29 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 /**
  * 浏览器 Fragment
  */
-public final class BrowserFragment extends AppFragment<AppActivity>
+public final class BrowserFragment extends TitleBarFragment<HomeActivity>
         implements StatusAction, OnRefreshListener {
 
     private static final String INTENT_KEY_IN_URL = "url";
+
+    private StatusLayout mStatusLayout;
+    private ProgressBar mProgressBar;
+    private SmartRefreshLayout mRefreshLayout;
+    private BrowserView mBrowserView;
+
+    @CheckNet
+    @Log
+    public static void start(Context context, String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+        Intent intent = new Intent(context, BrowserActivity.class);
+        intent.putExtra(INTENT_KEY_IN_URL, url);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        context.startActivity(intent);
+    }
 
     @Log
     public static BrowserFragment newInstance(String url) {
@@ -37,18 +63,15 @@ public final class BrowserFragment extends AppFragment<AppActivity>
         return fragment;
     }
 
-    private StatusLayout mStatusLayout;
-    private SmartRefreshLayout mRefreshLayout;
-    private BrowserView mBrowserView;
-
     @Override
     protected int getLayoutId() {
-        return R.layout.browser_fragment;
+        return R.layout.fragment_browser;
     }
 
     @Override
     protected void initView() {
         mStatusLayout = findViewById(R.id.hl_browser_hint);
+        mProgressBar = findViewById(R.id.pb_browser_progress);
         mRefreshLayout = findViewById(R.id.sl_browser_refresh);
         mBrowserView = findViewById(R.id.wv_browser_view);
 
@@ -60,15 +83,26 @@ public final class BrowserFragment extends AppFragment<AppActivity>
 
     @Override
     protected void initData() {
-        mBrowserView.setBrowserViewClient(new AppBrowserViewClient());
-        mBrowserView.setBrowserChromeClient(new BrowserView.BrowserChromeClient(mBrowserView));
-        mBrowserView.loadUrl(getString(INTENT_KEY_IN_URL));
         showLoading();
+
+        mBrowserView.setBrowserViewClient(new AppBrowserViewClient());
+        mBrowserView.setBrowserChromeClient(new AppBrowserChromeClient(mBrowserView));
+        mBrowserView.loadUrl(getString(INTENT_KEY_IN_URL));
     }
 
     @Override
     public StatusLayout getStatusLayout() {
         return mStatusLayout;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && mBrowserView.canGoBack()) {
+            // 后退网页并且拦截该事件
+            mBrowserView.goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     /**
@@ -104,6 +138,7 @@ public final class BrowserFragment extends AppFragment<AppActivity>
          */
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            mProgressBar.setVisibility(View.VISIBLE);
         }
 
         /**
@@ -111,30 +146,45 @@ public final class BrowserFragment extends AppFragment<AppActivity>
          */
         @Override
         public void onPageFinished(WebView view, String url) {
+            mProgressBar.setVisibility(View.GONE);
             mRefreshLayout.finishRefresh();
             showComplete();
         }
+    }
+
+    private class AppBrowserChromeClient extends BrowserView.BrowserChromeClient {
+
+        private AppBrowserChromeClient(BrowserView view) {
+            super(view);
+        }
 
         /**
-         * 跳转到其他链接
+         * 收到网页标题
          */
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, final String url) {
-            String scheme = Uri.parse(url).getScheme();
-            if (scheme == null) {
-                return true;
+        public void onReceivedTitle(WebView view, String title) {
+            if (title == null) {
+                return;
             }
-            switch (scheme.toLowerCase()) {
-                // 如果这是跳链接操作
-                case "http":
-                case "https":
-                    BrowserActivity.start(getAttachActivity(), url);
-                    break;
-                default:
-                    break;
+
+            setTitle(title);
+        }
+
+        @Override
+        public void onReceivedIcon(WebView view, Bitmap icon) {
+            if (icon == null) {
+                return;
             }
-            // 已经处理该链接请求
-            return true;
+
+            setRightIcon(new BitmapDrawable(getResources(), icon));
+        }
+
+        /**
+         * 收到加载进度变化
+         */
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            mProgressBar.setProgress(newProgress);
         }
     }
 }

@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.gyf.immersionbar.ImmersionBar;
 import com.longluo.ebookreader.R;
@@ -23,7 +22,6 @@ import com.longluo.ebookreader.ui.fragment.FileExplorerFragment;
 import com.longluo.ebookreader.ui.fragment.MineFragment;
 
 import io.github.longluo.base.FragmentPagerAdapter;
-import io.github.longluo.base.FragmentStateAdapter;
 
 /**
  * 首页界面

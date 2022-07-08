@@ -104,10 +104,6 @@
             android:process=":restart" />
 
         <activity
-            android:name=".ui.activity.FileActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
             android:name=".ui.activity.ReadActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -126,10 +122,6 @@
 
         <activity
             android:name=".ui.activity.BookMarkActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".ui.activity.FileChooserActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity

@@ -70,7 +70,7 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
     private List<BookMeta> bookMetas;
     private long sizeLimit = 1024 * 1024 * 1024;
 
-    private String[] chooseFileType = {".txt", ".epub", ".mobi", ".azw", ".azw3", ".pdf"};
+    private String[] chooseFileType = {".txt", ".epub", ".mobi", ".azw", ".azw3", ".pdf", ".doc", ".docx"};
 
     private class HistoryEntry {
         int scrollItem, scrollOffset;
@@ -92,7 +92,7 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.file_explorer_fragment;
+        return R.layout.fragment_file_explorer;
     }
 
     @Override
@@ -161,7 +161,9 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
                             file.toString().contains(chooseFileType[1]) ||
                             file.toString().contains(chooseFileType[2]) ||
                             file.toString().contains(chooseFileType[3]) ||
-                            file.toString().contains(chooseFileType[4])) {
+                            file.toString().contains(chooseFileType[5]) ||
+                            file.toString().contains(chooseFileType[6]) ||
+                            file.toString().contains(chooseFileType[7])) {
                         if (delegate != null) {
                             ArrayList<String> files = new ArrayList<String>();
                             files.add(file.getAbsolutePath());
@@ -305,6 +307,7 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
     private void addCheckBook() {
         if (checkItems.size() > 0) {
             List<BookMeta> bookMetas = new ArrayList<BookMeta>();
+
             for (ListItem item : checkItems) {
                 BookMeta bookMeta = new BookMeta();
                 String bookName = FileUtils.getFileName(item.thumb);
@@ -312,6 +315,7 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
                 bookMeta.setBookPath(item.thumb);
                 bookMetas.add(bookMeta);
             }
+
             SaveBookToSqlLiteTask mSaveBookToSqlLiteTask = new SaveBookToSqlLiteTask();
             mSaveBookToSqlLiteTask.execute(bookMetas);
         }
@@ -321,18 +325,21 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
         for (ListItem listItem : items) {
             if (!TextUtils.isEmpty(listItem.thumb)) {
                 boolean isCheck = false;
+
                 for (ListItem item : checkItems) {
                     if (item.thumb.equals(listItem.thumb)) {
                         isCheck = true;
                         break;
                     }
                 }
+
                 for (BookMeta list : bookMetas) {
                     if (list.getBookPath().equals(listItem.thumb)) {
                         isCheck = true;
                         break;
                     }
                 }
+
                 if (!isCheck) {
                     checkItems.add(listItem);
                 }
@@ -404,19 +411,16 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
     private void listRoots() {
         currentDir = null;
         items.clear();
-        String extStorage = Environment.getExternalStorageDirectory()
-                .getAbsolutePath();
+        String extStorage = Environment.getExternalStorageDirectory().getAbsolutePath();
         ListItem ext = new ListItem();
 
-        if (Build.VERSION.SDK_INT < 9
-                || Environment.isExternalStorageRemovable()) {
+        if (Environment.isExternalStorageRemovable()) {
             ext.title = "SdCard";
         } else {
             ext.title = "InternalStorage";
         }
 
-        ext.icon = Build.VERSION.SDK_INT < 9
-                || Environment.isExternalStorageRemovable() ? R.mipmap.ic_external_storage
+        ext.icon = Environment.isExternalStorageRemovable() ? R.mipmap.ic_external_storage
                 : R.mipmap.ic_storage;
         ext.subtitle = getRootSubtitle(extStorage);
         ext.file = Environment.getExternalStorageDirectory();
@@ -541,7 +545,10 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
                     && !file.getName().endsWith(".epub")
                     && !file.getName().endsWith(".mobi")
                     && !file.getName().endsWith(".azw")
-                    && !file.getName().endsWith(".azw3"))) {
+                    && !file.getName().endsWith(".azw3")
+                    && !file.getName().endsWith(".pdf")
+                    && !file.getName().endsWith(".doc")
+                    && !file.getName().endsWith(".docx"))) {
                 continue;
             }
             ListItem item = new ListItem();
@@ -587,9 +594,10 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
     }
 
     public static void clearDrawableAnimation(View view) {
-        if (Build.VERSION.SDK_INT < 21 || view == null) {
+        if (view == null) {
             return;
         }
+
         Drawable drawable = null;
         if (view instanceof ListView) {
             drawable = ((ListView) view).getSelector();
@@ -622,28 +630,28 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
         new AlertDialog.Builder(getActivity())
                 .setTitle(getActivity().getString(R.string.app_name))
                 .setMessage(path).setPositiveButton("阅读", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                BookMeta bookMeta = new BookMeta();
-                String bookName = FileUtils.getFileName(path);
-                String suffix = FileUtils.getSuffix(path);
-                bookMeta.setBookName(bookName);
-                bookMeta.setBookPath(path);
-                bookMeta.setFormat(suffix);
-                boolean isSave = false;
-                for (BookMeta book : bookMetas) {
-                    if (book.getBookPath().equals(bookMeta.getBookPath())) {
-                        isSave = true;
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        BookMeta bookMeta = new BookMeta();
+                        String bookName = FileUtils.getFileName(path);
+                        String suffix = FileUtils.getSuffix(path);
+                        bookMeta.setBookName(bookName);
+                        bookMeta.setBookPath(path);
+                        bookMeta.setFormat(suffix);
+                        boolean isSave = false;
+                        for (BookMeta book : bookMetas) {
+                            if (book.getBookPath().equals(bookMeta.getBookPath())) {
+                                isSave = true;
+                            }
+                        }
+
+                        if (!isSave) {
+                            bookMeta.save();
+                        }
+
+                        BookUtils.openBook(getActivity(), bookMeta);
                     }
-                }
-
-                if (!isSave) {
-                    bookMeta.save();
-                }
-
-                BookUtils.openBook(getActivity(), bookMeta);
-            }
-        }).show();
+                }).show();
     }
 
     private String getRootSubtitle(String path) {
@@ -734,6 +742,7 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -747,7 +756,6 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
         }
 
         private boolean isStorage(String path) {
-            boolean isStore = false;
             for (BookMeta bookMeta : bookMetas) {
                 if (bookMeta.getBookPath().equals(path)) {
                     return true;

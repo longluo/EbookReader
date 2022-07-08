@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.longluo.ebookreader.bean.Cache;
 import com.longluo.ebookreader.db.BookContent;
@@ -60,7 +58,8 @@ public class BookUtils {
 
     public static boolean isBookFormatSupport(String fileName) {
         if (fileName.endsWith(".txt") || fileName.endsWith(".epub") || fileName.endsWith(".mobi")
-        || fileName.endsWith(".azw") || fileName.endsWith(".azw3")) {
+                || fileName.endsWith(".azw") || fileName.endsWith(".azw3") || fileName.endsWith(".pdf")
+                || fileName.endsWith(".doc") || fileName.endsWith(".docx")) {
             return true;
         }
 
@@ -88,7 +87,7 @@ public class BookUtils {
 
         if (suffix.equals("txt")) {
             ReadActivity.openBook(activity, bookMeta);
-        } else if (suffix.equals("epub")) {
+        } else if (suffix.equals("epub") || suffix.equals("pdf")) {
             openEpubPdfBook(activity, file);
         } else if (suffix.equals("mobi") || suffix.equals("azw") || suffix.equals("azw3") || suffix.equals("azw4")) {
             openMobiAzwBook(activity, file);

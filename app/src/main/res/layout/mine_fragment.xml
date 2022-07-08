@@ -13,41 +13,47 @@
         app:leftIcon="@null"
         app:title="@string/home_nav_me" />
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="@dimen/dp_30"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_mine_about"
-                style="@style/ButtonStyle"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_30"
-                android:text="点我进入关于界面" />
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="@dimen/dp_30"
+                android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_mine_browser"
-                style="@style/ButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_30"
-                android:text="点我进入浏览器界面" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_mine_about"
+                    style="@style/ButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_30"
+                    android:text="点我进入关于界面" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_mine_crash"
-                style="@style/ButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_30"
-                android:text="点我进入崩溃捕捉界面" />
-        </LinearLayout>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_mine_browser"
+                    style="@style/ButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_30"
+                    android:text="点我进入浏览器界面" />
 
-    </androidx.core.widget.NestedScrollView>
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_mine_crash"
+                    style="@style/ButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_30"
+                    android:text="点我进入崩溃捕捉界面" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 
 </LinearLayout>

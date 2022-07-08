@@ -2,6 +2,8 @@ package com.longluo.ebookreader.ui.fragment;
 
 import android.view.View;
 
+import androidx.fragment.app.FragmentTransaction;
+
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.aop.SingleClick;
 import com.longluo.ebookreader.app.TitleBarFragment;
@@ -45,6 +47,7 @@ public final class MineFragment extends TitleBarFragment<HomeActivity> {
                 break;
 
             case R.id.btn_mine_browser:
+                BrowserFragment webFragment = new BrowserFragment();
 
                 break;
 

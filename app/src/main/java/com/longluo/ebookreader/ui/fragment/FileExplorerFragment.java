@@ -70,7 +70,7 @@ public class FileExplorerFragment extends TitleBarFragment<HomeActivity> {
     private List<BookMeta> bookMetas;
     private long sizeLimit = 1024 * 1024 * 1024;
 
-    private String[] chooseFileType = {".txt", ".epub", ".mobi", ".azw", ".azw3"};
+    private String[] chooseFileType = {".txt", ".epub", ".mobi", ".azw", ".azw3", ".pdf"};
 
     private class HistoryEntry {
         int scrollItem, scrollOffset;

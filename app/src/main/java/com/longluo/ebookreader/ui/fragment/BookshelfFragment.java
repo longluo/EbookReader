@@ -2,22 +2,17 @@ package com.longluo.ebookreader.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.view.View;
-import android.widget.AdapterView;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.app.TitleBarFragment;
-import com.longluo.ebookreader.db.BookMark;
 import com.longluo.ebookreader.db.BookMeta;
 import com.longluo.ebookreader.ui.activity.HomeActivity;
-import com.longluo.ebookreader.ui.adapter.BookMarkAdapter;
-import com.longluo.ebookreader.ui.adapter.ShelfAdapter;
+import com.longluo.ebookreader.ui.adapter.BookshelfAdapter;
 import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.widget.itemdecoration.DividerItemDecoration;
-import com.longluo.ebookreader.widget.view.DragGridView;
 
 import org.litepal.LitePal;
 
@@ -29,12 +24,11 @@ public class BookshelfFragment extends TitleBarFragment<HomeActivity> {
     private RecyclerView mBookshelf;
 
     private List<BookMeta> mBooks;
-    private ShelfAdapter mShelfAdapter;
+
+    private BookshelfAdapter mBookshelfAdapter;
 
     //点击书本的位置
     private int itemPosition;
-
-    private static Boolean isExit = false;
 
     public static BookshelfFragment newInstance() {
         return new BookshelfFragment();
@@ -55,18 +49,18 @@ public class BookshelfFragment extends TitleBarFragment<HomeActivity> {
     protected void initData() {
         mBooks = LitePal.findAll(BookMeta.class);
 
-        mShelfAdapter = new ShelfAdapter(getActivity(), mBooks);
-        mBookshelf.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mBookshelf.setAdapter(mShelfAdapter);
+        mBookshelfAdapter = new BookshelfAdapter(getActivity(), mBooks);
+        mBookshelf.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        mBookshelf.setAdapter(mBookshelfAdapter);
         mBookshelf.addItemDecoration(new DividerItemDecoration(getActivity()));
 
-        mShelfAdapter.notifyDataSetChanged();
+        mBookshelfAdapter.notifyDataSetChanged();
 
         initListener();
     }
 
     private void initListener() {
-        mShelfAdapter.setOnItemClickListener(new ShelfAdapter.OnItemClickListener() {
+        mBookshelfAdapter.setOnItemClickListener(new BookshelfAdapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
                 if (mBooks.size() > position) {
@@ -95,7 +89,7 @@ public class BookshelfFragment extends TitleBarFragment<HomeActivity> {
             }
         });
 
-        mShelfAdapter.setOnItemLongClickListener(new ShelfAdapter.OnItemLongClickListener() {
+        mBookshelfAdapter.setOnItemLongClickListener(new BookshelfAdapter.OnItemLongClickListener() {
             @Override
             public void onClick(int position) {
                 new AlertDialog.Builder(getActivity())

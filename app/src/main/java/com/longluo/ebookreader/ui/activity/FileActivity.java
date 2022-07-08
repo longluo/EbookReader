@@ -1,27 +1,23 @@
 package com.longluo.ebookreader.ui.activity;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longluo.ebookreader.R;
-import com.longluo.ebookreader.ui.adapter.FileAdapter;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookMeta;
+import com.longluo.ebookreader.ui.adapter.FileAdapter;
 import com.longluo.ebookreader.util.FileUtils;
 
 import org.litepal.LitePal;
@@ -252,6 +248,9 @@ public class FileActivity extends BaseActivity {
             listFile.addAll(FileUtils.getSuffixFile(root.getAbsolutePath(), ".epub"));
             listFile.addAll(FileUtils.getSuffixFile(root.getAbsolutePath(), ".azw3"));
             listFile.addAll(FileUtils.getSuffixFile(root.getAbsolutePath(), ".mobi"));
+            listFile.addAll(FileUtils.getSuffixFile(root.getAbsolutePath(), ".pdf"));
+            listFile.addAll(FileUtils.getSuffixFile(root.getAbsolutePath(), ".doc"));
+            listFile.addAll(FileUtils.getSuffixFile(root.getAbsolutePath(), ".docx"));
 
             if (listFile == null || listFile.isEmpty()) {
                 return false;

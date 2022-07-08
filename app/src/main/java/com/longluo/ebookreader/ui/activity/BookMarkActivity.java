@@ -26,7 +26,7 @@ import butterknife.BindView;
 
 
 public class BookMarkActivity extends BaseActivity {
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final String LOG_TAG = BookMarkActivity.class.getSimpleName();
 
     @BindView(R.id.toolbar)
     Toolbar toolBar;

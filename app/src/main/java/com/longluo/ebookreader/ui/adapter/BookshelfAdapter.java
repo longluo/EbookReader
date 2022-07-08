@@ -16,7 +16,7 @@ import com.longluo.ebookreader.ui.adapter.view.BookshelfViewHolder;
 import java.util.List;
 
 
-public class ShelfAdapter extends RecyclerView.Adapter<BookshelfViewHolder> {
+public class BookshelfAdapter extends RecyclerView.Adapter<BookshelfViewHolder> {
     private Context mContext;
     private List<BookMeta> mBookList;
 
@@ -39,7 +39,7 @@ public class ShelfAdapter extends RecyclerView.Adapter<BookshelfViewHolder> {
         this.longClickListener = longClickListener;
     }
 
-    public ShelfAdapter(Context context, List<BookMeta> mBookList) {
+    public BookshelfAdapter(Context context, List<BookMeta> mBookList) {
         this.mContext = context;
         this.mBookList = mBookList;
     }

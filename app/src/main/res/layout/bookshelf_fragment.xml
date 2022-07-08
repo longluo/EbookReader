@@ -14,7 +14,7 @@
         app:leftIcon="@null"
         app:title="@string/home_nav_bookshelf" />
 
-    <com.longluo.ebookreader.widget.view.DragGridView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bookShelf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

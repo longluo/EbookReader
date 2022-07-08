@@ -179,7 +179,7 @@ public class DragGridView extends GridView implements View.OnClickListener {
             setIsShowDeleteButton(true);
             for (int i = 0; i < getChildCount(); i++) {
                 final View mGridItemView = getChildAt(i);
-                mDeleteButton = (ImageButton) mGridItemView.findViewById(R.id.ib_close);
+//                mDeleteButton = (ImageButton) mGridItemView.findViewById(R.id.ib_close);
                 mDeleteButton.setOnClickListener(DragGridView.this);
                 if (mDeleteButton.getVisibility() != VISIBLE) {
                     //   mDeleteButton.setVisibility(VISIBLE);

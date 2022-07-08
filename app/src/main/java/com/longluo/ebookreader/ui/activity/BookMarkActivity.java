@@ -104,5 +104,4 @@ public class BookMarkActivity extends BaseActivity {
     protected void initListener() {
 
     }
-
 }

@@ -26,20 +26,20 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.R;
 import com.longluo.ebookreader.base.BaseActivity;
 import com.longluo.ebookreader.db.BookMeta;
+import com.longluo.ebookreader.manager.ReadSettingManager;
 import com.longluo.ebookreader.ui.adapter.ShelfAdapter;
 import com.longluo.ebookreader.util.BookUtils;
 import com.longluo.ebookreader.util.DisplayUtils;
-import com.longluo.ebookreader.widget.view.DragGridView;
 import com.longluo.ebookreader.widget.animation.ContentScaleAnimation;
 import com.longluo.ebookreader.widget.animation.Rotate3DAnimation;
-
+import com.longluo.ebookreader.widget.view.DragGridView;
 
 import org.litepal.LitePal;
 
@@ -67,7 +67,7 @@ public class MainActivity extends BaseActivity
     DrawerLayout drawer;
 
     @BindView(R.id.bookShelf)
-    DragGridView bookShelf;
+    RecyclerView bookShelf;
 
     private WindowManager mWindowManager;
     private AbsoluteLayout wmRootView;
@@ -119,6 +119,7 @@ public class MainActivity extends BaseActivity
         rootView = getWindow().getDecorView();
         typeface = readSettingManager.getTypeface();
         bookMetas = LitePal.findAll(BookMeta.class);
+
         shelfAdapter = new ShelfAdapter(MainActivity.this, bookMetas);
         bookShelf.setAdapter(shelfAdapter);
     }
@@ -139,37 +140,6 @@ public class MainActivity extends BaseActivity
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-
-        bookShelf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (bookMetas.size() > position) {
-                    itemPosition = position;
-                    String bookname = bookMetas.get(itemPosition).getBookName();
-                    shelfAdapter.setItemToFirst(itemPosition);
-                    final BookMeta bookMeta = bookMetas.get(itemPosition);
-                    bookMeta.setId(bookMetas.get(0).getId());
-                    final String path = bookMeta.getBookPath();
-                    File file = new File(path);
-                    if (!file.exists()) {
-                        new AlertDialog.Builder(MainActivity.this)
-                                .setTitle(MainActivity.this.getString(R.string.app_name))
-                                .setMessage(path + "文件不存在,是否删除该书本？")
-                                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        LitePal.deleteAll(BookMeta.class, "bookPath = ?", path);
-                                        bookMetas = LitePal.findAll(BookMeta.class);
-                                        shelfAdapter.setBookList(bookMetas);
-                                    }
-                                }).setCancelable(true).show();
-                        return;
-                    }
-
-                    BookUtils.openBook(MainActivity.this, bookMeta);
-                }
-            }
-        });
     }
 
     @Override
@@ -177,8 +147,7 @@ public class MainActivity extends BaseActivity
         super.onRestart();
         DragGridView.setIsShowDeleteButton(false);
         bookMetas = LitePal.findAll(BookMeta.class);
-        shelfAdapter.setBookList(bookMetas);
-        closeBookAnimation();
+        shelfAdapter.setBookLists(bookMetas);
     }
 
     @Override
@@ -263,35 +232,6 @@ public class MainActivity extends BaseActivity
         coverAnimation.setAnimationListener(this);
     }
 
-    public void closeBookAnimation() {
-        if (mIsOpen && wmRootView != null) {
-            //因为书本打开后会移动到第一位置，所以要设置新的位置参数
-            contentAnimation.setmPivotXValue(bookShelf.getFirstLocation()[0]);
-            contentAnimation.setmPivotYValue(bookShelf.getFirstLocation()[1]);
-            coverAnimation.setmPivotXValue(bookShelf.getFirstLocation()[0]);
-            coverAnimation.setmPivotYValue(bookShelf.getFirstLocation()[1]);
-
-            AbsoluteLayout.LayoutParams params = new AbsoluteLayout.LayoutParams(
-                    itemTextView.getLayoutParams());
-            params.x = bookShelf.getFirstLocation()[0];
-            params.y = bookShelf.getFirstLocation()[1];//firstLocation[1]在滑动的时候回改变,所以要在dispatchDraw的时候获取该位置值
-            wmRootView.updateViewLayout(cover, params);
-            wmRootView.updateViewLayout(content, params);
-            //动画逆向运行
-            if (!contentAnimation.getMReverse()) {
-                contentAnimation.reverse();
-            }
-            if (!coverAnimation.getMReverse()) {
-                coverAnimation.reverse();
-            }
-            //清除动画再开始动画
-            content.clearAnimation();
-            content.startAnimation(contentAnimation);
-            cover.clearAnimation();
-            cover.startAnimation(coverAnimation);
-        }
-    }
-
     @Override
     public void onAnimationStart(Animation animation) {
 
@@ -304,7 +244,6 @@ public class MainActivity extends BaseActivity
             animationCount++;
             if (animationCount >= 2) {
                 mIsOpen = true;
-                shelfAdapter.setItemToFirst(itemPosition);
                 BookMeta bookMeta = bookMetas.get(itemPosition);
                 bookMeta.setId(bookMetas.get(0).getId());
                 BookUtils.openBook(MainActivity.this, bookMeta);

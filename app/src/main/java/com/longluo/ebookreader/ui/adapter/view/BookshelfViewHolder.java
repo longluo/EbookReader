@@ -1,23 +1,22 @@
 package com.longluo.ebookreader.ui.adapter.view;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.longluo.ebookreader.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class BookshelfViewHolder extends RecyclerView.ViewHolder {
-    public ImageView ivBookCover;
 
+    @BindView(R.id.tv_book_name)
     public TextView tvBookName;
-
-//    public TextView tvBookType;
 
     public BookshelfViewHolder(View view) {
         super(view);
-        ivBookCover = view.findViewById(R.id.iv_cover);
-        tvBookName = view.findViewById(R.id.tv_name);
+        ButterKnife.bind(this, view);
     }
 }

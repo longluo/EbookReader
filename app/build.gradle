@@ -152,8 +152,8 @@ dependencies {
     implementation project(':DroidUtils')
     // Libraries封装
     implementation project(':DroidLibrary')
+    implementation project(':MuPdf')
     // pdf
-    implementation project(':mupdf-android-viewer')
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
 
